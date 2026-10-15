@@ -1,0 +1,9 @@
+# SLA de primeira resposta por categoria (horas úteis).
+# ⚠️ VALORES DE DEMONSTRAÇÃO: substitua pelo SLA real do suporte do Chopp Hub.
+billing:      { first_response_hours: 4,  escalate_if_urgency: [high, critical] }
+technical:    { first_response_hours: 4,  escalate_if_urgency: [critical] }
+account:      { first_response_hours: 8,  escalate_if_urgency: [critical] }
+shipping:     { first_response_hours: 2,  escalate_if_urgency: [high, critical] }
+cancellation: { first_response_hours: 24, escalate_if_urgency: [high, critical] }
+legal:        { first_response_hours: 4,  escalate_if_urgency: [low, medium, high, critical] }
+other:        { first_response_hours: 24 }

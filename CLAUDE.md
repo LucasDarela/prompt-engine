@@ -54,4 +54,5 @@ uvicorn main:app --reload       # API em http://localhost:8000/docs
 - O Gemini retorna 503 em picos de demanda: o retry com backoff é obrigatório, não opcional.
 - O plano gratuito do Gemini tem limite de requisições: os evals usam `EVAL_CONCURRENCY` baixo.
 - O `.env` existe na raiz e **não** pode ser commitado.
+- **Base de conhecimento:** nunca marque `reviewed: true` em `data/knowledge_base/generated/`. A revisão é humana (plano 5.8). Para regenerar: `python -m prompt_engine.enrichment.ingest --repo <clone do chopp-hub>`. Specs do produto podem conter detalhes internos e funcionalidades não lançadas.
 - Docstrings dos modelos em `output/schemas.py` entram no JSON schema do prompt: mudá-las muda o prompt e quebra snapshots (atualize com `pytest --snapshot-update` e revise o diff).

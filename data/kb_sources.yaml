@@ -1,0 +1,77 @@
+# Fontes permitidas para gerar a base de conhecimento a partir do repositório do Chopp Hub.
+# Uso: python -m prompt_engine.enrichment.ingest --repo <clone local do chopp-hub>
+# Regra: só conteúdo VOLTADO AO CLIENTE. Nada de migrations, rotas, SQL, runbooks ou .agents.
+# Tudo é gravado com reviewed: false; só entra na KB depois de revisado (KB_INCLUDE_UNREVIEWED=false).
+repo: chopp-hub
+max_chars: 900
+
+sources:
+  - path: app/dashboard/help/page.tsx
+    extractor: ts_objects
+    options: { array: helpSections }
+    prefix: help
+    category: other
+    category_rules:
+      - { match: "entrega|coleta", category: shipping }
+
+  - path: app/marketing/sections/FAQ.tsx
+    extractor: jsx_accordion
+    prefix: faq
+    category: other
+    category_rules:
+      - { match: "motorista|entreg|colet", category: shipping }
+      - { match: "acesso dos funcion|usuári|permiss", category: account }
+
+  - path: app/marketing/terms/page.tsx
+    extractor: jsx_sections
+    options: { components: [Section, SummaryCard] }
+    prefix: terms
+    category: legal
+    category_rules:
+      - { match: "^Rescisão", category: cancellation }
+
+  - path: app/marketing/privacy/page.tsx
+    extractor: jsx_sections
+    options: { components: [Section, SummaryCard] }
+    prefix: privacy
+    category: legal
+
+  # Specs internos: SÓ seções de comportamento do produto (lista permitida).
+  # ⚠️ Specs descrevem funcionalidades planejadas: confirme se já estão no ar ao revisar.
+  - path: docs/superpowers/specs/2026-09-06-pix-banco-inter-design.md
+    extractor: markdown_sections
+    options: &spec_sections
+      include_headings: ["^Contexto", "^Regras? de neg", "^Fluxo", "UI —", "^Banner", "^Card em",
+                         "^E-mail", "^Fora de escopo", "Objetivo$", "Escopo$", "Erros e casos"]
+    prefix: spec-pix-inter
+    category: billing
+  - path: docs/superpowers/specs/2026-09-08-pix-asaas-design.md
+    extractor: markdown_sections
+    options: *spec_sections
+    prefix: spec-pix-asaas
+    category: billing
+  - path: docs/superpowers/specs/2026-09-14-cartoes-asaas-design.md
+    extractor: markdown_sections
+    options: *spec_sections
+    prefix: spec-cartoes
+    category: billing
+  - path: docs/superpowers/specs/2026-09-18-nfe-direta-fase-b-design.md
+    extractor: markdown_sections
+    options: *spec_sections
+    prefix: spec-nfe-b
+    category: technical
+  - path: docs/superpowers/specs/2026-09-18-nfe-direta-fase-c-design.md
+    extractor: markdown_sections
+    options: *spec_sections
+    prefix: spec-nfe-c
+    category: technical
+  - path: docs/superpowers/specs/2026-09-19-aviso-inatividade-90-dias-design.md
+    extractor: markdown_sections
+    options: *spec_sections
+    prefix: spec-inatividade
+    category: account
+  - path: docs/superpowers/specs/2026-09-20-solicitar-exclusao-conta-design.md
+    extractor: markdown_sections
+    options: *spec_sections
+    prefix: spec-exclusao-conta
+    category: cancellation

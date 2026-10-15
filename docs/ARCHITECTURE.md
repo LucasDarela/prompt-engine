@@ -90,7 +90,8 @@ capstone módulo 2/
 │   │   ├── injection/              # heuristics.py, classifier.py, guard.py, patterns.yaml
 │   │   └── pii/                    # detectors.py (CPF, CNPJ, cartão...), vault.py, redaction.py, rehydration.py
 │   ├── enrichment/
-│   │   ├── knowledge_base.py       # protocolo KnowledgeBase + FileKnowledgeBase
+│   │   ├── knowledge_base.py       # protocolo KnowledgeBase + FileKnowledgeBase (BM25) + load_sla
+│   │   ├── ingest.py               # CLI: gera snippets a partir do repositório do produto
 │   │   └── enricher.py             # stage ContextEnrichment
 │   ├── routing/
 │   │   ├── complexity.py           # ComplexityScorer (heurística + sinais do classify)
@@ -123,7 +124,11 @@ capstone módulo 2/
 │       ├── store.py                # protocolo TraceStore + SQLiteTraceStore
 │       └── export.py               # traces → candidatos a golden dataset
 ├── data/
-│   └── knowledge_base/             # faq.yaml, policies.yaml, sla.yaml
+│   ├── sla.yaml                    # SLA por categoria
+│   ├── kb_sources.yaml             # lista permitida de fontes para a ingestão
+│   └── knowledge_base/
+│       ├── manual/                 # artigos revisados escritos à mão
+│       └── generated/              # gerados do chopp-hub (reviewed: false até revisão)
 ├── tests/
 │   ├── conftest.py                 # fixtures: settings, fake provider, registry, client
 │   ├── unit/                       # um arquivo por módulo

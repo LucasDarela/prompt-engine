@@ -1,0 +1,158 @@
+# Base de conhecimento REVISADA (escrita à mão) do suporte do Chopp Hub.
+# source:
+#   chopp-hub:<arquivo>  -> fato extraído do repositório do produto (termos, privacidade, FAQ)
+#   manual-demo          -> SUPOSIÇÃO de demonstração: valide com a operação antes de usar em produção
+# Os snippets gerados automaticamente ficam em ../generated/ e só entram após revisão.
+
+# --- billing ------------------------------------------------------------------------------
+- id: kb-billing-001
+  category: billing
+  title: Cobrança em duplicidade da mensalidade
+  content: >-
+    Quando a mensalidade do Chopp Hub é cobrada em duplicidade, o valor excedente é estornado
+    em até 7 dias úteis após a confirmação pelo financeiro. Peça ao cliente as datas ou os
+    comprovantes das duas cobranças para abrir a solicitação.
+  tags: [estorno, duplicada, mensalidade, fatura]
+  source: manual-demo
+- id: kb-billing-002
+  category: billing
+  title: Valor da fatura diferente do contratado
+  content: >-
+    Se a fatura veio com valor diferente do plano contratado, confirme o plano e o período
+    cobrado e encaminhe ao financeiro para conferência. Não confirme ajuste nem crédito antes
+    da análise.
+  tags: [fatura, valor, plano, divergência]
+  source: manual-demo
+- id: kb-billing-003
+  category: billing
+  title: Segunda via de boleto da mensalidade
+  content: >-
+    A segunda via do boleto da mensalidade pode ser solicitada ao suporte informando o mês de
+    referência. Boletos vencidos são reemitidos com nova data de vencimento.
+  tags: [boleto, segunda via, vencido]
+  source: manual-demo
+
+# --- technical ----------------------------------------------------------------------------
+- id: kb-technical-001
+  category: technical
+  title: App do Motorista (Chopp Hub Driver) não abre ou não sincroniza
+  content: >-
+    Peça para o motorista atualizar o Chopp Hub Driver pela loja de aplicativos, verificar a
+    conexão com a internet e sair e entrar novamente na conta. Se o problema continuar e houver
+    entregas do dia pendentes, trate como urgente e encaminhe ao time técnico com o modelo do
+    celular e o horário do erro.
+  tags: [app, motorista, driver, sincronizar, travou]
+  source: manual-demo
+- id: kb-technical-002
+  category: technical
+  title: Emissão de NF-e é opcional
+  content: >-
+    O Chopp Hub não obriga a emissão de nota fiscal em todas as vendas: a NF-e pode ser emitida
+    apenas quando o cliente quiser, e o sistema funciona normalmente sem ela. Falhas na emissão
+    de uma nota específica devem ser encaminhadas ao time técnico com o número do pedido.
+  tags: [nf-e, nota fiscal, emissão]
+  source: chopp-hub:app/marketing/sections/FAQ.tsx
+- id: kb-technical-003
+  category: technical
+  title: Sistema lento ou fora do ar
+  content: >-
+    Em caso de lentidão ou indisponibilidade, peça o horário aproximado, a tela em que ocorreu e
+    se afeta todos os usuários da empresa. Indisponibilidade geral é urgente e vai direto ao
+    time técnico.
+  tags: [lento, fora do ar, erro, indisponível]
+  source: manual-demo
+
+# --- account ------------------------------------------------------------------------------
+- id: kb-account-001
+  category: account
+  title: Limitar o acesso de funcionários
+  content: >-
+    O Chopp Hub permite controlar o que cada funcionário acessa no sistema. Ajustes de usuários
+    e permissões são feitos por um administrador da empresa.
+  tags: [usuário, permissão, acesso, funcionário, vendedor]
+  source: chopp-hub:app/marketing/sections/FAQ.tsx
+- id: kb-account-002
+  category: account
+  title: Esqueci a senha ou a conta foi bloqueada
+  content: >-
+    Oriente o usuário a usar a recuperação de senha na tela de login. Após várias tentativas
+    erradas o acesso é bloqueado temporariamente; peça para aguardar alguns minutos antes de
+    tentar de novo. Nunca peça a senha ao cliente.
+  tags: [senha, login, bloqueado, acesso]
+  source: manual-demo
+
+# --- shipping -----------------------------------------------------------------------------
+- id: kb-shipping-001
+  category: shipping
+  title: Entregas e coletas do dia pelo aplicativo
+  content: >-
+    O motorista acompanha e atualiza entregas e coletas em campo pelo aplicativo Chopp Hub
+    Driver; o status atualizado aparece no sistema web. O gestor vê no sistema o que precisa ser
+    entregue ou coletado no dia.
+  tags: [entrega, coleta, rota, motorista, barril]
+  source: chopp-hub:app/marketing/terms/page.tsx
+- id: kb-shipping-002
+  category: shipping
+  title: Rota não carrega ou entrega não aparece para o motorista
+  content: >-
+    Confirme se a entrega foi atribuída ao motorista correto e se o app está atualizado. Se a
+    rota continuar sem carregar, encaminhe ao time técnico com o número do pedido e o nome do
+    motorista.
+  tags: [rota, mapa, entrega, motorista]
+  source: manual-demo
+
+# --- cancellation -------------------------------------------------------------------------
+- id: kb-cancellation-001
+  category: cancellation
+  title: Cancelamento do plano
+  content: >-
+    Pedidos de cancelamento são registrados pelo suporte e um especialista de sucesso do cliente
+    entra em contato. O cancelamento da assinatura vale ao fim do período já pago.
+  tags: [cancelar, plano, assinatura]
+  source: manual-demo
+- id: kb-cancellation-002
+  category: cancellation
+  title: Suspensão por violação dos Termos
+  content: >-
+    Em caso de violação material dos Termos, o cliente recebe aviso por escrito e tem 14 dias a
+    partir do recebimento para sanar a violação; se não sanar, o acesso pode ser encerrado.
+  tags: [suspensão, rescisão, termos, violação]
+  source: chopp-hub:app/marketing/terms/page.tsx
+
+# --- legal --------------------------------------------------------------------------------
+- id: kb-legal-001
+  category: legal
+  title: Exclusão de dados pessoais (LGPD)
+  content: >-
+    O titular pode pedir, de forma gratuita, a eliminação ou anonimização dos seus dados pelo
+    e-mail suporte@chopphub.com. O procedimento pode ser iniciado em até 30 dias após a
+    solicitação. Dados fiscais, como notas fiscais, podem ser mantidos por obrigação legal.
+  tags: [lgpd, exclusão, dados pessoais, privacidade]
+  source: chopp-hub:app/marketing/privacy/page.tsx
+- id: kb-legal-002
+  category: legal
+  title: Ameaças jurídicas, Procon e contrato
+  content: >-
+    Mensagens que mencionam Procon, advogado, processo ou disputa contratual são sempre
+    encaminhadas a um atendente humano. Responda com cordialidade, registre o caso e não faça
+    promessas em nome da empresa.
+  tags: [procon, advogado, processo, contrato, jurídico]
+  source: manual-demo
+
+# --- other --------------------------------------------------------------------------------
+- id: kb-other-001
+  category: other
+  title: Usar o Chopp Hub no celular e no computador
+  content: >-
+    O sistema web Chopp Hub funciona no navegador do computador e do celular. Os motoristas usam
+    o aplicativo Chopp Hub Driver para atualizar entregas e coletas em campo.
+  tags: [celular, computador, navegador, aplicativo]
+  source: chopp-hub:app/marketing/sections/FAQ.tsx
+- id: kb-other-002
+  category: other
+  title: Falar com um atendente humano
+  content: >-
+    Sempre que o cliente pedir para falar com uma pessoa, registre o pedido e informe que um
+    atendente entrará em contato dentro do SLA da categoria.
+  tags: [atendente, humano, contato]
+  source: manual-demo

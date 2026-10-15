@@ -97,6 +97,12 @@ class PromptLibraryError(PromptEngineError):
     code = "prompt_library_invalid"
 
 
+class KnowledgeBaseError(PromptEngineError):
+    """Base de conhecimento ou SLA inválidos (detectado no startup)."""
+
+    code = "kb_invalid"
+
+
 class TemplateRenderError(PromptEngineError):
     code = "template_error"
 

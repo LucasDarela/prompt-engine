@@ -70,11 +70,14 @@
 - [x] **4.8** Datasets iniciais `injection_redteam.jsonl` (30) e `benign.jsonl` (50) + testes offline → GR-2, GR-3
 
 ## Fase 5 — Enriquecimento + Roteamento (SPEC-004, SPEC-006 §5)
-- [ ] **5.1** `data/knowledge_base/*.yaml` com conteúdo realista (≥ 3 snippets por categoria) + `sla.yaml`
-- [ ] **5.2** `enrichment/knowledge_base.py` (BM25 simples PT + boost de categoria) → EN-1..5
-- [ ] **5.3** `enrichment/enricher.py` (stage) → EN-6
-- [ ] **5.4** `routing/complexity.py` → RT-1, RT-2, RT-4
-- [ ] **5.5** `routing/router.py` (stage, force tier, override de provider) → RT-3
+- [x] **5.1** `data/knowledge_base/*.yaml` com conteúdo realista (≥ 3 snippets por categoria) + `sla.yaml`
+- [x] **5.2** `enrichment/knowledge_base.py` (BM25 simples PT + boost de categoria) → EN-1..5
+- [x] **5.3** `enrichment/enricher.py` (stage) → EN-6
+- [x] **5.4** `routing/complexity.py` → RT-1, RT-2, RT-4
+- [x] **5.5** `routing/router.py` (stage, force tier, override de provider) → RT-3
+- [x] **5.6** (novo) `enrichment/ingest.py`: ingestão determinística do repositório `chopp-hub` (4 extratores, filtro de segredos, `review_notes` de termos internos, revisão preservada) → EN-7, EN-8
+- [x] **5.7** (novo) Ingestão real: `data/kb_sources.yaml` → 84 snippets em `data/knowledge_base/generated/` (`chopp-hub@1674717`)
+- [ ] **5.8** 👤 **Revisão humana (Lucas)** dos 84 snippets gerados: remover termos internos apontados em `review_notes`, confirmar se as funcionalidades dos specs já estão no ar e marcar `reviewed: true`. Validar também os itens `manual-demo` e o `sla.yaml`.
 
 ## Fase 6 — Flow + API (SPEC-002 §5, SPEC-001) — **MVP**
 - [ ] **6.1** `AssembleTriage` com a regra de `needs_human` → OUT-8
@@ -135,6 +138,7 @@
 | `INJECTION_JUDGE_ENABLED` | `true` | |
 | `PII_REHYDRATE_REPLY` | `true` | |
 | `KB_PATH` / `KB_TOP_K` / `KB_MIN_SCORE` / `KB_MAX_CHARS` | `data/knowledge_base` / `3` / `0.1` / `2000` | |
+| `KB_MIN_RELATIVE_SCORE` / `KB_INCLUDE_UNREVIEWED` / `SLA_PATH` | `0.3` / `false` / `data/sla.yaml` | corte relativo; gerados só após revisão |
 | `ROUTER_T1` / `ROUTER_T2` / `ROUTER_FORCE_TIER` | `0.35` / `0.7` / vazio | |
 | `CONFIDENCE_MIN` | `0.6` | abaixo disso, `needs_human=true` |
 | `OUTPUT_MAX_REPAIRS` | `1` | |

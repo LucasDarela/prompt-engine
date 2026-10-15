@@ -63,8 +63,11 @@ class Settings(BaseSettings):
 
     # Enriquecimento
     kb_path: Path = Path("data/knowledge_base")
+    kb_include_unreviewed: bool = False  # snippets gerados só entram após revisão humana
+    sla_path: Path = Path("data/sla.yaml")
     kb_top_k: int = Field(default=3, gt=0)
     kb_min_score: float = Field(default=0.1, ge=0)
+    kb_min_relative_score: Unit = 0.3  # descarta snippets < 30% do melhor (escala do BM25 varia)
     kb_max_chars: int = Field(default=2000, gt=0)
 
     # Roteamento
