@@ -82,6 +82,8 @@ capstone módulo 2/
 │   │   ├── stage.py                # protocolo Stage
 │   │   ├── pipeline.py             # Pipeline (executa stages, short-circuit, spans)
 │   │   ├── errors.py               # hierarquia de exceções de domínio
+│   │   ├── vault.py                # PIIVault (estrutura de dados; detecção fica em guardrails/pii)
+│   │   ├── tracing.py              # porta TraceSink + Span/PipelineRun (impl. em observability/)
 │   │   └── llm_step.py             # LLMStep genérico (render → call → parse → validate)
 │   ├── guardrails/
 │   │   ├── input_validation.py
@@ -107,7 +109,9 @@ capstone módulo 2/
 │   │       ├── _partials/          # system_base.j2, business_rules.j2, output_format.j2, safety.j2
 │   │       └── support_triage/     # classify.yaml, draft_reply.yaml, review_reply.yaml, injection_judge.yaml
 │   ├── output/
-│   │   ├── cleaners.py             # strip_markdown, extract_json
+│   │   ├── cleaners.py             # strip_markdown, extract_json, loads_lenient, clean_text
+│   │   ├── normalize.py            # enums: caixa, acentos, aliases PT/EN
+│   │   ├── fallbacks.py            # saídas seguras por step
 │   │   ├── schemas.py              # ClassifyOutput, DraftOutput, ReviewOutput, TriageResult
 │   │   └── validator.py            # validate + repair loop + fallback
 │   ├── flows/
@@ -180,9 +184,10 @@ O contexto é **imutável por convenção**: os stages retornam `ctx.model_copy(
 ## 6. Contratos entre módulos (resumo)
 
 ```python
-class Stage(Protocol):
+class Stage(ABC):
     name: str
-    async def __call__(self, ctx: PipelineContext) -> PipelineContext: ...
+    def is_enabled(self, ctx: PipelineContext) -> bool: ...   # default True
+    async def run(self, ctx: PipelineContext) -> PipelineContext: ...
 
 class LLMProvider(Protocol):
     name: str

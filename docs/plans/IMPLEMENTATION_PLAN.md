@@ -33,12 +33,12 @@
 - [x] **0.7** `Makefile`/scripts: `make test`, `make lint`, `make run`, `make eval`
 
 ## Fase 1 — Core + Output (SPEC-002, SPEC-007)
-- [ ] **1.1** `core/context.py`: `PipelineContext`, `StepResult`, `Usage`, `SecurityReport`, `RouteDecision`, `EnrichmentData` (testes de imutabilidade/`with_step`)
-- [ ] **1.2** `core/stage.py` + `core/pipeline.py` com o tracer no-op injetável → CORE-1, CORE-2, CORE-3
-- [ ] **1.3** `output/schemas.py` (Classify/Draft/Review/TriageResult) + validators → OUT-7
-- [ ] **1.4** `output/cleaners.py`: `strip_markdown`, `extract_json` (balanceamento com strings) → OUT-1, OUT-2, OUT-3
-- [ ] **1.5** Normalização de enums/aliases → OUT-4
-- [ ] **1.6** `output/validator.py`: validate + loop de reparo (callback) + fallbacks → OUT-5, OUT-6, OUT-9 (hypothesis)
+- [x] **1.1** `core/context.py`: `PipelineContext`, `StepResult`, `Usage`, `SecurityReport`, `RouteDecision`, `EnrichmentData` (testes de imutabilidade/`with_step`)
+- [x] **1.2** `core/stage.py` + `core/pipeline.py` com o tracer no-op injetável → CORE-1, CORE-2, CORE-3
+- [x] **1.3** `output/schemas.py` (Classify/Draft/Review/TriageResult) + validators → OUT-7
+- [x] **1.4** `output/cleaners.py`: `strip_markdown`, `extract_json` (balanceamento com strings) → OUT-1, OUT-2, OUT-3
+- [x] **1.5** Normalização de enums/aliases → OUT-4
+- [x] **1.6** `output/validator.py`: validate + loop de reparo (callback) + fallbacks → OUT-5, OUT-6, OUT-9 (hypothesis)
 
 ## Fase 2 — Biblioteca de prompts (SPEC-005)
 - [ ] **2.1** `prompts/models.py` (`PromptTemplate`, enum `Technique`, `Version` SemVer)

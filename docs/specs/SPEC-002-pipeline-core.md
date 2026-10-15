@@ -9,13 +9,19 @@ Definir as abstrações que tornam o sistema **modular, testável e reutilizáve
 
 ```python
 # core/stage.py
-class Stage(Protocol):
+class Stage(ABC):
     name: str
-    async def __call__(self, ctx: PipelineContext) -> PipelineContext: ...
+    def is_enabled(self, ctx: PipelineContext) -> bool: ...   # default True; False → span "skipped"
+    @abstractmethod
+    async def run(self, ctx: PipelineContext) -> PipelineContext: ...
+
+# core/tracing.py — porta; a implementação persistente vive em observability/
+class TraceSink(Protocol):
+    async def record(self, run: PipelineRun) -> None: ...   # PipelineRun = ctx + spans + status
 
 # core/pipeline.py
 class Pipeline:
-    def __init__(self, stages: Sequence[Stage], tracer: Tracer) -> None: ...
+    def __init__(self, stages: Sequence[Stage], sink: TraceSink | None = None) -> None: ...
     async def run(self, ctx: PipelineContext) -> PipelineContext: ...
 
 # core/llm_step.py
@@ -45,11 +51,11 @@ class FlowRunner:
 
 ## 3. Comportamento do `Pipeline.run`
 
-1. Para cada stage, abre um `Span(name=stage.name)` no tracer.
-2. Executa `ctx = await stage(ctx)` e registra a duração e um snapshot resumido do delta.
+1. Para cada stage: se `is_enabled(ctx)` for falso, registra o span `skipped` e segue. Senão, cronometra e registra um `Span(name=stage.name)`.
+2. Executa `ctx = await stage.run(ctx)`.
 3. Se o stage lança uma `ShortCircuit` (subclasses: `InputValidationError`, `PromptInjectionDetected`), fecha o span com `status=blocked`, persiste o trace e **re-lança**. Os stages seguintes não rodam.
 4. Exceções não-domínio: fecha o span com `status=error`, persiste o trace e re-lança.
-5. No fim, persiste o trace com `status=ok`.
+5. No fim, entrega ao `TraceSink` com `status=ok` (ou `degraded` se `ctx.degraded`). Falha do sink é logada e **nunca** derruba a request.
 
 **Invariantes:**
 - Nenhum stage acessa `ctx.raw_input` depois de `PIIRedaction`, exceto `PIIRehydration`. Isso é garantido por teste.
