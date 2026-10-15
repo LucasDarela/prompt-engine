@@ -17,7 +17,7 @@ O texto cru do usuário nunca chega direto ao modelo: ele passa por uma **cadeia
                                                                        ▼
 ┌──────────────────────────────────────── Pipeline (core/) ──────────────────────────────────────────┐
 │                                                                                                    │
-│  ① InputValidation → ② InjectionGuard → ③ PIIRedaction                       [guardrails/]         │
+│  ① InputValidation → ② PIIRedaction → ③ InjectionGuard                       [guardrails/]         │
 │            │ (falha = short-circuit 422)                                                           │
 │            ▼                                                                                       │
 │  ④ LLMStep "classify"  ──▶ ⑤ ContextEnrichment ──▶ ⑥ Router ──▶ ⑦ LLMStep "draft_reply"           │
@@ -39,7 +39,7 @@ O texto cru do usuário nunca chega direto ao modelo: ele passa por uma **cadeia
 
 | Fluxo original | Implementação |
 |---|---|
-| `validate_input()` | Stage `InputValidation` + `InjectionGuard` + `PIIRedaction` |
+| `validate_input()` | Stage `InputValidation` + `PIIRedaction` + `InjectionGuard` |
 | `inject_context()` | `ContextEnrichment` (dados de negócio/KB) + parciais do `PromptRegistry` (system prompt, regras, formato) |
 | `build_final_prompt()` | `PromptRenderer` dentro de cada `LLMStep` |
 | Chamada à LLM | `LLMProvider.generate()` escolhido pelo `Router` |
@@ -99,7 +99,7 @@ capstone módulo 2/
 │   │   ├── base.py                 # protocolo LLMProvider, LLMRequest, LLMResponse
 │   │   ├── gemini.py  anthropic.py  openai.py
 │   │   ├── fake.py                 # FakeProvider determinístico (testes/demos)
-│   │   ├── resilience.py           # retry/backoff, timeout, fallback chain
+│   │   ├── pool.py                 # ProviderPool: tier→modelo, timeout, retry/backoff, fallback
 │   │   └── factory.py              # build_provider(name, settings)
 │   ├── prompts/
 │   │   ├── registry.py             # PromptRegistry (carrega, valida, resolve versões)
@@ -166,8 +166,8 @@ O contexto é **imutável por convenção**: os stages retornam `ctx.model_copy(
 | # | Stage | Tipo | Tier/Modelo | Saída no contexto |
 |---|---|---|---|---|
 | 1 | `InputValidation` | determinístico | — | normaliza unicode/whitespace, valida tamanho/idioma |
-| 2 | `InjectionGuard` | heurística + LLM (zona cinzenta) | `fast` | `security` (pode short-circuitar) |
-| 3 | `PIIRedaction` | determinístico | — | `sanitized_input`, `pii_vault` |
+| 2 | `PIIRedaction` | determinístico | — | `sanitized_input`, `pii_vault` |
+| 3 | `InjectionGuard` | heurística + LLM (zona cinzenta) | `fast` | `security` (pode short-circuitar) |
 | 4 | `LLMStep(classify)` | LLM | `fast`, temp 0 | `category`, `urgency`, `sentiment`, `entities`, `intents`, `complexity_hint` |
 | 5 | `ContextEnrichment` | determinístico | — | trechos da KB por categoria + regras + SLA |
 | 6 | `Router` | determinístico | — | `RouteDecision` para o draft |
@@ -176,6 +176,8 @@ O contexto é **imutável por convenção**: os stages retornam `ctx.model_copy(
 | 9 | `OutputValidation` | determinístico | — | `TriageResult` validado |
 | 10 | `PIIRehydration` | determinístico | — | placeholders → valores reais na `suggested_reply` |
 | 11 | `Assemble` | determinístico | — | resposta HTTP + `meta` |
+
+**Por que mascarar PII antes do `InjectionGuard`?** O guard pode chamar o juiz LLM na zona cinzenta; se rodasse antes, o texto com PII real iria para o provedor. As heurísticas funcionam igual sobre o texto com placeholders.
 
 **Por que classificar antes de enriquecer?** O contexto relevante da KB depende da categoria. O enriquecimento *estático* (system prompt, regras, formato) entra em todos os steps via parciais. O enriquecimento *dinâmico* (KB) entra depois da classificação.
 
@@ -239,7 +241,7 @@ observability ◀── usado por core e api (nunca o contrário)
 | Modelos/validação | Pydantic v2 + pydantic-settings | Schemas de I/O e config tipada |
 | Templates | Jinja2 (`StrictUndefined`) + YAML (PyYAML) | Prompts como dados, com parciais e herança |
 | LLM SDKs | `google-genai`, `anthropic`, `openai` (extras) | Adapters plugáveis |
-| Resiliência | `tenacity` | Retry/backoff declarativo |
+| Resiliência | `ProviderPool` próprio (`asyncio`) | Retry/backoff/fallback explícitos e testáveis com `sleep` injetado; retry interno do SDK desligado |
 | Logs | `structlog` (JSON) | Logs estruturados para correlação |
 | Traces | SQLite (stdlib `sqlite3`) | Zero infra, consultável, exportável |
 | Testes | pytest, pytest-asyncio, pytest-cov, syrupy, httpx (TestClient) | Unit/integration/snapshot |

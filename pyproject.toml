@@ -16,7 +16,6 @@ dependencies = [
     "pydantic-settings>=2.5",
     "jinja2>=3.1",
     "pyyaml>=6.0",
-    "tenacity>=9.0",
     "structlog>=24.4",
     "python-ulid>=3.0",
 ]
@@ -50,6 +49,9 @@ extend-exclude = ["docs"]  # pseudocódigo ilustrativo nas specs
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF", "ASYNC", "S"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["prompt_engine", "tests"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101", "S105", "S106"]  # assert e "senhas" fake são esperados em testes

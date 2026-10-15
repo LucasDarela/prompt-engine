@@ -80,8 +80,8 @@ return ctx.with_step(name, StepResult(...))
 def build_support_triage(d: Deps) -> Pipeline:
     return Pipeline([
         InputValidation(d.settings),
+        PIIRedaction(d.pii_detectors),          # antes do guard: o juiz LLM só vê texto mascarado
         InjectionGuard(d.heuristics, d.judge, d.settings),
-        PIIRedaction(d.pii_detectors),
         LLMStep("classify", "support_triage.classify@latest", ClassifyOutput,
                 variables=lambda c: {"message": c.sanitized_input}, tier="fast", ...),
         ContextEnrichment(d.kb, d.business_rules),

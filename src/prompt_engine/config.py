@@ -39,7 +39,7 @@ class Settings(BaseSettings):
 
     gemini_api_key: SecretStr | None = None
     gemini_model_fast: str | None = "gemini-3.5-flash-lite"
-    gemini_model_balanced: str | None = "gemini-3.5-flash"
+    gemini_model_balanced: str | None = "gemini-3.7-flash"
     gemini_model_powerful: str | None = "gemini-3.8-flash"
 
     anthropic_api_key: SecretStr | None = None

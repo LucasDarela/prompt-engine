@@ -75,7 +75,7 @@ Um **middleware de prompts em Python (FastAPI)** que fica entre o frontend (text
     "flow": "support_triage",
     "steps": ["classify@1.0.0", "draft_reply@1.0.0", "review_reply@1.0.0"],
     "provider": "gemini",
-    "models": { "classify": "gemini-3.5-flash-lite", "draft_reply": "gemini-3.5-flash" },
+    "models": { "classify": "gemini-3.5-flash-lite", "draft_reply": "gemini-3.7-flash" },
     "pii_redacted": ["CPF", "CARD"],
     "latency_ms": 2140,
     "tokens": { "input": 1830, "output": 412 }

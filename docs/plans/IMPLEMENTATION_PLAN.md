@@ -50,14 +50,14 @@
 - [x] **2.7** Snapshot tests de todos os prompts → PL-5
 
 ## Fase 3 — Camada LLM (SPEC-006 §2–4)
-- [ ] **3.1** `llm/base.py` (Message, LLMRequest, LLMResponse, Usage, Protocol, erros de provider)
-- [ ] **3.2** `llm/fake.py` roteirizável + registro de calls
-- [ ] **3.3** Suíte de **contract tests** parametrizável (roda com o Fake primeiro)
-- [ ] **3.4** `llm/gemini.py` com `google-genai` (system_instruction, roles user/model, JSON schema nativo, usage, tradução de erros); contract tests com SDK mockado → LLM-1
-- [ ] **3.5** `llm/resilience.py`: timeout, retry (tenacity) e fallback chain → LLM-3, LLM-4, LLM-5
-- [ ] **3.6** `llm/factory.py` + `ProviderPool.resolve(tier)` + import lazy com erro claro → LLM-6
-- [ ] **3.7** `core/llm_step.py` integrando registry, renderer, pool e validator → CORE-4, CORE-5
-- [ ] **3.8** Script `examples/smoke_gemini.py` (manual, `@live`): 1 chamada real ao classify
+- [x] **3.1** `llm/base.py` (Message, LLMRequest, LLMResponse, Usage, Protocol, erros de provider)
+- [x] **3.2** `llm/fake.py` roteirizável + registro de calls
+- [x] **3.3** Suíte de **contract tests** parametrizável (roda com o Fake primeiro)
+- [x] **3.4** `llm/gemini.py` com `google-genai` (system_instruction, roles user/model, JSON schema nativo, usage, tradução de erros); contract tests com SDK mockado → LLM-1
+- [x] **3.5** `llm/pool.py` (era `resilience.py`): timeout, retry com backoff (loop próprio) e fallback chain → LLM-3, LLM-4, LLM-5
+- [x] **3.6** `llm/factory.py` + `ProviderPool.resolve(tier)` + import lazy com erro claro → LLM-6
+- [x] **3.7** `core/llm_step.py` integrando registry, renderer, pool e validator → CORE-4, CORE-5
+- [x] **3.8** Script `examples/smoke_gemini.py` (manual, `@live`): 1 chamada real ao classify
 
 ## Fase 4 — Guardrails (SPEC-003)
 - [ ] **4.1** `input_validation.py` → GR-1 (normalização) e limites
@@ -102,6 +102,7 @@
 - [ ] **9.3** Evals de validade, acurácia, needs_human, consistência, injection e PII leak
 - [ ] **9.4** `evals.judge_reply` + `test_reply_quality`
 - [ ] **9.5** Gerador de relatório `reports/eval-*.{json,md}`
+- [ ] **9.0** Corrigir extração de entidades do `classify`: no smoke de 2026-10-14 o modelo pôs `"amount": "outubro"` (mês no campo de valor). Medir no golden dataset, ajustar critério/few-shot, subir MINOR.
 - [ ] **9.6** Rodar com o Gemini, iterar prompts até atingir os limiares e registrar a tabela de resultados no README
 
 ## Fase 10 — Entrega
@@ -125,7 +126,7 @@
 | `LLM_PROVIDER` | `gemini` | `gemini` \| `anthropic` \| `openai` \| `fake` |
 | `LLM_FALLBACK_PROVIDERS` | vazio | ex.: `anthropic,openai` |
 | `LLM_TIMEOUT_S` / `LLM_MAX_RETRIES` | `30` / `2` | |
-| `GEMINI_API_KEY`, `GEMINI_MODEL_{FAST,BALANCED,POWERFUL}` | — / `gemini-3.5-flash-lite` / `gemini-3.5-flash` / `gemini-3.8-flash` | validados em 2026-10-14 (SPEC-006 §3.1) |
+| `GEMINI_API_KEY`, `GEMINI_MODEL_{FAST,BALANCED,POWERFUL}` | — / `gemini-3.5-flash-lite` / `gemini-3.7-flash` / `gemini-3.8-flash` | validados em 2026-10-14 (SPEC-006 §3.1) |
 | `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL_{FAST,BALANCED,POWERFUL}` | — | |
 | `OPENAI_API_KEY`, `OPENAI_MODEL_{FAST,BALANCED,POWERFUL}` | — | |
 | `ENABLE_REVIEW_STEP` | `true` | desligar para economizar quota |

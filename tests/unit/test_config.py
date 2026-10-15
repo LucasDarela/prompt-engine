@@ -22,7 +22,7 @@ def test_defaults_match_documented_values() -> None:
     assert s.llm_provider == "gemini"
     assert s.max_input_chars == 4000
     assert s.gemini_model_fast == "gemini-3.5-flash-lite"
-    assert s.gemini_model_balanced == "gemini-3.5-flash"
+    assert s.gemini_model_balanced == "gemini-3.7-flash"
     assert s.gemini_model_powerful == "gemini-3.8-flash"
     assert s.injection_low == 0.3
     assert s.injection_high == 0.8

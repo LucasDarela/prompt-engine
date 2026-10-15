@@ -66,6 +66,12 @@ class ProviderBadRequestError(ProviderError):
     code = "provider_bad_request"
 
 
+class ProviderConfigError(PromptEngineError):
+    """Provider mal configurado (chave ausente, extra não instalado, modelo não definido)."""
+
+    code = "provider_config"
+
+
 class OutputValidationError(PromptEngineError):
     """Saída do modelo inválida. Tratada internamente (reparo/fallback); não chega ao usuário."""
 

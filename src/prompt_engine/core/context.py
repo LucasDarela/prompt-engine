@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import secrets
 from typing import Any, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -29,6 +30,11 @@ _FROZEN = ConfigDict(frozen=True)
 
 def new_request_id() -> str:
     return f"req_{ULID()}"
+
+
+def new_canary() -> str:
+    """Token aleatório por request; se aparecer numa saída, o system prompt vazou (SPEC-003)."""
+    return f"CANARY-{secrets.token_hex(4)}"
 
 
 class RunOptions(BaseModel):
@@ -93,7 +99,8 @@ class StepResult(BaseModel):
     parsed: dict[str, Any] | None = None
     usage: Usage = Usage()
     latency_ms: int = 0
-    attempts: int = 1
+    attempts: int = 1  # chamadas ao provider, incluindo retries e reparos
+    call_log: list[str] = []  # ex.: ["gemini:rate_limited", "gemini:ok", "repair:gemini:ok"]
     repaired: bool = False
     fallback_used: bool = False
 
@@ -107,7 +114,7 @@ class PipelineContext(BaseModel):
     raw_input: str = Field(repr=False, exclude=True)
     sanitized_input: str | None = None
     pii_vault: PIIVault = Field(default_factory=PIIVault, repr=False, exclude=True)
-    canary: str | None = Field(default=None, repr=False)
+    canary: str = Field(default_factory=new_canary, repr=False)
     customer_id: str | None = None
     locale: str = "pt-BR"
     options: RunOptions = RunOptions()

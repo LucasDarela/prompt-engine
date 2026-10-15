@@ -22,7 +22,9 @@ A normalização acontece **antes** da detecção de injection, para que ofusca�
 
 ---
 
-## 3. `InjectionGuard` (stage 2): defesa em camadas
+## 3. `InjectionGuard` (stage 3): defesa em camadas
+
+> Roda **depois** do `PIIRedaction`: o juiz LLM da Camada B só recebe texto mascarado.
 
 ### Camada A: heurística (sempre, custo zero)
 `guardrails/injection/patterns.yaml` com padrões PT e EN, cada um com peso:
@@ -70,7 +72,7 @@ Schemas rígidos (SPEC-007) limitam o que o modelo pode "fazer": não existe cam
 
 ---
 
-## 4. PII: `PIIRedaction` (stage 3) e `PIIRehydration` (stage 10)
+## 4. PII: `PIIRedaction` (stage 2) e `PIIRehydration` (stage 10)
 
 ### Detectores (ordem de aplicação)
 | Tipo | Placeholder | Detecção | Validação |

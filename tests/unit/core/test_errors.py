@@ -11,6 +11,7 @@ from prompt_engine.core import errors as e
         (e.ProviderUnavailableError("gemini"), "provider_unavailable"),
         (e.ProviderRateLimitError("gemini", retry_after=3.0), "rate_limited"),
         (e.ProviderBadRequestError("gemini"), "provider_bad_request"),
+        (e.ProviderConfigError("GEMINI_API_KEY ausente"), "provider_config"),
         (e.OutputValidationError("classify", ["x"]), "output_invalid"),
         (e.PromptNotFoundError("a.b@1.0.0"), "prompt_not_found"),
         (e.TemplateRenderError("a.b", "missing var"), "template_error"),

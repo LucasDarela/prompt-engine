@@ -20,7 +20,6 @@ class LLMRequest(BaseModel):
     temperature: float = 0.0
     max_output_tokens: int = 1024
     json_schema: dict[str, Any] | None = None   # se presente, pedir saída JSON nativa
-    timeout_s: float = 30.0
     metadata: dict[str, str] = {}               # request_id, step — para logs
 
 class Usage(BaseModel):
@@ -46,7 +45,7 @@ class LLMProvider(Protocol):
 | Erros → domínio | 429 → `ProviderRateLimitError`; 5xx/timeout → `ProviderUnavailableError`; 400 → `ProviderBadRequestError` | idem | idem | configurável |
 
 - Os SDKs são **extras opcionais** (`pip install -e ".[gemini]"`), importados **dentro** do adapter. Se o extra não estiver instalado e o provider estiver habilitado, o startup falha com uma mensagem clara.
-- Os adapters **não** fazem retry por conta própria: isso é responsabilidade de `resilience.py`. Os retries internos dos SDKs ficam desligados quando possível.
+- Os adapters **não** fazem retry por conta própria: isso é responsabilidade do `ProviderPool` (`llm/pool.py`). Os retries internos dos SDKs ficam desligados quando possível.
 
 ### `FakeProvider`
 ```python
@@ -63,7 +62,7 @@ LLM_FALLBACK_PROVIDERS=anthropic,openai # ordem de fallback (só os com chave co
 
 GEMINI_API_KEY=
 GEMINI_MODEL_FAST=gemini-3.5-flash-lite      # validados em 2026-10-14 com a chave do projeto (ver §3.1)
-GEMINI_MODEL_BALANCED=gemini-3.5-flash
+GEMINI_MODEL_BALANCED=gemini-3.7-flash
 GEMINI_MODEL_POWERFUL=gemini-3.8-flash
 
 ANTHROPIC_API_KEY=
@@ -82,7 +81,9 @@ Lista obtida com `client.models.list()` (SDK `google-genai`) e uma chamada míni
 | Modelo | Resultado | Uso |
 |---|---|---|
 | `gemini-3.5-flash-lite` | ✅ OK | `fast`: classify, injection_judge, review, repair |
-| `gemini-3.5-flash` | ⚠️ 503 (alta demanda, momentâneo) | `balanced` |
+| `gemini-3.5-flash` | ❌ 503 persistente durante o dia todo ("high demand") | — (era o `balanced`) |
+| `gemini-3.7-flash` | ✅ OK | `balanced` |
+| `gemini-3.6-flash` | ✅ OK | alternativa |
 | `gemini-3.8-flash` | ✅ OK | `powerful`: o Flash mais recente, já que não há Pro no plano gratuito |
 | `gemini-2.5-pro` | ❌ 404, indisponível para novos usuários | — |
 | `gemini-3.1-pro-preview` | ❌ 429, sem cota no plano gratuito | `powerful`, se houver billing ativo |
@@ -93,9 +94,20 @@ Lista obtida com `client.models.list()` (SDK `google-genai`) e uma chamada míni
 
 `ProviderPool.resolve(tier, provider=None) -> Target(provider, model)`. Se o tier não estiver configurado para um provider, ele cai para o tier inferior configurado e emite um warning.
 
-## 4. Resiliência (`llm/resilience.py`)
+## 4. Resiliência (`llm/pool.py`)
+
+```python
+@dataclass(frozen=True)
+class Target: provider: ProviderName; model: str; tier: Tier
+
+class ProviderPool:
+    def resolve(self, tier: Tier, provider: ProviderName | None = None) -> Target: ...
+    async def generate(self, target: Target, request: LLMRequest) -> PoolResult: ...  # response + attempts
+```
+- O timeout é aplicado pelo pool (`asyncio.wait_for`), não pelo `LLMRequest`.
+- `PoolResult.attempts` registra cada tentativa (`"gemini:rate_limited"`, `"gemini:ok"`) e vai para `StepResult.call_log`. Chamadas de reparo aparecem com prefixo `repair:`.
 - **Timeout** por request: `LLM_TIMEOUT_S` (padrão 30).
-- **Retry** (tenacity): só para `ProviderRateLimitError` e `ProviderUnavailableError`. Até `LLM_MAX_RETRIES` (padrão 2), backoff exponencial com jitter (0.5s, 1s, 2s…). Respeita `retry_after` se vier.
+- **Retry** (loop próprio com `sleep` injetável, determinístico nos testes): só para `ProviderRateLimitError` e `ProviderUnavailableError`. Até `LLM_MAX_RETRIES` (padrão 2), backoff exponencial com jitter (0.5s, 1s, 2s…). Respeita `retry_after` se vier.
 - **Fallback:** esgotados os retries, tenta o próximo provider de `LLM_FALLBACK_PROVIDERS` **no mesmo tier**. Isso fica registrado em `StepResult.attempts` e no trace.
 - `ProviderBadRequestError` **não** tem retry (é bug nosso).
 

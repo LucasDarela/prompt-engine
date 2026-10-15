@@ -1,8 +1,8 @@
-"""Tipos neutros de provedor (SPEC-006 §2). O protocolo LLMProvider entra na Fase 3."""
+"""Contrato neutro de provedor de LLM (SPEC-006 §2). O core depende só deste módulo."""
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal, Protocol
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -27,3 +27,33 @@ class Usage(BaseModel):
             input_tokens=self.input_tokens + other.input_tokens,
             output_tokens=self.output_tokens + other.output_tokens,
         )
+
+
+class LLMRequest(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    messages: list[Message]
+    model: str
+    temperature: float = 0.0
+    max_output_tokens: int = 1024
+    json_schema: dict[str, Any] | None = None  # presente => pedir saída JSON nativa
+    metadata: dict[str, str] = {}  # request_id, step: para logs e roteiro do Fake
+
+
+class LLMResponse(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    text: str
+    model: str
+    provider: str
+    usage: Usage = Usage()
+    latency_ms: int = 0
+    finish_reason: str = "STOP"
+
+
+class LLMProvider(Protocol):
+    """Adapter de um provedor. Deve traduzir falhas para ProviderError (core/errors.py)."""
+
+    name: str
+
+    async def generate(self, request: LLMRequest) -> LLMResponse: ...
