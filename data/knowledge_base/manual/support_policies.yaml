@@ -9,17 +9,17 @@
   category: billing
   title: Cobrança em duplicidade da mensalidade
   content: >-
-    Quando a mensalidade do Chopp Hub é cobrada em duplicidade, o valor excedente é estornado
-    em até 7 dias úteis após a confirmação pelo financeiro. Peça ao cliente as datas ou os
-    comprovantes das duas cobranças para abrir a solicitação.
-  tags: [estorno, duplicada, mensalidade, fatura]
+    Cobranças em duplicidade da mensalidade são analisadas pelo time financeiro. Peça ao cliente
+    as datas ou os comprovantes das duas cobranças; a solicitação será encaminhada ao financeiro,
+    que dará o retorno. Não informe prazos nem valores de devolução.
+  tags: [estorno, duplicada, mensalidade, fatura, cobrada duas vezes]
   source: manual-demo
 - id: kb-billing-002
   category: billing
   title: Valor da fatura diferente do contratado
   content: >-
-    Se a fatura veio com valor diferente do plano contratado, confirme o plano e o período
-    cobrado e encaminhe ao financeiro para conferência. Não confirme ajuste nem crédito antes
+    Se a fatura veio com valor diferente do plano contratado, o caso será conferido pelo
+    financeiro a partir do plano e do período cobrado. Não confirme ajuste nem crédito antes
     da análise.
   tags: [fatura, valor, plano, divergência]
   source: manual-demo
@@ -28,7 +28,7 @@
   title: Segunda via de boleto da mensalidade
   content: >-
     A segunda via do boleto da mensalidade pode ser solicitada ao suporte informando o mês de
-    referência. Boletos vencidos são reemitidos com nova data de vencimento.
+    referência; o pedido será encaminhado ao time financeiro, que envia o boleto.
   tags: [boleto, segunda via, vencido]
   source: manual-demo
 
@@ -39,8 +39,8 @@
   content: >-
     Peça para o motorista atualizar o Chopp Hub Driver pela loja de aplicativos, verificar a
     conexão com a internet e sair e entrar novamente na conta. Se o problema continuar e houver
-    entregas do dia pendentes, trate como urgente e encaminhe ao time técnico com o modelo do
-    celular e o horário do erro.
+    entregas do dia pendentes, o caso é urgente e será encaminhado ao time técnico; peça o modelo
+    do celular e o horário do erro.
   tags: [app, motorista, driver, sincronizar, travou]
   source: manual-demo
 - id: kb-technical-002
@@ -95,9 +95,9 @@
   category: shipping
   title: Rota não carrega ou entrega não aparece para o motorista
   content: >-
-    Confirme se a entrega foi atribuída ao motorista correto e se o app está atualizado. Se a
-    rota continuar sem carregar, encaminhe ao time técnico com o número do pedido e o nome do
-    motorista.
+    Peça para confirmar se a entrega foi atribuída ao motorista correto e se o app está
+    atualizado. Se a rota continuar sem carregar, o caso será analisado pelo time técnico com o
+    número do pedido e o nome do motorista.
   tags: [rota, mapa, entrega, motorista]
   source: manual-demo
 
@@ -107,7 +107,8 @@
   title: Cancelamento do plano
   content: >-
     Pedidos de cancelamento são registrados pelo suporte e um especialista de sucesso do cliente
-    entra em contato. O cancelamento da assinatura vale ao fim do período já pago.
+    entra em contato para tratar dos próximos passos. Não informe condições financeiras do
+    cancelamento.
   tags: [cancelar, plano, assinatura]
   source: manual-demo
 - id: kb-cancellation-002
@@ -134,8 +135,8 @@
   title: Ameaças jurídicas, Procon e contrato
   content: >-
     Mensagens que mencionam Procon, advogado, processo ou disputa contratual são sempre
-    encaminhadas a um atendente humano. Responda com cordialidade, registre o caso e não faça
-    promessas em nome da empresa.
+    encaminhadas a um atendente humano. Responda com cordialidade, informe que o caso será
+    analisado por um especialista e não faça promessas em nome da empresa.
   tags: [procon, advogado, processo, contrato, jurídico]
   source: manual-demo
 
@@ -152,7 +153,7 @@
   category: other
   title: Falar com um atendente humano
   content: >-
-    Sempre que o cliente pedir para falar com uma pessoa, registre o pedido e informe que um
-    atendente entrará em contato dentro do SLA da categoria.
+    Sempre que o cliente pedir para falar com uma pessoa, informe que o pedido será registrado e
+    que um atendente entrará em contato dentro do SLA da categoria.
   tags: [atendente, humano, contato]
   source: manual-demo

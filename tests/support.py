@@ -32,3 +32,12 @@ def make_llm_deps(script: dict[str, Any], **settings_kw: Any) -> tuple[LLMDeps, 
         settings=cfg,
     )
     return deps, fake
+
+
+def make_app_deps(script: dict[str, Any], **settings_kw: Any) -> tuple[Any, FakeProvider]:
+    """AppDeps completas (KB e SLA reais, prompts reais) com FakeProvider roteirizado."""
+    from prompt_engine.flows.deps import build_deps
+
+    fake = FakeProvider(script)
+    deps = build_deps(make_settings(**settings_kw), provider_overrides={"fake": fake})
+    return deps, fake

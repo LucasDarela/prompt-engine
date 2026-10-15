@@ -35,6 +35,11 @@ class PromptInjectionDetected(ShortCircuit):
         self.signals = list(signals)
 
 
+class UnauthorizedError(PromptEngineError):
+    code = "unauthorized"
+    public_message = "Credenciais ausentes ou inválidas."
+
+
 class ProviderError(PromptEngineError):
     """Falha ao falar com um provedor de LLM."""
 

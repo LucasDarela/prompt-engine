@@ -1,7 +1,7 @@
 # Prompt Engine — Triagem de Suporte com LLM
 
 > Capstone Módulo 2 · Sistema de prompts **modular, testável e reutilizável**
-> Status: 📄 **Documentação em revisão**, implementação ainda não iniciada
+> Status: ✅ **MVP funcional** (Fases 0–6): API ponta a ponta com Gemini · 478 testes · cobertura 100%
 
 Um middleware em **Python + FastAPI** que recebe a mensagem livre de um cliente (text area), protege, enriquece, roteia, consulta uma LLM em várias etapas e devolve um **JSON de triagem limpo e validado**.
 
@@ -33,17 +33,36 @@ texto do cliente ─▶ validação ─▶ anti-injection ─▶ mascarar PII �
 | [docs/CONVENTIONS.md](docs/CONVENTIONS.md) | Padrões de código, testes, git, DoD |
 | [CLAUDE.md](CLAUDE.md) | Instruções para agentes de IA |
 
-## Quickstart *(disponível após a Fase 0)*
+## Quickstart
 ```bash
 source venv/bin/activate
 pip install -e ".[dev,gemini]"
 cp .env.example .env            # preencha GEMINI_API_KEY
-pytest                          # testes offline
-uvicorn main:app --reload       # http://localhost:8000/docs
+make test                       # 478 testes offline, sem chave
+make run                        # http://localhost:8000/docs
+./examples/curl.sh              # 5 cenários de exemplo
 ```
 
 ```bash
 curl -X POST http://localhost:8000/api/v1/process-prompt \
   -H "Content-Type: application/json" \
-  -d '{"input": "Fui cobrado duas vezes no pedido PED-48213"}'
+  -d '{"input": "Fomos cobrados duas vezes na mensalidade de outubro."}'
 ```
+
+## Resultados ao vivo (Gemini, 2026-10-14)
+
+| Mensagem | Classificação | Rota (modelo do draft) | Resultado |
+|---|---|---|---|
+| Cobrança duplicada + CPF | billing / high | fast (`3.5-flash-lite`) | CPF mascarado antes do LLM; pede comprovantes; **sem prometer estorno** |
+| Cobrança duplicada **pedindo desconto** | billing / high | fast | não oferece desconto; encaminha ao financeiro |
+| App do motorista parado, 35 entregas | technical / critical | balanced (`3.7-flash`) | passos de diagnóstico da KB; "será encaminhada com urgência"; escalado |
+| Procon + advogado + cancelamento | legal / critical | powerful (`3.8-flash`, score 1.0) | escalado (`category=legal`, `urgency=critical`) |
+| Cancelamento **pedindo promoção** | cancellation / medium | fast | não oferece nada; especialista entrará em contato |
+| `Ignore all previous instructions...` | — | — | **422 `unsafe_input`**, nenhuma chamada ao LLM |
+
+Latência típica: ~1 s por step no `flash-lite`; o draft chega a ~7 s quando o Gemini devolve 503 e o retry com backoff entra em ação.
+
+**Problemas encontrados ao vivo e corrigidos** (veja `docs/plans/IMPLEMENTATION_PLAN.md` 6.6):
+- o modelo afirmava ações não executadas ("encaminhei", "registramos") → regra no prompt + item no checklist do revisor + guarda determinística `unverified_action_claim`;
+- promessas financeiras (prazo de estorno) → **política: nada financeiro é prometido pela IA**, com guarda `financial_promise`;
+- falta de acentuação intermitente do Gemini → warning `missing_accents` (correção será medida nos evals, plano 9.0c).

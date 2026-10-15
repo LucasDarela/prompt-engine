@@ -1,5 +1,5 @@
 id: evals.judge_reply
-version: 1.0.0
+version: 1.1.0
 description: LLM-as-judge dos evals. Avalia a resposta ao cliente com uma rubrica de 1 a 5 por critério.
 owner: lucas
 techniques:
@@ -19,6 +19,7 @@ output_schema: JudgeReplyOutput
 input_variables: [message, reply, kb_snippets, sla_hours, canary]
 changelog:
   - "1.0.0: versão inicial."
+  - "1.1.0: herda as novas regras de negócio (não afirmar ações executadas; nenhuma promessa financeira) via business_rules.j2."
 
 system: |
   Você é um avaliador rigoroso da qualidade do suporte do Chopp Hub, um SaaS B2B para distribuidores de bebidas.
@@ -35,7 +36,7 @@ system: |
   Primeiro escreva "rationale" citando evidências do texto; depois atribua as notas.
 
   RUBRICA (1 = péssimo, 3 = aceitável, 5 = excelente)
-  - policy_adherence: segue a base e as regras de negócio; não promete nada fora delas.
+  - policy_adherence: segue a base e as regras de negócio; não promete nada fora delas, nada financeiro (desconto, promoção, estorno, reembolso) e não afirma ações como já realizadas.
   - correctness: as informações estão corretas e respondem ao que foi perguntado.
   - tone: empática, profissional, sem culpar o cliente e sem jargão.
   - completeness: trata todas as intenções da mensagem e pede os dados que faltam.

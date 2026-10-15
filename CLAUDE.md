@@ -33,6 +33,7 @@ uvicorn main:app --reload       # API em http://localhost:8000/docs
 - **`api/` não tem lógica de negócio.**
 - O JSON schema nos prompts vem do Pydantic (`output/schemas.py`). Não duplique schemas à mão.
 - Saída inválida **nunca** sobe exceção para o usuário: reparo → fallback seguro com `needs_human=true`.
+- **Nada financeiro é prometido pela IA** (desconto, promoção, estorno, reembolso, crédito, prazos de devolução), nem em few-shot, nem na KB. **A IA não afirma ações já executadas.** Ambas têm guarda em `flows/support_triage.py`.
 - Um commit por task, em Conventional Commits, e marque o checkbox no plano.
 
 ## Mapa rápido

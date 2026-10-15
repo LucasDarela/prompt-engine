@@ -66,7 +66,20 @@ falha final → FALLBACK SEGURO por step
 Todo fallback adiciona um warning em `ctx.warnings` e marca `meta.degraded=true` na resposta.
 
 ## 4. Regras de consistência (pós-validação, `AssembleTriage`)
-- `needs_human = draft.needs_human OR security.verdict=="suspicious" OR urgency=="critical" OR category=="legal" OR confidence < CONFIDENCE_MIN (0.6) OR qualquer fallback`.
+- `needs_human` é verdadeiro se **qualquer** condição abaixo valer; as que valeram vão para `TriageResult.escalation_reasons`:
+
+  | Razão | Condição |
+  |---|---|
+  | `draft_requested_human` | o draft pediu humano |
+  | `security=suspicious` | injection na zona cinzenta |
+  | `urgency=critical` | urgência crítica |
+  | `category=legal` | tema jurídico |
+  | `low_confidence` | `confidence < CONFIDENCE_MIN` (0.6) |
+  | `degraded` | algum step usou fallback |
+  | `unverified_action_claim` | a resposta afirma ação já feita ("registramos", "encaminhei"); o assistente não executa ações |
+  | `financial_promise` | a resposta menciona desconto/promoção/cupom/bônus ou promete estorno/reembolso/crédito/prazo. **Política do Chopp Hub: nada financeiro é prometido pela IA** |
+
+- Warning `missing_accents` (não escala): ≥ 2 palavras comuns sem acento ("voce", "nao", "sera"…). O Gemini omite acentos de forma intermitente em JSON mode; ver plano 9.0c.
 - Se o review reprovou, `suggested_reply = review.revised_reply`.
 - `summary` vem de `DraftOutput.summary`. O `classify.reasoning` é interno e **nunca** vai para a resposta.
 - Strings passam por `clean_text`: sem markdown (`**`, `#`), sem placeholders desconhecidos e com espaços normalizados.

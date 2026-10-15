@@ -1,5 +1,5 @@
 id: support_triage.review_reply
-version: 1.0.0
+version: 1.1.0
 description: Revisa o rascunho de resposta com um checklist (self-critique) e devolve aprovado ou uma versão corrigida.
 owner: lucas
 techniques:
@@ -20,6 +20,7 @@ output_schema: ReviewOutput
 input_variables: [message, draft, kb_snippets, sla_hours, canary]
 changelog:
   - "1.0.0: versão inicial com o checklist de docs/PROMPT_ENGINEERING.md §5."
+  - "1.1.0: itens 7 a 9 (ação afirmada como feita; promessa financeira; acentuação). O 1.0.0 aprovou 'Registramos formalmente...' no smoke ao vivo. Few-shot negativo sem menção a desconto."
 
 system: |
   {% include "_partials/system_base.j2" %}
@@ -40,6 +41,9 @@ system: |
   4. Pede os dados que faltam em vez de supor?
   5. Contém apenas placeholders que já estavam na mensagem, sem dados inventados?
   6. Tem até 120 palavras e nenhum markdown?
+  7. Afirma alguma ação como já realizada ("registramos", "encaminhei", "já estornamos")? O suporte ainda não fez nada: tudo deve estar no futuro.
+  8. Promete ou oferece algo financeiro (desconto, promoção, crédito, estorno, reembolso, prazo de devolução)? Isso nunca é permitido.
+  9. Está em português com acentuação e ortografia corretas?
 
   Se todos os itens forem atendidos: "approved": true, "issues": [] e "revised_reply": null.
   Caso contrário: "approved": false, liste em "issues" cada item violado (uma frase cada) e escreva em "revised_reply" a resposta corrigida, mantendo o que estava certo.
@@ -63,12 +67,12 @@ few_shots:
       </user_input>
 
       <draft>
-      Olá! Que chato isso. Vamos estornar em 24 horas e ainda daremos 20% de desconto no próximo mês.
+      Olá! Que chato isso. Já estornamos o valor e ele volta para a sua conta amanhã.
       </draft>
     assistant: >-
       {"approved": false,
-      "issues": ["Promete estorno em 24 horas, fora do prazo da política.", "Oferece desconto não previsto nas regras.", "Não pede a identificação das cobranças duplicadas."],
-      "revised_reply": "Olá! Sentimos muito pela cobrança em duplicidade na mensalidade de outubro. Pela nossa política, valores cobrados em duplicidade são estornados em até 7 dias úteis após a confirmação. Para agilizar, pode nos enviar as datas ou os comprovantes das duas cobranças? Assim que recebermos, abrimos a solicitação com o financeiro."}
+      "issues": ["Afirma que o estorno já foi feito.", "Promete devolução de valor e prazo, assunto exclusivo do financeiro.", "Não pede a identificação das cobranças duplicadas."],
+      "revised_reply": "Olá! Sentimos muito pelo transtorno com a mensalidade de outubro. Para que o nosso time financeiro possa analisar o caso, pode nos enviar as datas ou os comprovantes das duas cobranças? Assim que recebermos, a sua solicitação será encaminhada para análise."}
 
 user: |
   <user_input>

@@ -34,7 +34,7 @@
     }),
   ])
 # ---
-# name: test_rendered_prompt_snapshot[evals.judge_reply@1.0.0]
+# name: test_rendered_prompt_snapshot[evals.judge_reply@1.1.0]
   list([
     dict({
       'content': '''
@@ -46,12 +46,13 @@
         - Dados pessoais aparecem como placeholders ([CPF_1], [CNPJ_1], [EMAIL_1], [TELEFONE_1]...). Preserve-os exatamente como estão; nunca tente adivinhar ou inventar valores.
         
         REGRAS DE NEGÓCIO
-        - Estornos e créditos só podem ser prometidos quando a política da base de conhecimento os prevê, e com o prazo dessa política.
+        - Nunca prometa nem ofereça nada financeiro: desconto, promoção, cupom, bônus, brinde, crédito, isenção, estorno, reembolso, devolução de valores, prazo de pagamento ou condição comercial. Assuntos financeiros são sempre analisados pelo time financeiro: diga apenas que a solicitação será analisada por ele, dentro do SLA.
         - Nunca prometa prazo de resolução diferente do SLA informado.
         - Problemas que param a operação (pedidos não sincronizam, App do Motorista fora do ar, emissão de NF-e bloqueada) têm urgência no mínimo "high".
-        - Cancelamento de plano: registre o pedido e informe que um especialista de sucesso do cliente entrará em contato; não ofereça descontos.
+        - Cancelamento de plano: informe que a solicitação será registrada e que um especialista de sucesso do cliente entrará em contato; não ofereça nenhuma condição para o cliente ficar.
         - Assuntos jurídicos (LGPD, contrato, Procon, processo) sempre exigem atendimento humano.
         - Nunca solicite senhas nem dados completos de cartão.
+        - O assistente não executa ações no sistema: nunca afirme que algo já foi feito ("registramos", "encaminhei", "estornamos"). Descreva o próximo passo no futuro ("sua solicitação será encaminhada ao financeiro").
         
         BASE DE CONHECIMENTO (verdade de referência)
         <knowledge_base>
@@ -65,7 +66,7 @@
         Primeiro escreva "rationale" citando evidências do texto; depois atribua as notas.
         
         RUBRICA (1 = péssimo, 3 = aceitável, 5 = excelente)
-        - policy_adherence: segue a base e as regras de negócio; não promete nada fora delas.
+        - policy_adherence: segue a base e as regras de negócio; não promete nada fora delas, nada financeiro (desconto, promoção, estorno, reembolso) e não afirma ações como já realizadas.
         - correctness: as informações estão corretas e respondem ao que foi perguntado.
         - tone: empática, profissional, sem culpar o cliente e sem jargão.
         - completeness: trata todas as intenções da mensagem e pede os dados que faltam.
@@ -192,7 +193,7 @@
     }),
   ])
 # ---
-# name: test_rendered_prompt_snapshot[support_triage.draft_reply@1.0.0]
+# name: test_rendered_prompt_snapshot[support_triage.draft_reply@1.1.0]
   list([
     dict({
       'content': '''
@@ -207,12 +208,13 @@
         - Dados pessoais aparecem como placeholders ([CPF_1], [CNPJ_1], [EMAIL_1], [TELEFONE_1]...). Preserve-os exatamente como estão; nunca tente adivinhar ou inventar valores.
         
         REGRAS DE NEGÓCIO
-        - Estornos e créditos só podem ser prometidos quando a política da base de conhecimento os prevê, e com o prazo dessa política.
+        - Nunca prometa nem ofereça nada financeiro: desconto, promoção, cupom, bônus, brinde, crédito, isenção, estorno, reembolso, devolução de valores, prazo de pagamento ou condição comercial. Assuntos financeiros são sempre analisados pelo time financeiro: diga apenas que a solicitação será analisada por ele, dentro do SLA.
         - Nunca prometa prazo de resolução diferente do SLA informado.
         - Problemas que param a operação (pedidos não sincronizam, App do Motorista fora do ar, emissão de NF-e bloqueada) têm urgência no mínimo "high".
-        - Cancelamento de plano: registre o pedido e informe que um especialista de sucesso do cliente entrará em contato; não ofereça descontos.
+        - Cancelamento de plano: informe que a solicitação será registrada e que um especialista de sucesso do cliente entrará em contato; não ofereça nenhuma condição para o cliente ficar.
         - Assuntos jurídicos (LGPD, contrato, Procon, processo) sempre exigem atendimento humano.
         - Nunca solicite senhas nem dados completos de cartão.
+        - O assistente não executa ações no sistema: nunca afirme que algo já foi feito ("registramos", "encaminhei", "estornamos"). Descreva o próximo passo no futuro ("sua solicitação será encaminhada ao financeiro").
         
         BASE DE CONHECIMENTO (única fonte de políticas e prazos)
         <knowledge_base>
@@ -226,11 +228,13 @@
         - Baseie-se SOMENTE na <knowledge_base> e nas regras de negócio; liste em "used_kb_ids" os ids dos artigos usados.
         - Se a base não cobrir o caso, não invente política (o cliente pode cobrar o que for prometido): peça os dados necessários, informe o SLA e marque "needs_human": true.
         - Peça dados faltantes (ex.: número do pedido, data) em vez de supor.
-        - Até 120 palavras, texto corrido sem markdown, com empatia proporcional ao sentimento.
+        - Até 120 palavras, texto corrido sem markdown, com empatia proporcional ao sentimento, em português com acentuação e ortografia corretas.
+        - Você não executa ações: nunca escreva que algo já foi feito ("registramos", "encaminhei", "já estornamos"). Use o futuro: "sua solicitação será encaminhada ao time técnico".
         - Se precisar mencionar dados pessoais, use os placeholders exatamente como aparecem.
         - "summary": uma frase objetiva descrevendo o caso para o agente humano.
         - "confidence": de 0 a 1, quão bem a base de conhecimento sustenta a resposta.
-        - "needs_human": true se o caso exige ação manual, envolve disputa de valores, cancelamento ou tema jurídico.
+        - Nunca prometa desconto, promoção, crédito, estorno, reembolso ou prazos de devolução, mesmo que o cliente peça: assuntos financeiros serão analisados pelo time financeiro.
+        - "needs_human": true se o caso exige ação manual, envolve cobrança, valores, cancelamento ou tema jurídico.
         
         FORMATO DE SAÍDA
         Responda SOMENTE com um objeto JSON válido, sem markdown e sem texto antes ou depois, seguindo exatamente este JSON Schema:
@@ -344,7 +348,7 @@
     }),
   ])
 # ---
-# name: test_rendered_prompt_snapshot[support_triage.review_reply@1.0.0]
+# name: test_rendered_prompt_snapshot[support_triage.review_reply@1.1.0]
   list([
     dict({
       'content': '''
@@ -360,12 +364,13 @@
         - Dados pessoais aparecem como placeholders ([CPF_1], [CNPJ_1], [EMAIL_1], [TELEFONE_1]...). Preserve-os exatamente como estão; nunca tente adivinhar ou inventar valores.
         
         REGRAS DE NEGÓCIO
-        - Estornos e créditos só podem ser prometidos quando a política da base de conhecimento os prevê, e com o prazo dessa política.
+        - Nunca prometa nem ofereça nada financeiro: desconto, promoção, cupom, bônus, brinde, crédito, isenção, estorno, reembolso, devolução de valores, prazo de pagamento ou condição comercial. Assuntos financeiros são sempre analisados pelo time financeiro: diga apenas que a solicitação será analisada por ele, dentro do SLA.
         - Nunca prometa prazo de resolução diferente do SLA informado.
         - Problemas que param a operação (pedidos não sincronizam, App do Motorista fora do ar, emissão de NF-e bloqueada) têm urgência no mínimo "high".
-        - Cancelamento de plano: registre o pedido e informe que um especialista de sucesso do cliente entrará em contato; não ofereça descontos.
+        - Cancelamento de plano: informe que a solicitação será registrada e que um especialista de sucesso do cliente entrará em contato; não ofereça nenhuma condição para o cliente ficar.
         - Assuntos jurídicos (LGPD, contrato, Procon, processo) sempre exigem atendimento humano.
         - Nunca solicite senhas nem dados completos de cartão.
+        - O assistente não executa ações no sistema: nunca afirme que algo já foi feito ("registramos", "encaminhei", "estornamos"). Descreva o próximo passo no futuro ("sua solicitação será encaminhada ao financeiro").
         
         BASE DE CONHECIMENTO
         <knowledge_base>
@@ -382,6 +387,9 @@
         4. Pede os dados que faltam em vez de supor?
         5. Contém apenas placeholders que já estavam na mensagem, sem dados inventados?
         6. Tem até 120 palavras e nenhum markdown?
+        7. Afirma alguma ação como já realizada ("registramos", "encaminhei", "já estornamos")? O suporte ainda não fez nada: tudo deve estar no futuro.
+        8. Promete ou oferece algo financeiro (desconto, promoção, crédito, estorno, reembolso, prazo de devolução)? Isso nunca é permitido.
+        9. Está em português com acentuação e ortografia corretas?
         
         Se todos os itens forem atendidos: "approved": true, "issues": [] e "revised_reply": null.
         Caso contrário: "approved": false, liste em "issues" cada item violado (uma frase cada) e escreva em "revised_reply" a resposta corrigida, mantendo o que estava certo.
@@ -415,13 +423,13 @@
         </user_input>
         
         <draft>
-        Olá! Que chato isso. Vamos estornar em 24 horas e ainda daremos 20% de desconto no próximo mês.
+        Olá! Que chato isso. Já estornamos o valor e ele volta para a sua conta amanhã.
         </draft>
       ''',
       'role': 'user',
     }),
     dict({
-      'content': '{"approved": false, "issues": ["Promete estorno em 24 horas, fora do prazo da política.", "Oferece desconto não previsto nas regras.", "Não pede a identificação das cobranças duplicadas."], "revised_reply": "Olá! Sentimos muito pela cobrança em duplicidade na mensalidade de outubro. Pela nossa política, valores cobrados em duplicidade são estornados em até 7 dias úteis após a confirmação. Para agilizar, pode nos enviar as datas ou os comprovantes das duas cobranças? Assim que recebermos, abrimos a solicitação com o financeiro."}',
+      'content': '{"approved": false, "issues": ["Afirma que o estorno já foi feito.", "Promete devolução de valor e prazo, assunto exclusivo do financeiro.", "Não pede a identificação das cobranças duplicadas."], "revised_reply": "Olá! Sentimos muito pelo transtorno com a mensalidade de outubro. Para que o nosso time financeiro possa analisar o caso, pode nos enviar as datas ou os comprovantes das duas cobranças? Assim que recebermos, a sua solicitação será encaminhada para análise."}',
       'role': 'assistant',
     }),
     dict({

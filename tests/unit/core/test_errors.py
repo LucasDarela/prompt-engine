@@ -18,6 +18,7 @@ from prompt_engine.core import errors as e
         (e.PromptLibraryError("x.yaml: tier"), "prompt_library_invalid"),
         (e.KnowledgeBaseError("kb.yaml: category"), "kb_invalid"),
         (e.FlowNotFoundError("nope"), "flow_not_found"),
+        (e.UnauthorizedError(), "unauthorized"),
         (e.PipelineMisconfigured("route ausente"), "pipeline_misconfigured"),
     ],
 )

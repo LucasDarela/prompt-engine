@@ -81,6 +81,7 @@ class TriageResult(StrictModel):
     suggested_reply: str
     needs_human: bool
     confidence: float = Field(ge=0, le=1)
+    escalation_reasons: list[str] = []  # por que precisa de humano (vazio se needs_human=false)
 
 
 SCHEMAS: dict[str, type[BaseModel]] = {

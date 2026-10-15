@@ -80,11 +80,13 @@
 - [ ] **5.8** 👤 **Revisão humana (Lucas)** dos 84 snippets gerados: remover termos internos apontados em `review_notes`, confirmar se as funcionalidades dos specs já estão no ar e marcar `reviewed: true`. Validar também os itens `manual-demo` e o `sla.yaml`.
 
 ## Fase 6 — Flow + API (SPEC-002 §5, SPEC-001) — **MVP**
-- [ ] **6.1** `AssembleTriage` com a regra de `needs_human` → OUT-8
-- [ ] **6.2** `flows/registry.py` + `flows/support_triage.py` → CORE-7, CORE-8
-- [ ] **6.3** Teste da invariante de PII no fluxo completo → CORE-6
-- [ ] **6.4** `api/schemas.py`, `api/routes.py`, `api/deps.py`, `api/app.py` (request id, CORS, API key, handlers) → API-1..8
-- [ ] **6.5** Rodar manualmente com Gemini real (`make run` + `examples/curl.sh`) e registrar a saída no README
+- [x] **6.1** `AssembleTriage` com a regra de `needs_human` → OUT-8
+- [x] **6.2** `flows/registry.py` + `flows/support_triage.py` → CORE-7, CORE-8
+- [x] **6.3** Teste da invariante de PII no fluxo completo → CORE-6
+- [x] **6.4** `api/schemas.py`, `api/routes.py`, `api/deps.py`, `api/app.py` (request id, CORS, API key, handlers) → API-1..8
+- [x] **6.5** Rodar manualmente com Gemini real (`make run` + `examples/curl.sh`) e registrar a saída no README
+- [x] **6.6** (achados do teste ao vivo) Regras "IA não executa ações" e "nada financeiro é prometido" em prompt + review + guarda determinística (`unverified_action_claim`, `financial_promise`); warning `missing_accents`; latência por step no debug
+- [ ] **6.7** Fallback entre **modelos do mesmo provedor**: com só a chave do Gemini, um 503 persistente num modelo derruba a request (visto ao vivo em 2026-10-14) mesmo com outros modelos Gemini respondendo. Ex.: `balanced` em 503 → tentar `powerful`, depois `fast`
 
 ## Fase 7 — Observabilidade (SPEC-008)
 - [ ] **7.1** `observability/logging.py` (structlog, filtros anti-PII) → OBS-5
@@ -105,6 +107,7 @@
 - [ ] **9.3** Evals de validade, acurácia, needs_human, consistência, injection e PII leak
 - [ ] **9.4** `evals.judge_reply` + `test_reply_quality`
 - [ ] **9.5** Gerador de relatório `reports/eval-*.{json,md}`
+- [ ] **9.0c** Medir a frequência do warning `missing_accents` nos evals (Gemini omite acentos de forma intermitente em JSON mode, inclusive na `revised_reply` do review). Se relevante: tier mínimo `balanced` no draft, ou reparo dirigido.
 - [ ] **9.0b** Ampliar `injection_redteam.jsonl` com ataques **escritos por outra pessoa** (os atuais foram escritos junto com os padrões; risco de sobreajuste) e medir recall do juiz real.
 - [ ] **9.0** Corrigir extração de entidades do `classify`: no smoke de 2026-10-14 o modelo pôs `"amount": "outubro"` (mês no campo de valor). Medir no golden dataset, ajustar critério/few-shot, subir MINOR.
 - [ ] **9.6** Rodar com o Gemini, iterar prompts até atingir os limiares e registrar a tabela de resultados no README

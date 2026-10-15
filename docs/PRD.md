@@ -26,6 +26,11 @@ Um **middleware de prompts em Python (FastAPI)** que fica entre o frontend (text
 5. **Valida a saída**: JSON contra um schema, com reparo automático e fallback seguro.
 6. **Observa**: registra o input original (redigido), os prompts finais, as respostas, os modelos, os tokens, a latência e o custo. Esses traces alimentam os testes.
 
+### Regras de negócio inegociáveis
+- **Nada financeiro é prometido pela IA:** desconto, promoção, cupom, bônus, crédito, isenção, estorno, reembolso, prazo de devolução ou condição de pagamento. Assuntos financeiros são encaminhados ao time financeiro.
+- **A IA não executa ações:** nunca afirma que algo já foi feito; descreve o próximo passo no futuro.
+- Ambas são garantidas em 3 camadas: prompt (`business_rules.j2`), autocrítica (`review_reply`) e guarda determinística (`AssembleTriage`).
+
 ## 3. Usuários
 
 | Persona | Necessidade |

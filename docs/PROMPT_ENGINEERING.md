@@ -88,6 +88,11 @@ O revisor verifica e lista as violações em `issues`:
 4. Pede os dados que faltam (ex.: número do pedido) em vez de supor?
 5. Contém apenas placeholders conhecidos, sem dados inventados?
 6. Tamanho adequado (≤ 120 palavras), sem markdown?
+7. Afirma alguma ação como já realizada ("registramos", "encaminhei")? Tudo deve estar no futuro.
+8. Promete ou oferece algo financeiro (desconto, promoção, crédito, estorno, reembolso, prazo de devolução)? **Nunca permitido.**
+9. Português com acentuação e ortografia corretas?
+
+> Os itens 7 e 8 também têm **guarda determinística** no `AssembleTriage` (`unverified_action_claim`, `financial_promise`): se escaparem do prompt e do revisor, a resposta é escalada para um humano.
 
 ## 6. Processo de mudança de prompt
 

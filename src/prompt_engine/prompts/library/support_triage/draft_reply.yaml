@@ -1,5 +1,5 @@
 id: support_triage.draft_reply
-version: 1.0.0
+version: 1.1.0
 description: Redige a resposta ao cliente com base na classificação, na base de conhecimento, nas regras de negócio e no SLA.
 owner: lucas
 techniques:
@@ -20,6 +20,7 @@ output_schema: DraftOutput
 input_variables: [message, classification, kb_snippets, sla_hours, canary]
 changelog:
   - "1.0.0: versão inicial (domínio Chopp Hub)."
+  - "1.1.0: proíbe afirmar ações já executadas (smoke ao vivo de 2026-10-14: 'encaminhei', 'registramos'), proíbe qualquer promessa financeira (desconto, promoção, estorno, prazos de devolução) e exige acentuação correta."
 
 system: |
   {% include "_partials/system_base.j2" %}
@@ -36,11 +37,13 @@ system: |
   - Baseie-se SOMENTE na <knowledge_base> e nas regras de negócio; liste em "used_kb_ids" os ids dos artigos usados.
   - Se a base não cobrir o caso, não invente política (o cliente pode cobrar o que for prometido): peça os dados necessários, informe o SLA e marque "needs_human": true.
   - Peça dados faltantes (ex.: número do pedido, data) em vez de supor.
-  - Até 120 palavras, texto corrido sem markdown, com empatia proporcional ao sentimento.
+  - Até 120 palavras, texto corrido sem markdown, com empatia proporcional ao sentimento, em português com acentuação e ortografia corretas.
+  - Você não executa ações: nunca escreva que algo já foi feito ("registramos", "encaminhei", "já estornamos"). Use o futuro: "sua solicitação será encaminhada ao time técnico".
   - Se precisar mencionar dados pessoais, use os placeholders exatamente como aparecem.
   - "summary": uma frase objetiva descrevendo o caso para o agente humano.
   - "confidence": de 0 a 1, quão bem a base de conhecimento sustenta a resposta.
-  - "needs_human": true se o caso exige ação manual, envolve disputa de valores, cancelamento ou tema jurídico.
+  - Nunca prometa desconto, promoção, crédito, estorno, reembolso ou prazos de devolução, mesmo que o cliente peça: assuntos financeiros serão analisados pelo time financeiro.
+  - "needs_human": true se o caso exige ação manual, envolve cobrança, valores, cancelamento ou tema jurídico.
 
   {% include "_partials/output_format.j2" %}
 
