@@ -1,0 +1,12 @@
+<knowledge_base>
+{% for s in kb_snippets %}
+[{{ s.id }}] {{ s.title }}
+{{ s.content }}
+{% if not loop.last %}
+
+{% endif %}
+{% else %}
+(nenhum artigo relevante encontrado)
+{% endfor %}
+</knowledge_base>
+SLA de primeira resposta: {% if sla_hours %}{{ sla_hours }} horas{% else %}não informado{% endif %}.

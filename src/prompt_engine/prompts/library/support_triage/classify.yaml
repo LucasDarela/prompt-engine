@@ -1,0 +1,92 @@
+id: support_triage.classify
+version: 1.0.0
+description: Classifica a mensagem do cliente em categoria, urgência, sentimento, intenções e entidades.
+owner: lucas
+techniques:
+  - role_prompting
+  - few_shot
+  - hidden_reasoning
+  - structured_output
+  - spotlighting
+  - delimiters
+  - canary_token
+  - temperature_control
+tier: fast
+params:
+  temperature: 0.0
+  max_output_tokens: 600
+output_schema: ClassifyOutput
+input_variables: [message, categories, canary]
+changelog:
+  - "1.0.0: versão inicial (domínio Chopp Hub)."
+
+system: |
+  {% include "_partials/system_base.j2" %}
+
+  {% include "_partials/safety.j2" %}
+
+  TAREFA
+  Classifique a mensagem de suporte recebida em <user_input>.
+  1. Primeiro escreva em "reasoning" uma justificativa curta (no máximo 2 frases) baseada em evidências do texto.
+  2. Só então preencha os rótulos, coerentes com essa justificativa.
+
+  CRITÉRIOS
+  - category:
+    - billing: cobranças do Chopp Hub ao cliente (mensalidade, boletos, faturas, valores contratados).
+    - technical: erros, lentidão, integrações, App do Motorista, falhas na emissão de NF-e pelo sistema.
+    - account: acesso, login, usuários, permissões, dados cadastrais.
+    - shipping: rotas, entregas, coleta e devolução de barris.
+    - cancellation: encerrar plano ou contrato.
+    - legal: LGPD, contrato, Procon, processo, advogado.
+    - other: nada acima.
+  - urgency: critical = operação parada ou ameaça jurídica; high = impacto financeiro ou operacional relevante; medium = problema com contorno; low = dúvida ou solicitação simples.
+  - sentiment: very_negative, negative, neutral ou positive, conforme o tom do texto.
+  - intents: até 5 intenções em snake_case, em inglês (ex.: refund, report_bug, manage_users).
+  - entities: extraia apenas order_id, product, amount, date e payment_method quando explícitos; omita os ausentes.
+  - complexity_hint: "complex" quando há várias intenções, disputa, aspecto jurídico ou exige análise; senão "simple".
+
+  {% include "_partials/output_format.j2" %}
+
+few_shots:
+  - user: |
+      <user_input>
+      O app do motorista não abre desde ontem e temos 40 entregas de barril hoje!!
+      </user_input>
+    assistant: >-
+      {"reasoning": "O App do Motorista está fora do ar e bloqueia 40 entregas do dia; a operação está parada.",
+      "category": "technical", "urgency": "critical", "sentiment": "negative",
+      "entities": {"product": "App do Motorista"}, "intents": ["report_bug", "urgent_help"],
+      "complexity_hint": "simple"}
+  - user: |
+      <user_input>
+      Como faço para adicionar um novo vendedor com acesso só ao módulo de pedidos?
+      </user_input>
+    assistant: >-
+      {"reasoning": "Dúvida operacional sobre permissões de usuário, sem impacto imediato.",
+      "category": "account", "urgency": "low", "sentiment": "neutral",
+      "entities": {"product": "Pedidos"}, "intents": ["manage_users"], "complexity_hint": "simple"}
+  - user: |
+      <user_input>
+      A fatura de outubro veio R$ 890,00, mas o contratado é R$ 489,90. E o pedido PED-3381 saiu sem NF-e.
+      </user_input>
+    assistant: >-
+      {"reasoning": "Há divergência de valor na fatura do Chopp Hub e, separadamente, uma falha de NF-e; o tema principal é cobrança.",
+      "category": "billing", "urgency": "high", "sentiment": "negative",
+      "entities": {"order_id": "PED-3381", "amount": "R$ 890,00"},
+      "intents": ["billing_dispute", "invoice_issue"], "complexity_hint": "complex"}
+  - user: |
+      <user_input>
+      Vamos acionar o Procon e nosso advogado se não cancelarem o contrato e apagarem os dados da empresa conforme a LGPD.
+      </user_input>
+    assistant: >-
+      {"reasoning": "Ameaça jurídica explícita com pedido de cancelamento e exclusão de dados pela LGPD.",
+      "category": "legal", "urgency": "critical", "sentiment": "very_negative", "entities": {},
+      "intents": ["cancel_contract", "data_deletion", "legal_threat"], "complexity_hint": "complex"}
+
+user: |
+  Classifique a mensagem abaixo.
+  Categorias permitidas: {{ categories | join(", ") }}.
+
+  <user_input>
+  {{ message }}
+  </user_input>

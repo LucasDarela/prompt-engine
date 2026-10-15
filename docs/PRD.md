@@ -14,6 +14,9 @@ Hoje, para usar uma LLM nesse fluxo, o texto do cliente vai **cru** para o model
 
 ## 2. Solução
 
+> **Cliente-alvo:** o suporte do **Chopp Hub**, um SaaS B2B para distribuidores de bebidas (pedidos, rotas e entregas, App do Motorista, estoque de barris, faturamento e NF-e). Quem escreve são usuários das distribuidoras.
+
+
 Um **middleware de prompts em Python (FastAPI)** que fica entre o frontend (text area) e a LLM. Ele recebe a intenção crua do usuário e:
 
 1. **Protege**: valida a entrada, detecta prompt injection e mascara PII antes de qualquer chamada externa.

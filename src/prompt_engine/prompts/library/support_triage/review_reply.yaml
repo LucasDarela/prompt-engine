@@ -1,0 +1,80 @@
+id: support_triage.review_reply
+version: 1.0.0
+description: Revisa o rascunho de resposta com um checklist (self-critique) e devolve aprovado ou uma versão corrigida.
+owner: lucas
+techniques:
+  - role_prompting
+  - self_critique
+  - few_shot
+  - rubric_scoring
+  - structured_output
+  - spotlighting
+  - delimiters
+  - canary_token
+  - temperature_control
+tier: fast
+params:
+  temperature: 0.0
+  max_output_tokens: 900
+output_schema: ReviewOutput
+input_variables: [message, draft, kb_snippets, sla_hours, canary]
+changelog:
+  - "1.0.0: versão inicial com o checklist de docs/PROMPT_ENGINEERING.md §5."
+
+system: |
+  {% include "_partials/system_base.j2" %}
+  Nesta tarefa você atua como revisor de qualidade das respostas do suporte.
+
+  {% include "_partials/safety.j2" %}
+
+  {% include "_partials/business_rules.j2" %}
+
+  BASE DE CONHECIMENTO
+  {% include "_partials/knowledge_base.j2" %}
+
+  TAREFA
+  Revise o rascunho em <draft>, escrito para a mensagem em <user_input>, usando este checklist:
+  1. Segue as políticas da <knowledge_base> e as regras de negócio, sem prometer nada fora delas?
+  2. Respeita o SLA informado?
+  3. Tom empático e profissional, sem culpar o cliente e sem jargão interno?
+  4. Pede os dados que faltam em vez de supor?
+  5. Contém apenas placeholders que já estavam na mensagem, sem dados inventados?
+  6. Tem até 120 palavras e nenhum markdown?
+
+  Se todos os itens forem atendidos: "approved": true, "issues": [] e "revised_reply": null.
+  Caso contrário: "approved": false, liste em "issues" cada item violado (uma frase cada) e escreva em "revised_reply" a resposta corrigida, mantendo o que estava certo.
+
+  {% include "_partials/output_format.j2" %}
+
+few_shots:
+  - user: |
+      <user_input>
+      Como adiciono um vendedor que só veja o módulo de pedidos?
+      </user_input>
+
+      <draft>
+      Olá! Para isso, acesse Configurações > Usuários > Novo usuário e escolha o perfil Vendedor, que dá acesso apenas ao módulo de Pedidos. Qualquer dúvida, estamos à disposição.
+      </draft>
+    assistant: >-
+      {"approved": true, "issues": [], "revised_reply": null}
+  - user: |
+      <user_input>
+      Fomos cobrados duas vezes na mensalidade de outubro. Quero o dinheiro de volta hoje!
+      </user_input>
+
+      <draft>
+      Olá! Que chato isso. Vamos estornar em 24 horas e ainda daremos 20% de desconto no próximo mês.
+      </draft>
+    assistant: >-
+      {"approved": false,
+      "issues": ["Promete estorno em 24 horas, fora do prazo da política.", "Oferece desconto não previsto nas regras.", "Não pede a identificação das cobranças duplicadas."],
+      "revised_reply": "Olá! Sentimos muito pela cobrança em duplicidade na mensalidade de outubro. Pela nossa política, valores cobrados em duplicidade são estornados em até 7 dias úteis após a confirmação. Para agilizar, pode nos enviar as datas ou os comprovantes das duas cobranças? Assim que recebermos, abrimos a solicitação com o financeiro."}
+
+user: |
+  <user_input>
+  {{ message }}
+  </user_input>
+
+  <draft>
+  {{ draft }}
+  </draft>

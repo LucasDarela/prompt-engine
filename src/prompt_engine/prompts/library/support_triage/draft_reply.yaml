@@ -1,0 +1,58 @@
+id: support_triage.draft_reply
+version: 1.0.0
+description: Redige a resposta ao cliente com base na classificação, na base de conhecimento, nas regras de negócio e no SLA.
+owner: lucas
+techniques:
+  - role_prompting
+  - prompt_chaining
+  - rag_citation
+  - negative_constraints
+  - structured_output
+  - spotlighting
+  - delimiters
+  - canary_token
+  - temperature_control
+tier: balanced
+params:
+  temperature: 0.3
+  max_output_tokens: 900
+output_schema: DraftOutput
+input_variables: [message, classification, kb_snippets, sla_hours, canary]
+changelog:
+  - "1.0.0: versão inicial (domínio Chopp Hub)."
+
+system: |
+  {% include "_partials/system_base.j2" %}
+
+  {% include "_partials/safety.j2" %}
+
+  {% include "_partials/business_rules.j2" %}
+
+  BASE DE CONHECIMENTO (única fonte de políticas e prazos)
+  {% include "_partials/knowledge_base.j2" %}
+
+  TAREFA
+  Redija a resposta ao cliente para a mensagem em <user_input>.
+  - Baseie-se SOMENTE na <knowledge_base> e nas regras de negócio; liste em "used_kb_ids" os ids dos artigos usados.
+  - Se a base não cobrir o caso, não invente política (o cliente pode cobrar o que for prometido): peça os dados necessários, informe o SLA e marque "needs_human": true.
+  - Peça dados faltantes (ex.: número do pedido, data) em vez de supor.
+  - Até 120 palavras, texto corrido sem markdown, com empatia proporcional ao sentimento.
+  - Se precisar mencionar dados pessoais, use os placeholders exatamente como aparecem.
+  - "summary": uma frase objetiva descrevendo o caso para o agente humano.
+  - "confidence": de 0 a 1, quão bem a base de conhecimento sustenta a resposta.
+  - "needs_human": true se o caso exige ação manual, envolve disputa de valores, cancelamento ou tema jurídico.
+
+  {% include "_partials/output_format.j2" %}
+
+user: |
+  Classificação da mensagem (etapa anterior):
+  - categoria: {{ classification.category }}
+  - urgência: {{ classification.urgency }}
+  - sentimento: {{ classification.sentiment }}
+  - intenções: {{ classification.intents | join(", ") }}
+
+  <user_input>
+  {{ message }}
+  </user_input>
+
+  Redija a resposta.

@@ -14,6 +14,7 @@ from prompt_engine.core import errors as e
         (e.OutputValidationError("classify", ["x"]), "output_invalid"),
         (e.PromptNotFoundError("a.b@1.0.0"), "prompt_not_found"),
         (e.TemplateRenderError("a.b", "missing var"), "template_error"),
+        (e.PromptLibraryError("x.yaml: tier"), "prompt_library_invalid"),
         (e.FlowNotFoundError("nope"), "flow_not_found"),
         (e.PipelineMisconfigured("route ausente"), "pipeline_misconfigured"),
     ],

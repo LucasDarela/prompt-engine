@@ -41,13 +41,13 @@
 - [x] **1.6** `output/validator.py`: validate + loop de reparo (callback) + fallbacks → OUT-5, OUT-6, OUT-9 (hypothesis)
 
 ## Fase 2 — Biblioteca de prompts (SPEC-005)
-- [ ] **2.1** `prompts/models.py` (`PromptTemplate`, enum `Technique`, `Version` SemVer)
-- [ ] **2.2** `prompts/registry.py`: load do diretório, resolução `@latest`/`@x.y.z`, erros claros → PL-1, PL-2, PL-3
-- [ ] **2.3** `prompts/renderer.py`: Jinja2 StrictUndefined, verificação de variáveis, escape de `<user_input>`, injeção de `schema_json` → PL-4, PL-6, GR-11
-- [ ] **2.4** Parciais `_partials/*.j2`
-- [ ] **2.5** YAMLs: `classify`, `draft_reply`, `review_reply`, `injection_judge`, `common.repair_json`, `evals.judge_reply` → PL-7
-- [ ] **2.6** Teste "few-shots validam contra o schema" → PL-8
-- [ ] **2.7** Snapshot tests de todos os prompts → PL-5
+- [x] **2.1** `prompts/models.py` (`PromptTemplate`, enum `Technique`, `Version` SemVer)
+- [x] **2.2** `prompts/registry.py`: load do diretório, resolução `@latest`/`@x.y.z`, erros claros → PL-1, PL-2, PL-3
+- [x] **2.3** `prompts/renderer.py`: Jinja2 StrictUndefined, verificação de variáveis, escape de `<user_input>`, injeção de `schema_json` → PL-4, PL-6, GR-11
+- [x] **2.4** Parciais `_partials/*.j2`
+- [x] **2.5** YAMLs: `classify`, `draft_reply`, `review_reply`, `injection_judge`, `common.repair_json`, `evals.judge_reply` → PL-7
+- [x] **2.6** Teste "few-shots validam contra o schema" → PL-8
+- [x] **2.7** Snapshot tests de todos os prompts → PL-5
 
 ## Fase 3 — Camada LLM (SPEC-006 §2–4)
 - [ ] **3.1** `llm/base.py` (Message, LLMRequest, LLMResponse, Usage, Protocol, erros de provider)

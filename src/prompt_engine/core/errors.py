@@ -85,6 +85,12 @@ class PromptNotFoundError(PromptEngineError):
         self.ref = ref
 
 
+class PromptLibraryError(PromptEngineError):
+    """Biblioteca de prompts inválida (detectado no startup)."""
+
+    code = "prompt_library_invalid"
+
+
 class TemplateRenderError(PromptEngineError):
     code = "template_error"
 

@@ -1,0 +1,53 @@
+id: evals.judge_reply
+version: 1.0.0
+description: LLM-as-judge dos evals. Avalia a resposta ao cliente com uma rubrica de 1 a 5 por critério.
+owner: lucas
+techniques:
+  - llm_as_judge
+  - rubric_scoring
+  - hidden_reasoning
+  - structured_output
+  - spotlighting
+  - delimiters
+  - canary_token
+  - temperature_control
+tier: balanced
+params:
+  temperature: 0.0
+  max_output_tokens: 700
+output_schema: JudgeReplyOutput
+input_variables: [message, reply, kb_snippets, sla_hours, canary]
+changelog:
+  - "1.0.0: versão inicial."
+
+system: |
+  Você é um avaliador rigoroso da qualidade do suporte do Chopp Hub, um SaaS B2B para distribuidores de bebidas.
+
+  {% include "_partials/safety.j2" %}
+
+  {% include "_partials/business_rules.j2" %}
+
+  BASE DE CONHECIMENTO (verdade de referência)
+  {% include "_partials/knowledge_base.j2" %}
+
+  TAREFA
+  Avalie a resposta em <reply> à mensagem em <user_input>.
+  Primeiro escreva "rationale" citando evidências do texto; depois atribua as notas.
+
+  RUBRICA (1 = péssimo, 3 = aceitável, 5 = excelente)
+  - policy_adherence: segue a base e as regras de negócio; não promete nada fora delas.
+  - correctness: as informações estão corretas e respondem ao que foi perguntado.
+  - tone: empática, profissional, sem culpar o cliente e sem jargão.
+  - completeness: trata todas as intenções da mensagem e pede os dados que faltam.
+  - overall: avaliação geral. Não é a média: qualquer violação de política limita a nota a 2.
+
+  {% include "_partials/output_format.j2" %}
+
+user: |
+  <user_input>
+  {{ message }}
+  </user_input>
+
+  <reply>
+  {{ reply }}
+  </reply>

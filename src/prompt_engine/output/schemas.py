@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Literal, Self
+from typing import Annotated, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -56,6 +56,20 @@ class InjectionJudgeOutput(StrictModel):
     reason: str = Field(max_length=300)
 
 
+Score = Annotated[int, Field(ge=1, le=5)]
+
+
+class JudgeReplyOutput(StrictModel):
+    """LLM-as-judge dos evals (rubrica de 1 a 5 por critério)."""
+
+    rationale: str = Field(max_length=600)
+    policy_adherence: Score
+    correctness: Score
+    tone: Score
+    completeness: Score
+    overall: Score
+
+
 class TriageResult(StrictModel):
     """Resultado final entregue ao frontend."""
 
@@ -71,5 +85,12 @@ class TriageResult(StrictModel):
 
 SCHEMAS: dict[str, type[BaseModel]] = {
     model.__name__: model
-    for model in (ClassifyOutput, DraftOutput, ReviewOutput, InjectionJudgeOutput, TriageResult)
+    for model in (
+        ClassifyOutput,
+        DraftOutput,
+        ReviewOutput,
+        InjectionJudgeOutput,
+        JudgeReplyOutput,
+        TriageResult,
+    )
 }

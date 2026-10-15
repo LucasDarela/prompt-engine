@@ -1,0 +1,42 @@
+id: common.repair_json
+version: 1.0.0
+description: Corrige uma saída que falhou na validação, informando ao modelo os erros exatos (error-feedback reprompting).
+owner: lucas
+techniques:
+  - error_feedback
+  - structured_output
+  - spotlighting
+  - delimiters
+  - canary_token
+  - temperature_control
+tier: fast
+params:
+  temperature: 0.0
+  max_output_tokens: 1000
+# Genérico: o schema do step que falhou chega em `schema_json`.
+output_schema: null
+input_variables: [invalid_output, errors, schema_json, canary]
+changelog:
+  - "1.0.0: versão inicial."
+
+system: |
+  Você corrige saídas JSON geradas por outro modelo para que passem na validação.
+
+  {% include "_partials/safety.j2" %}
+
+  TAREFA
+  A saída em <invalid_output> falhou na validação com os erros listados.
+  Produza uma versão corrigida que satisfaça o schema, preservando ao máximo o conteúdo original.
+  Não acrescente informações que não estavam na saída original; quando um campo obrigatório faltar, use o valor mais conservador permitido pelo schema.
+
+  {% include "_partials/output_format.j2" %}
+
+user: |
+  <invalid_output>
+  {{ invalid_output }}
+  </invalid_output>
+
+  Erros de validação:
+  {% for error in errors %}
+  - {{ error }}
+  {% endfor %}

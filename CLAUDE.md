@@ -10,7 +10,8 @@ Middleware de prompts em Python/FastAPI para **triagem de suporte**: guardrails 
 5. `docs/CONVENTIONS.md` e, se for mexer em prompt, `docs/PROMPT_ENGINEERING.md`
 
 ## Status atual
-**Fase de documentação.** Nenhum código deve ser escrito até o usuário aprovar os docs. Depois da aprovação, siga o plano fase por fase.
+Documentação aprovada. Implementação em andamento, fase por fase: o próximo item é o primeiro checkbox aberto em `docs/plans/IMPLEMENTATION_PLAN.md`.
+Domínio: **Chopp Hub**, SaaS B2B para distribuidores de bebidas (persona em `prompts/library/_partials/system_base.j2`).
 
 ## Comandos (após a Fase 0)
 ```bash
@@ -53,3 +54,4 @@ uvicorn main:app --reload       # API em http://localhost:8000/docs
 - O Gemini retorna 503 em picos de demanda: o retry com backoff é obrigatório, não opcional.
 - O plano gratuito do Gemini tem limite de requisições: os evals usam `EVAL_CONCURRENCY` baixo.
 - O `.env` existe na raiz e **não** pode ser commitado.
+- Docstrings dos modelos em `output/schemas.py` entram no JSON schema do prompt: mudá-las muda o prompt e quebra snapshots (atualize com `pytest --snapshot-update` e revise o diff).
