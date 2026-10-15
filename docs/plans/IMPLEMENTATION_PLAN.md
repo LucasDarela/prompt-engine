@@ -24,13 +24,13 @@
 ---
 
 ## Fase 0 — Fundação
-- [ ] **0.1** `git init`, `.gitignore` (venv/, .env, var/, reports/, `__pycache__`, .pytest_cache, .mypy_cache, .coverage)
-- [ ] **0.2** `pyproject.toml`: projeto `prompt-engine`, `requires-python>=3.12`, layout `src/`, deps core (`fastapi`, `uvicorn[standard]`, `pydantic>=2`, `pydantic-settings`, `jinja2`, `pyyaml`, `tenacity`, `structlog`, `python-ulid`), extras `gemini`/`anthropic`/`openai`/`all`/`dev` (`pytest`, `pytest-asyncio`, `pytest-cov`, `syrupy`, `hypothesis`, `httpx`, `ruff`, `mypy`, `types-PyYAML`). Config de ruff, mypy e pytest (`-m "not live"`, `asyncio_mode=auto`, cov ≥ 80)
-- [ ] **0.3** Verificar a instalação no venv Python 3.14. Se alguma dependência falhar, recriar o venv em 3.12/3.13 e registrar no README
-- [ ] **0.4** `.env.example` com todas as variáveis (Apêndice A); `src/prompt_engine/config.py` com `Settings` + teste de defaults
-- [ ] **0.5** Esqueleto de pacotes (`__init__.py`) conforme ARCHITECTURE §3; `core/errors.py` com a hierarquia de exceções
-- [ ] **0.6** `main.py`: `from prompt_engine.api.app import create_app; app = create_app()` com `/health` mínimo + teste
-- [ ] **0.7** `Makefile`/scripts: `make test`, `make lint`, `make run`, `make eval`
+- [x] **0.1** `git init`, `.gitignore` (venv/, .env, var/, reports/, `__pycache__`, .pytest_cache, .mypy_cache, .coverage)
+- [x] **0.2** `pyproject.toml`: projeto `prompt-engine`, `requires-python>=3.12`, layout `src/`, deps core (`fastapi`, `uvicorn[standard]`, `pydantic>=2`, `pydantic-settings`, `jinja2`, `pyyaml`, `tenacity`, `structlog`, `python-ulid`), extras `gemini`/`anthropic`/`openai`/`all`/`dev` (`pytest`, `pytest-asyncio`, `pytest-cov`, `syrupy`, `hypothesis`, `httpx`, `ruff`, `mypy`, `types-PyYAML`). Config de ruff, mypy e pytest (`-m "not live"`, `asyncio_mode=auto`, cov ≥ 80)
+- [x] **0.3** Verificar a instalação no venv Python 3.14 → ✅ todas as dependências instalaram no 3.14.4 (2026-10-14)
+- [x] **0.4** `.env.example` com todas as variáveis (Apêndice A); `src/prompt_engine/config.py` com `Settings` + teste de defaults
+- [x] **0.5** Esqueleto de pacotes (`__init__.py`) conforme ARCHITECTURE §3; `core/errors.py` com a hierarquia de exceções
+- [x] **0.6** `main.py`: `from prompt_engine.api.app import create_app; app = create_app()` com `/health` mínimo + teste
+- [x] **0.7** `Makefile`/scripts: `make test`, `make lint`, `make run`, `make eval`
 
 ## Fase 1 — Core + Output (SPEC-002, SPEC-007)
 - [ ] **1.1** `core/context.py`: `PipelineContext`, `StepResult`, `Usage`, `SecurityReport`, `RouteDecision`, `EnrichmentData` (testes de imutabilidade/`with_step`)
