@@ -42,14 +42,12 @@ class KBSnippet(BaseModel):
     id: str; category: str; title: str; content: str; score: float
 
 class KnowledgeBase(Protocol):
-    def search(self, query: str, *, category: str | None = None, k: int = 3) -> list[KBSnippet]: ...
+    def search(self, query: str, *, category: str | None = None, k: int = 3,
+               min_score: float = 0.0) -> list[KBSnippet]: ...
 
 class FileKnowledgeBase:   # implementação MVP
     """Carrega os YAMLs (recursivo) no startup. BM25 (k1=1.5, b=0.75) sobre título×2 + conteúdo + tags;
     tokenização PT: minúsculas, sem acentos, stopwords, stemming leve de plural. Boost ×2 por categoria."""
-
-class CustomerRepository(Protocol):
-    def get(self, customer_id: str) -> CustomerProfile | None: ...
 
 class ContextEnrichment:   # Stage
     """Lê ctx.steps['classify'].parsed.category + sanitized_input; escreve ctx.enrichment."""
