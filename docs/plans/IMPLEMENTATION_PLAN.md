@@ -60,14 +60,14 @@
 - [x] **3.8** Script `examples/smoke_gemini.py` (manual, `@live`): 1 chamada real ao classify
 
 ## Fase 4 — Guardrails (SPEC-003)
-- [ ] **4.1** `input_validation.py` → GR-1 (normalização) e limites
-- [ ] **4.2** `injection/patterns.yaml` + `heuristics.py` (score combinado)
-- [ ] **4.3** `injection/guard.py` com zona cinzenta → juiz LLM (via `LLMStep` interno) → GR-4
-- [ ] **4.4** Canary: geração por request, injeção via `safety.j2`, verificação na saída → GR-10
-- [ ] **4.5** `pii/detectors.py`: CPF, CNPJ (dígitos verificadores), cartão (Luhn), e-mail, telefone, CEP, PIX → GR-5, GR-6
-- [ ] **4.6** `pii/vault.py` + `redaction.py` → GR-7, GR-8 (hypothesis)
-- [ ] **4.7** `pii/rehydration.py` → GR-9
-- [ ] **4.8** Datasets iniciais `injection_redteam.jsonl` (30) e `benign.jsonl` (50) + testes offline → GR-2, GR-3
+- [x] **4.1** `input_validation.py` → GR-1 (normalização) e limites
+- [x] **4.2** `injection/patterns.yaml` + `heuristics.py` (score combinado)
+- [x] **4.3** `injection/guard.py` com zona cinzenta → juiz LLM (via `LLMStep` interno) → GR-4
+- [x] **4.4** (feito na Fase 3, em `LLMStep`) Canary: geração por request, injeção via `safety.j2`, verificação na saída → GR-10
+- [x] **4.5** `pii/detectors.py`: CPF, CNPJ (dígitos verificadores), cartão (Luhn), e-mail, telefone, CEP, PIX → GR-5, GR-6
+- [x] **4.6** `pii/vault.py` + `redaction.py` → GR-7, GR-8 (hypothesis)
+- [x] **4.7** `pii/rehydration.py` → GR-9
+- [x] **4.8** Datasets iniciais `injection_redteam.jsonl` (30) e `benign.jsonl` (50) + testes offline → GR-2, GR-3
 
 ## Fase 5 — Enriquecimento + Roteamento (SPEC-004, SPEC-006 §5)
 - [ ] **5.1** `data/knowledge_base/*.yaml` com conteúdo realista (≥ 3 snippets por categoria) + `sla.yaml`
@@ -102,6 +102,7 @@
 - [ ] **9.3** Evals de validade, acurácia, needs_human, consistência, injection e PII leak
 - [ ] **9.4** `evals.judge_reply` + `test_reply_quality`
 - [ ] **9.5** Gerador de relatório `reports/eval-*.{json,md}`
+- [ ] **9.0b** Ampliar `injection_redteam.jsonl` com ataques **escritos por outra pessoa** (os atuais foram escritos junto com os padrões; risco de sobreajuste) e medir recall do juiz real.
 - [ ] **9.0** Corrigir extração de entidades do `classify`: no smoke de 2026-10-14 o modelo pôs `"amount": "outubro"` (mês no campo de valor). Medir no golden dataset, ajustar critério/few-shot, subir MINOR.
 - [ ] **9.6** Rodar com o Gemini, iterar prompts até atingir os limiares e registrar a tabela de resultados no README
 

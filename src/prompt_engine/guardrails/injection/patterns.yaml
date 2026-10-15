@@ -1,0 +1,47 @@
+# Padrões de prompt injection (SPEC-003 §3, Camada A).
+# Aplicados sobre o texto DOBRADO por fold_for_detection(): minúsculas, sem acentos,
+# leetspeak desfeito (1->i, 0->o, 3->e, 4->a, 5->s, 7->t) e homóglifos cirílicos/gregos -> latinos.
+# Por isso os padrões são ASCII. `weight` entra na combinação 1 - Π(1 - w); cada id conta uma vez.
+#
+# Ao mudar um padrão: rode os datasets (tests/unit/guardrails/test_injection_datasets.py).
+
+- id: ignore_instructions
+  weight: 0.6
+  patterns:
+    - '\b(ignor\w*|desconsider\w*|esquec\w*|disregard|forget)\W+(?:\w+\W+){0,4}?(instruc\w*|regras|diretrizes|orientac\w*|instructions?|rules|guidelines|prompt)\b'
+    - '\b(esquec\w*|forget)\W+(tudo|everything)\b'
+
+- id: role_override
+  weight: 0.5
+  patterns:
+    - '\b(voce agora e|a partir de agora,? voce (e|sera|vai agir|deve agir)|finja (que e|ser)|atue como|aja como)\b'
+    - '\b(you are now|act as|pretend (to be|you are)|roleplay as)\b'
+
+- id: system_prompt_exfiltration
+  weight: 0.7
+  patterns:
+    - '\b(mostr\w*|revel\w*|repit\w*|exib\w*|imprim\w*|traduz\w*|diga|liste|print|show|reveal|repeat|translate|tell me|list)\W+(?:\w+\W+){0,5}?(system prompt|prompt (de|do) sistema|instruc\w* (do sistema|iniciais|internas|originais|ocultas)|(suas|your) (instruc\w*|diretrizes|regras internas|instructions|guidelines)|(initial|hidden|original) instructions|token)\b'
+
+- id: delimiter_injection
+  weight: 0.6
+  patterns:
+    - '<\s*/?\s*(user_input|system|knowledge_base|draft|instructions?)\s*>'
+    - '\[/?\s*(user_input|inst|system)\s*\]'
+    - '```\s*system'
+    - '<\|im_(start|end)\|>'
+    - '(?m)^\s*(system|assistant)\s*:'
+
+- id: jailbreak_keywords
+  weight: 0.5
+  patterns:
+    - '\b(modo dan|dan mode|do anything now|developer mode|modo (de )?desenvolvedor|jailbreak|sem (nenhuma )?restric\w*|without (any )?restrictions|no restrictions|unfiltered|sem filtro)\b'
+
+- id: new_instructions
+  weight: 0.5
+  patterns:
+    - '\b(novas instruc\w*|nova instrucao|new instructions|override|sobrescrev\w*)\b'
+
+- id: unauthorized_action
+  weight: 0.4
+  patterns:
+    - '\b(aprov\w*|conced\w*|liber\w*|approve|grant)\W+(?:\w+\W+){0,4}?(reembolso|estorno|acesso admin\w*|refund|admin access)\W+(?:\w+\W+){0,4}?(sem (verificar|validar|checar|confirmar)|without (verifying|checking))\b'

@@ -54,7 +54,10 @@ select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF", "ASYNC", "S"]
 known-first-party = ["prompt_engine", "tests"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["S101", "S105", "S106"]  # assert e "senhas" fake são esperados em testes
+"tests/**" = ["S101", "S105", "S106", "S311"]  # assert e "senhas" fake são esperados em testes
+# Homóglifos/fullwidth são o próprio objeto de teste e da tabela de detecção.
+"tests/unit/guardrails/**" = ["S101", "RUF001", "RUF003"]
+"src/prompt_engine/guardrails/injection/heuristics.py" = ["RUF001"]
 
 # --- mypy -------------------------------------------------------------------
 [tool.mypy]
