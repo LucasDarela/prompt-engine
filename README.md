@@ -43,6 +43,11 @@ make run                        # http://localhost:8000/docs
 ./examples/curl.sh              # 5 cenários de exemplo
 ```
 
+Ou com Docker (lê o `.env`; traces persistem em `./var`):
+```bash
+docker compose up --build    # http://localhost:8000/docs
+```
+
 ```bash
 curl -X POST http://localhost:8000/api/v1/process-prompt \
   -H "Content-Type: application/json" \
