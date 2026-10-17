@@ -91,7 +91,7 @@ python -m prompt_engine.evals.run --sample 10    # ou: make eval
 ## Limitações conhecidas
 - **Plano gratuito do Gemini:** 500 req/dia no `flash-lite` e **20/dia** no `3.7-flash` e no `3.8-flash`. Os tiers `balanced`/`powerful` atendem ~20 drafts/dia cada; depois disso o fallback cai para o `fast`. Para produção, é preciso um plano pago.
 - **Evals parciais:** 25 a 28 dos 43 casos medidos; consistência e juiz ainda não remedidos no `classify` 1.1.0 (comando para completar em [SPEC-009 §8](docs/specs/SPEC-009-testing-evals.md)).
-- **Golden dataset e ataques de injection escritos por Claude:** há viés de autoria. Os rótulos merecem auditoria e os ataques, complemento por outra pessoa (plano 9.0b).
+- **Golden dataset e ataques de injection escritos por Claude:** os rótulos foram auditados (2026-10-17); os ataques ainda pedem complemento por outra pessoa (plano 9.0b), porque foram escritos junto com os padrões de detecção.
 - **Base de conhecimento em revisão:** 42 artigos aprovados; parte dos gerados do `chopp-hub` aguarda revisão, e os itens `manual-demo` são suposições de demonstração. Sem artigo para o assunto, a IA escala para humano em vez de inventar (por isso o escalonamento desnecessário fica alto).
 - **Acentuação:** o Gemini omite acentos de forma intermitente em JSON mode (8 a 14% das respostas); é sinalizado com `missing_accents`, sem correção automática.
 - **PII:** nomes próprios não são detectados (exigiriam NER).

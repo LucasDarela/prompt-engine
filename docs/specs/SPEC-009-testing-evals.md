@@ -100,7 +100,7 @@ Decisões:
 - **Juiz de qualidade** usa o tier `balanced` (modelo diferente do draft típico, que é `fast`) e vê a resposta **mascarada**.
 - **Vazamento de PII:** *spy* em todos os providers; nenhuma request pode conter um valor de PII dos inputs.
 - Indisponibilidade do provider (`rate_limited`, `provider_unavailable`) **não** conta contra a validade do JSON; aparece em "Erros de execução".
-- O golden dataset (43 casos) foi rotulado por Claude (`source: synthetic-claude`, `reviewed: false`): os erros listados no relatório servem também para auditar os rótulos.
+- O golden dataset (43 casos) foi rotulado por Claude e **auditado por Lucas em 2026-10-17** a partir dos erros listados nos relatórios: rótulos mantidos (`reviewed: true`).
 
 **Resultados (2026-10-17, Gemini plano gratuito):**
 

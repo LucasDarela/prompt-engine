@@ -103,7 +103,7 @@
 - [ ] **8.3** Smoke `@live` por provider com chave → LLM-2
 
 ## Fase 9 — Evals (SPEC-009 §5)
-- [x] **9.1** `golden_dataset.jsonl` com 43 casos (rotulados por Claude, `source: synthetic-claude`, `reviewed: false`: auditar os rótulos pelos erros listados no relatório)
+- [x] **9.1** `golden_dataset.jsonl` com 43 casos (rotulados por Claude, **auditados por Lucas em 2026-10-17**: rótulos mantidos, `reviewed: true`)
 - [x] **9.2** `tests/evals/conftest.py`: opção `--provider`, rate limiting e coleta de resultados
 - [x] **9.3** Evals de validade, acurácia, needs_human, consistência, injection e PII leak
 - [x] **9.4** `evals.judge_reply` + `test_reply_quality`
