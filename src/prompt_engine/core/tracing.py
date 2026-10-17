@@ -34,6 +34,7 @@ class PipelineRun(BaseModel):
     started_at: datetime
     duration_ms: int
     error_code: str | None = None
+    error_details: dict[str, Any] = {}  # ex.: score e sinais de um bloqueio por injection
 
 
 class TraceSink(Protocol):

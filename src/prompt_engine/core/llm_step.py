@@ -6,6 +6,7 @@ render -> checagem de PII -> provider (via pool) -> canary -> validação com re
 from __future__ import annotations
 
 import json
+import logging
 from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, Literal
@@ -24,6 +25,8 @@ from prompt_engine.prompts.registry import PromptRegistry
 from prompt_engine.prompts.renderer import PromptRenderer
 
 REPAIR_PROMPT = "common.repair_json@latest"
+
+logger = logging.getLogger("prompt_engine.llm_step")
 
 Variables = Callable[[PipelineContext], dict[str, Any]]
 Fallback = Callable[[PipelineContext], BaseModel]
@@ -117,7 +120,10 @@ class LLMStep(Stage):
                 fallback_used=outcome.fallback_used,
             )
         )
+        if outcome.repaired:
+            logger.info("output.repaired", extra={"step": self.name})
         if outcome.fallback_used:
+            logger.warning("output.fallback", extra={"step": self.name, "errors": outcome.errors})
             ctx = ctx.evolve(degraded=True).with_warning(f"{self.name}_fallback")
         return ctx
 

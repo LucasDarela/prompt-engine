@@ -6,7 +6,9 @@ Os adapters não fazem retry: toda a política de resiliência fica aqui (SPEC-0
 from __future__ import annotations
 
 import asyncio
+import logging
 import random
+import time
 from collections.abc import Awaitable, Callable, MutableMapping
 from dataclasses import dataclass, field
 
@@ -23,6 +25,8 @@ MODEL_FALLBACK_ORDER: dict[Tier, tuple[Tier, ...]] = {
 }
 BASE_DELAY_S = 0.5
 MAX_DELAY_S = 30.0
+
+logger = logging.getLogger("prompt_engine.llm")
 JITTER_S = 0.25
 
 
@@ -73,6 +77,7 @@ class ProviderPool:
             provider = self.providers[candidate.provider]
             scoped = request.model_copy(update={"model": candidate.model})
             for attempt in range(self.settings.llm_max_retries + 1):
+                started = time.perf_counter()
                 try:
                     response = await asyncio.wait_for(
                         provider.generate(scoped), timeout=self.settings.llm_timeout_s
@@ -83,9 +88,11 @@ class ProviderPool:
                     last_error = exc
                 else:
                     attempts.append(f"{self._label(candidate, target)}:ok")
+                    self._log(candidate, request, "ok", started)
                     return PoolResult(response=response, attempts=attempts)
 
                 attempts.append(f"{self._label(candidate, target)}:{last_error.code}")
+                self._log(candidate, request, last_error.code, started)
                 if not last_error.retryable:
                     raise last_error  # bug nosso (400): nem retry nem fallback
                 if attempt < self.settings.llm_max_retries:
@@ -94,6 +101,22 @@ class ProviderPool:
         if last_error is None:  # pragma: no cover - sempre há ao menos um candidato
             raise ProviderConfigError("nenhum provider candidato")
         raise last_error
+
+    @staticmethod
+    def _log(candidate: Target, request: LLMRequest, outcome: str, started: float) -> None:
+        level = logging.INFO if outcome == "ok" else logging.WARNING
+        logger.log(
+            level,
+            "llm.call",
+            extra={
+                "step": request.metadata.get("step"),
+                "provider": candidate.provider,
+                "model": candidate.model,
+                "tier": candidate.tier,
+                "outcome": outcome,
+                "latency_ms": round((time.perf_counter() - started) * 1000),
+            },
+        )
 
     @staticmethod
     def _label(candidate: Target, target: Target) -> str:

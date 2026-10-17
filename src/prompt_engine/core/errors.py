@@ -125,5 +125,10 @@ class FlowNotFoundError(PromptEngineError):
         self.flow = flow
 
 
+class TraceNotFoundError(PromptEngineError):
+    code = "trace_not_found"
+    public_message = "Trace não encontrado."
+
+
 class PipelineMisconfigured(PromptEngineError):
     code = "pipeline_misconfigured"

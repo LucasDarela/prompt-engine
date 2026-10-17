@@ -123,6 +123,14 @@ def test_vault_kinds_and_contains() -> None:
     assert not v.contains_value_in("[CPF_1]")
 
 
+def test_vault_mask_is_inverse_of_restore() -> None:
+    v = PIIVault()
+    v.put("CPF", CPF)
+    v.put("EMAIL", "a@b.com")
+    assert v.mask(f"CPF {CPF}, e-mail a@b.com") == "CPF [CPF_1], e-mail [EMAIL_1]"
+    assert v.mask("sem pii") == "sem pii"
+
+
 def test_vault_repr_hides_values() -> None:
     v = PIIVault()
     v.put("CPF", CPF)

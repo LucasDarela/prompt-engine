@@ -101,6 +101,7 @@ capstone módulo 2/
 │   │   ├── gemini.py  anthropic.py  openai.py
 │   │   ├── fake.py                 # FakeProvider determinístico (testes/demos)
 │   │   ├── pool.py                 # ProviderPool: tier→modelo, timeout, retry/backoff, fallback
+│   │   ├── pricing.py / pricing.yaml # estimativa de custo (preços vêm do arquivo)
 │   │   └── factory.py              # build_provider(name, settings)
 │   ├── prompts/
 │   │   ├── registry.py             # PromptRegistry (carrega, valida, resolve versões)
@@ -118,11 +119,13 @@ capstone módulo 2/
 │   ├── flows/
 │   │   ├── registry.py             # FlowRegistry: nome → lista de stages
 │   │   └── support_triage.py       # montagem do fluxo de triagem
-│   └── observability/
-│       ├── logging.py              # structlog JSON
-│       ├── tracer.py               # Trace, Span, contexto por request
-│       ├── store.py                # protocolo TraceStore + SQLiteTraceStore
-│       └── export.py               # traces → candidatos a golden dataset
+│   ├── observability/
+│   │   ├── logging.py              # structlog JSON, request_id por contexto, filtro anti-PII
+│   │   ├── trace.py                # Trace + LLMCallRecord (build_trace a partir do PipelineRun)
+│   │   ├── store.py                # SQLiteTraceStore + StoreTraceSink
+│   │   └── export.py               # traces → candidatos a golden dataset
+│   └── evals/
+│       └── dataset.py              # GoldenCase (formato do golden dataset)
 ├── data/
 │   ├── sla.yaml                    # SLA por categoria
 │   ├── kb_sources.yaml             # lista permitida de fontes para a ingestão

@@ -12,6 +12,8 @@ from prompt_engine.enrichment.knowledge_base import FileKnowledgeBase, SLAPolicy
 from prompt_engine.guardrails.injection.heuristics import InjectionHeuristics
 from prompt_engine.llm.base import LLMProvider
 from prompt_engine.llm.factory import build_pool
+from prompt_engine.llm.pricing import load_pricing
+from prompt_engine.observability.store import SQLiteTraceStore, StoreTraceSink
 from prompt_engine.output.validator import OutputValidator
 from prompt_engine.prompts.registry import PromptRegistry
 from prompt_engine.prompts.renderer import PromptRenderer
@@ -25,6 +27,7 @@ class AppDeps:
     sla: Mapping[str, SLAPolicy]
     heuristics: InjectionHeuristics
     sink: TraceSink = field(default_factory=NoopSink)
+    traces: SQLiteTraceStore | None = None  # None quando OBS_ENABLED=false
 
 
 def build_deps(
@@ -34,6 +37,12 @@ def build_deps(
     sink: TraceSink | None = None,
 ) -> AppDeps:
     """Carrega prompts, KB, SLA e providers. Qualquer config inválida falha AQUI (startup)."""
+    traces = SQLiteTraceStore(settings.obs_db_path) if settings.obs_enabled else None
+    default_sink: TraceSink = (
+        StoreTraceSink(traces, store_raw_input=settings.obs_store_raw_input, pricing=load_pricing())
+        if traces is not None
+        else NoopSink()
+    )
     registry = PromptRegistry.default()
     llm = LLMDeps(
         registry=registry,
@@ -50,5 +59,6 @@ def build_deps(
         ),
         sla=load_sla(settings.sla_path),
         heuristics=InjectionHeuristics.default(),
-        sink=sink or NoopSink(),
+        sink=sink or default_sink,
+        traces=traces,
     )

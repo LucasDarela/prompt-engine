@@ -1,0 +1,7 @@
+# Preço por 1 milhão de tokens (USD), por modelo, para a estimativa de custo dos traces.
+# Vazio de propósito: não usamos preços inventados. Sem preço => cost_usd_estimate = null.
+# Preencha com a tabela oficial do provedor, por exemplo:
+#   models:
+#     gemini-3.5-flash-lite: { input_per_1m: 0.10, output_per_1m: 0.40 }
+# No plano gratuito do Gemini o custo real é zero (use 0.0 se quiser registrar isso).
+models: {}

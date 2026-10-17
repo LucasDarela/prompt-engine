@@ -20,6 +20,7 @@ from prompt_engine.api.schemas import (
 )
 from prompt_engine.config import Settings
 from prompt_engine.core.context import RunOptions
+from prompt_engine.core.errors import TraceNotFoundError
 from prompt_engine.flows.deps import AppDeps
 from prompt_engine.flows.registry import FlowRunner
 
@@ -82,6 +83,21 @@ async def process_prompt(
     latency_ms = round((time.perf_counter() - start) * 1000)
     debug = body.options.include_debug and settings.debug_endpoints
     return to_response(ctx, latency_ms=latency_ms, debug=debug)
+
+
+@api_router.get("/traces/{request_id}", responses=ERROR_RESPONSES, tags=["debug"])
+async def get_trace(
+    request_id: str,
+    deps: Annotated[AppDeps, Depends(get_app_deps)],
+    settings: Annotated[Settings, Depends(get_settings)],
+) -> dict[str, Any]:
+    """Trace completo de uma request. Só existe com DEBUG_ENDPOINTS=true (senão, 404)."""
+    if not settings.debug_endpoints or deps.traces is None:
+        raise TraceNotFoundError()
+    trace = deps.traces.get(request_id)
+    if trace is None:
+        raise TraceNotFoundError()
+    return trace.model_dump(mode="json")
 
 
 @api_router.get("/prompts", response_model=list[PromptSummary], tags=["prompts"])

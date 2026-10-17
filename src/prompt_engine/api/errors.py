@@ -20,6 +20,7 @@ HTTP_STATUS: dict[str, int] = {
     "unauthorized": 401,
     "flow_not_found": 404,
     "prompt_not_found": 404,
+    "trace_not_found": 404,
     "rate_limited": 429,
     "provider_unavailable": 503,
 }
@@ -41,13 +42,13 @@ async def domain_error_handler(request: Request, exc: Exception) -> JSONResponse
     assert isinstance(exc, PromptEngineError)  # noqa: S101 - registrado só para esse tipo
     status = HTTP_STATUS.get(exc.code)
     if status is None:  # erro de domínio sem mapeamento HTTP = bug/config nossa
-        logger.error("domain_error_unmapped", exc_info=exc)
+        logger.error("request.domain_error_unmapped", exc_info=exc, extra={"code": exc.code})
         return error_response(request_id_of(request), 500, "internal_error", GENERIC_MESSAGE)
     headers = None
     if isinstance(exc, ProviderRateLimitError) and exc.retry_after:
         headers = {"Retry-After": str(math.ceil(exc.retry_after))}
     log = logger.warning if status >= 500 else logger.info
-    log("domain_error code=%s request_id=%s", exc.code, request_id_of(request))
+    log("request.domain_error", extra={"code": exc.code})
     return error_response(request_id_of(request), status, exc.code, exc.public_message, headers)
 
 

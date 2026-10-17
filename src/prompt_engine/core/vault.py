@@ -39,6 +39,14 @@ class PIIVault:
 
         return PLACEHOLDER_RE.sub(_sub, text), unknown
 
+    def mask(self, text: str) -> str:
+        """Inverso do restore: troca valores reais conhecidos por placeholders (logs/traces)."""
+        for placeholder, value in sorted(
+            self._by_placeholder.items(), key=lambda item: len(item[1]), reverse=True
+        ):
+            text = text.replace(value, placeholder)
+        return text
+
     def kinds(self) -> list[str]:
         return sorted(self._counters)
 

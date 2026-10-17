@@ -1,6 +1,7 @@
 """API HTTP com FakeProvider (SPEC-001)."""
 
 import json
+import logging
 from typing import Any
 
 import pytest
@@ -195,8 +196,11 @@ def test_lifespan_builds_deps_from_settings() -> None:
     from tests.support import make_settings
 
     app = create_app(make_settings())
-    with TestClient(app) as c:  # o lifespan roda no `with`
-        assert c.get("/health/ready").json()["providers"] == ["fake"]
+    try:
+        with TestClient(app) as c:  # o lifespan roda no `with`
+            assert c.get("/health/ready").json()["providers"] == ["fake"]
+    finally:
+        logging.getLogger().handlers.clear()  # o lifespan configura o logging global
 
 
 def test_flow_without_result_is_generic_500(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -219,5 +223,8 @@ def test_flow_without_result_is_generic_500(monkeypatch: pytest.MonkeyPatch) -> 
 def test_lifespan_keeps_injected_deps() -> None:
     deps, _ = make_app_deps(script())
     app = create_app(deps=deps)
-    with TestClient(app):
-        assert app.state.deps is deps
+    try:
+        with TestClient(app):
+            assert app.state.deps is deps
+    finally:
+        logging.getLogger().handlers.clear()

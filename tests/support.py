@@ -17,7 +17,8 @@ RENDERER = PromptRenderer(REGISTRY)
 
 
 def make_settings(**kw: Any) -> Settings:
-    base: dict[str, Any] = {"llm_provider": "fake", "llm_max_retries": 0}
+    # obs_enabled=False: testes nunca gravam em var/traces.db (os de observabilidade usam tmp_path)
+    base: dict[str, Any] = {"llm_provider": "fake", "llm_max_retries": 0, "obs_enabled": False}
     return Settings(_env_file=None, **(base | kw))  # type: ignore[call-arg]
 
 

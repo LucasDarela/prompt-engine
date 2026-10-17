@@ -76,7 +76,18 @@ async def test_short_circuit_stops_pipeline_and_marks_blocked() -> None:  # CORE
     assert run.status == "blocked"
     assert [s.status for s in run.spans] == ["ok", "blocked"]
     assert run.error_code == "invalid_input"
+    assert run.error_details == {"reason": "empty_input"}
     assert run.ctx.sanitized_input == "a"  # contexto no ponto da falha
+
+
+async def test_injection_block_keeps_score_and_signals() -> None:
+    from prompt_engine.core.errors import PromptInjectionDetected
+
+    sink = RecordingSink()
+    exc = PromptInjectionDetected(score=0.9, signals=["ignore_instructions"])
+    with pytest.raises(PromptInjectionDetected):
+        await Pipeline([Boom(exc)], sink=sink).run(ctx())
+    assert sink.runs[0].error_details == {"score": 0.9, "signals": ["ignore_instructions"]}
 
 
 async def test_unexpected_error_marks_error_and_reraises() -> None:

@@ -1,7 +1,7 @@
 # Prompt Engine — Triagem de Suporte com LLM
 
 > Capstone Módulo 2 · Sistema de prompts **modular, testável e reutilizável**
-> Status: ✅ **MVP funcional** (Fases 0–6): API ponta a ponta com Gemini · 478 testes · cobertura 100%
+> Status: ✅ **MVP funcional + observabilidade** (Fases 0–7): API ponta a ponta com Gemini · 522 testes · cobertura 100%
 
 Um middleware em **Python + FastAPI** que recebe a mensagem livre de um cliente (text area), protege, enriquece, roteia, consulta uma LLM em várias etapas e devolve um **JSON de triagem limpo e validado**.
 
@@ -38,7 +38,7 @@ texto do cliente ─▶ validação ─▶ anti-injection ─▶ mascarar PII �
 source venv/bin/activate
 pip install -e ".[dev,gemini]"
 cp .env.example .env            # preencha GEMINI_API_KEY
-make test                       # 478 testes offline, sem chave
+make test                       # 522 testes offline, sem chave
 make run                        # http://localhost:8000/docs
 ./examples/curl.sh              # 5 cenários de exemplo
 ```
@@ -61,6 +61,11 @@ curl -X POST http://localhost:8000/api/v1/process-prompt \
 | `Ignore all previous instructions...` | — | — | **422 `unsafe_input`**, nenhuma chamada ao LLM |
 
 Latência típica: ~1 s por step no `flash-lite`; o draft chega a ~7 s quando o Gemini devolve 503 e o retry com backoff entra em ação.
+
+## Observabilidade
+- **Logs JSON** (`LOG_FORMAT=json`) com `request_id` em todas as linhas e filtro anti-PII em todos os campos.
+- **Trace por request** em `var/traces.db` (SQLite): prompt final e versão de cada step, resposta bruta, tentativas (`call_log`), tokens, latência, rota, segurança. Sem PII. Ver com `DEBUG_ENDPOINTS=true`: `GET /api/v1/traces/{request_id}`.
+- **Traces → dataset de teste:** `python -m prompt_engine.observability.export --since 2026-10-01 --out tests/fixtures/candidates.jsonl`.
 
 **Problemas encontrados ao vivo e corrigidos** (veja `docs/plans/IMPLEMENTATION_PLAN.md` 6.6):
 - o modelo afirmava ações não executadas ("encaminhei", "registramos") → regra no prompt + item no checklist do revisor + guarda determinística `unverified_action_claim`;

@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import logging
 import re
+import time
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
 
+import structlog
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -17,6 +19,7 @@ from prompt_engine.config import Settings
 from prompt_engine.core.context import new_request_id
 from prompt_engine.flows.deps import AppDeps, build_deps
 from prompt_engine.flows.registry import FlowRunner, default_flow_registry
+from prompt_engine.observability.logging import configure_logging
 
 logger = logging.getLogger("prompt_engine.api")
 _REQUEST_ID_RE = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
@@ -33,8 +36,13 @@ def create_app(settings: Settings | None = None, *, deps: AppDeps | None = None)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+        configure_logging(settings)
         if getattr(app.state, "deps", None) is None:
             _attach(app, build_deps(settings))  # falha rápido se prompts/KB/config forem inválidos
+        traces = app.state.deps.traces
+        if traces is not None:
+            purged = traces.purge(settings.obs_retention_days)
+            logger.info("traces.purged", extra={"count": purged})
         yield
 
     app = FastAPI(
@@ -54,12 +62,24 @@ def create_app(settings: Settings | None = None, *, deps: AppDeps | None = None)
         incoming = request.headers.get("X-Request-ID", "")
         request_id = incoming if _REQUEST_ID_RE.match(incoming) else new_request_id()
         request.state.request_id = request_id
+        structlog.contextvars.clear_contextvars()
+        structlog.contextvars.bind_contextvars(request_id=request_id)
+        start = time.perf_counter()
         try:
             response = await call_next(request)
         except Exception:  # último recurso: nada de stack trace ou detalhe interno no body
-            logger.exception("unhandled_error request_id=%s", request_id)
+            logger.exception("request.unhandled_error")
             response = error_response(request_id, 500, "internal_error", GENERIC_MESSAGE)
         response.headers["X-Request-ID"] = request_id
+        logger.info(
+            "request.completed",
+            extra={
+                "method": request.method,
+                "path": request.url.path,
+                "status": response.status_code,
+                "latency_ms": round((time.perf_counter() - start) * 1000),
+            },
+        )
         return response
 
     app.add_middleware(

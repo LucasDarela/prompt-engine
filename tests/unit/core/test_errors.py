@@ -19,6 +19,7 @@ from prompt_engine.core import errors as e
         (e.KnowledgeBaseError("kb.yaml: category"), "kb_invalid"),
         (e.FlowNotFoundError("nope"), "flow_not_found"),
         (e.UnauthorizedError(), "unauthorized"),
+        (e.TraceNotFoundError(), "trace_not_found"),
         (e.PipelineMisconfigured("route ausente"), "pipeline_misconfigured"),
     ],
 )

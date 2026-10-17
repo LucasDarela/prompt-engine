@@ -89,12 +89,12 @@
 - [x] **6.7** Fallback entre **modelos do mesmo provedor**: com só a chave do Gemini, um 503 persistente num modelo derruba a request (visto ao vivo em 2026-10-14) mesmo com outros modelos Gemini respondendo. Ex.: `balanced` em 503 → tentar `powerful`, depois `fast`
 
 ## Fase 7 — Observabilidade (SPEC-008)
-- [ ] **7.1** `observability/logging.py` (structlog, filtros anti-PII) → OBS-5
-- [ ] **7.2** `observability/tracer.py` (Trace/Span por request, `LLMCallRecord`) integrado ao Pipeline/LLMStep → OBS-1, OBS-2
-- [ ] **7.3** `observability/store.py` SQLite com escrita assíncrona e tolerante a falha → OBS-3, OBS-4
-- [ ] **7.4** `GET /api/v1/traces/{id}` (debug) → OBS-7, API-6
-- [ ] **7.5** `llm/pricing.yaml` + estimativa de custo
-- [ ] **7.6** `observability/export.py` (CLI) → OBS-6
+- [x] **7.1** `observability/logging.py` (structlog, filtros anti-PII) → OBS-5
+- [x] **7.2** `observability/tracer.py` (Trace/Span por request, `LLMCallRecord`) integrado ao Pipeline/LLMStep → OBS-1, OBS-2
+- [x] **7.3** `observability/store.py` SQLite com escrita assíncrona e tolerante a falha → OBS-3, OBS-4
+- [x] **7.4** `GET /api/v1/traces/{id}` (debug) → OBS-7, API-6
+- [x] **7.5** `llm/pricing.yaml` + estimativa de custo
+- [x] **7.6** `observability/export.py` (CLI) → OBS-6
 
 ## Fase 8 — Provedores adicionais (SPEC-006)
 - [ ] **8.1** `llm/anthropic.py` + contract tests → LLM-1
