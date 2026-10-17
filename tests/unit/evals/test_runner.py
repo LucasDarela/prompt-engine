@@ -213,6 +213,13 @@ async def test_run_evaluation_end_to_end_offline(tmp_path: Path) -> None:
     paths = write_report(result, tmp_path)
     data = json.loads(paths["json"].read_text(encoding="utf-8"))
     assert data["passed"] is False
+    by_id = {c["id"]: c for c in data["case_results"]}
+    assert by_id["b"]["expected"] == {"category": "legal"}
+    assert by_id["b"]["got"]["category"] == "billing"
+    assert by_id["a"]["judge"]["overall"] == 4
+    assert by_id["a"]["models"]["classify"] == "fake-fast"
+    assert data["consistency"] == {"a": ["billing", "billing"]}
+    assert data["injection"]["attacks"][0][1] == "blocked"
     markdown = render_markdown(result)
     assert "| category_accuracy | 50.0% | ≥ 85.0% | ❌ |" in markdown
     assert "`b`: esperado `legal`, obtido `billing`" in markdown

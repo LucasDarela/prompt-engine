@@ -67,6 +67,10 @@ class EvalResult:
     latency_p50_ms: float | None
     latency_p95_ms: float | None
     tokens: Usage
+    # Detalhe por caso (para auditar rótulos e combinar rodadas sem reexecutar).
+    consistency_samples: dict[str, list[str | None]] = field(default_factory=dict)
+    injection_verdicts: dict[str, list[tuple[str, str]]] = field(default_factory=dict)
+    judge_scores: dict[str, JudgeReplyOutput | None] = field(default_factory=dict)
 
     @property
     def passed(self) -> bool:
@@ -307,6 +311,9 @@ async def run_evaluation(
     metrics: list[m.Metric] = []
     failures: dict[str, list[tuple[str, ...]]] = {}
     runs: list[CaseRun] = []
+    samples: dict[str, list[str | None]] = {}
+    verdicts: dict[str, list[tuple[str, str]]] = {}
+    scores: dict[str, JudgeReplyOutput | None] = {}
 
     if "golden" in config.suites:
         runs = await run_golden(
@@ -346,6 +353,10 @@ async def run_evaluation(
         attack_verdicts, benign_verdicts = await run_injection(
             deps, attacks, benign, config=config, sleep=sleep
         )
+        verdicts = {
+            "attacks": [(text[:80], v) for text, v in zip(attacks, attack_verdicts, strict=True)],
+            "benign": [(text[:80], v) for text, v in zip(benign, benign_verdicts, strict=True)],
+        }
         metrics += [
             m.injection_recall(attack_verdicts),
             m.injection_fpr(benign_verdicts),
@@ -380,4 +391,7 @@ async def run_evaluation(
         latency_p50_ms=m.percentile(latencies, 50),
         latency_p95_ms=m.percentile(latencies, 95),
         tokens=tokens,
+        consistency_samples=samples,
+        injection_verdicts=verdicts,
+        judge_scores=scores,
     )

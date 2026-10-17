@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from prompt_engine.evals.metrics import Metric
-from prompt_engine.evals.runner import EvalResult
+from prompt_engine.evals.runner import CaseRun, EvalResult
 
 FAILURE_TITLES = {
     "category": "Categoria errada",
@@ -67,6 +67,29 @@ def to_dict(result: EvalResult) -> dict[str, Any]:
         ),
         "models": dict(Counter(model for run in result.runs for model in run.models.values())),
         "cases": len(result.runs),
+        "case_results": [_case(run, result) for run in result.runs],
+        "consistency": result.consistency_samples,
+        "injection": {k: [list(item) for item in v] for k, v in result.injection_verdicts.items()},
+    }
+
+
+RESULT_FIELDS = ("category", "urgency", "needs_human", "entities", "escalation_reasons")
+
+
+def _case(run: CaseRun, result: EvalResult) -> dict[str, Any]:
+    score = result.judge_scores.get(run.case.id)
+    return {
+        "id": run.case.id,
+        "expected": run.case.expected.model_dump(exclude_none=True),
+        "got": {k: run.result.get(k) for k in RESULT_FIELDS} if run.result else None,
+        "error_code": run.error_code,
+        "latency_ms": run.latency_ms,
+        "models": run.models,
+        "prompt_versions": run.prompt_versions,
+        "repaired_steps": run.repaired_steps,
+        "fallback_steps": run.fallback_steps,
+        "warnings": run.warnings,
+        "judge": score.model_dump() if score else None,
     }
 
 
