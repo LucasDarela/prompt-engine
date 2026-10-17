@@ -84,6 +84,21 @@ def test_reviewed_entry_with_pending_notes_is_not_approved(tmp_path: Path) -> No
     assert "kb-pending" in {e.id for e in kb_all.entries}
 
 
+def test_approved_entry_with_internal_terms_is_rejected(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    leaky = {
+        **ENTRIES[1],
+        "id": "kb-leaky",
+        "content": "O pedido é gravado em tabela_exemplo via POST /api/exemplo/pedido.",
+    }
+    kb = FileKnowledgeBase.from_directory(write_kb(tmp_path, [*ENTRIES, leaky]))
+    assert "kb-leaky" not in {e.id for e in kb.entries}
+    assert "kb.entry_rejected_internal_terms" in caplog.text
+    inspect = FileKnowledgeBase.from_directory(tmp_path, include_unreviewed=True)
+    assert "kb-leaky" in {e.id for e in inspect.entries}
+
+
 def test_no_match_returns_empty(tmp_path: Path) -> None:  # EN-4
     kb = FileKnowledgeBase.from_directory(write_kb(tmp_path))
     assert kb.search("xyzzy quântico", k=3) == []

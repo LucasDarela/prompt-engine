@@ -26,6 +26,8 @@ from typing import Any
 
 import yaml
 
+from prompt_engine.enrichment.text_checks import find_internal_terms
+
 DEFAULT_MAX_CHARS = 900
 
 # --- modelo --------------------------------------------------------------------------------------
@@ -70,17 +72,6 @@ SECRET_PATTERNS: dict[str, re.Pattern[str]] = {
 
 def find_secrets(text: str) -> list[str]:
     return [name for name, pattern in SECRET_PATTERNS.items() if pattern.search(text)]
-
-
-# Caminhos de código e identificadores snake_case (tabelas, colunas, flags): não são segredo,
-# mas não devem chegar ao cliente. Viram `review_notes` para o revisor cortar.
-_INTERNAL_TERM_RE = re.compile(
-    r"\b(?:app|lib|components|supabase|docs|api)/[\w./\[\]-]+|\b[a-z]+(?:_[a-z0-9]+)+\b"
-)
-
-
-def find_internal_terms(text: str) -> list[str]:
-    return sorted(set(_INTERNAL_TERM_RE.findall(text)))
 
 
 # --- utilidades de JS/JSX ------------------------------------------------------------------------

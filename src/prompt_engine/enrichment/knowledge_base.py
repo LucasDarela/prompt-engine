@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import math
 import re
 import unicodedata
@@ -16,7 +17,10 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from prompt_engine.core.context import KBSnippet
 from prompt_engine.core.errors import KnowledgeBaseError
+from prompt_engine.enrichment.text_checks import find_internal_terms
 from prompt_engine.output.schemas import Category, Urgency
+
+logger = logging.getLogger("prompt_engine.kb")
 
 BM25_K1 = 1.5
 BM25_B = 0.75
@@ -128,8 +132,20 @@ class FileKnowledgeBase:
                         f"{path}: id duplicado '{entry.id}' (já existe em {seen[entry.id]})"
                     )
                 seen[entry.id] = path
-                if entry.is_approved or include_unreviewed:
+                if include_unreviewed:
                     entries.append(entry)
+                    continue
+                if not entry.is_approved:
+                    continue
+                internal = find_internal_terms(f"{entry.title}\n{entry.content}")
+                if internal:
+                    # Defesa em profundidade: aprovação humana não basta se o texto vaza código.
+                    logger.warning(
+                        "kb.entry_rejected_internal_terms",
+                        extra={"id": entry.id, "file": str(path), "terms": internal},
+                    )
+                    continue
+                entries.append(entry)
         return cls(entries)
 
     def __len__(self) -> int:
