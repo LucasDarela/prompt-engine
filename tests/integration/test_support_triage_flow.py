@@ -7,8 +7,9 @@ import pytest
 
 from prompt_engine.core import errors as e
 from prompt_engine.core.context import RunOptions
+from prompt_engine.enrichment.knowledge_base import load_sla
 from prompt_engine.flows.registry import FlowRunner, default_flow_registry
-from tests.support import make_app_deps
+from tests.support import make_app_deps, make_settings
 
 CPF = "529.982.247-25"
 MESSAGE = f"Fomos cobrados duas vezes na mensalidade de outubro. CPF do responsável {CPF}."
@@ -87,8 +88,9 @@ async def test_draft_prompt_receives_kb_and_sla() -> None:
     ctx = await runner.run("support_triage", MESSAGE)
     draft_system = next(c for c in fake.calls if c.metadata["step"] == "draft_reply").messages[0]
     assert "[kb-billing-001]" in draft_system.content
-    assert "SLA de primeira resposta: 4 horas." in draft_system.content
-    assert ctx.enrichment.sla_hours == 4
+    expected = load_sla(make_settings().sla_path)["billing"].first_response_hours  # SLA real
+    assert f"SLA de primeira resposta: {expected} horas." in draft_system.content
+    assert ctx.enrichment.sla_hours == expected
 
 
 async def test_injection_is_blocked_before_any_llm_call() -> None:  # GR-4 no flow

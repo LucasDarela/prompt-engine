@@ -58,6 +58,11 @@ class KBEntry(BaseModel):
     reviewed: bool = True  # gerados entram como False e só valem após revisão humana
     review_notes: list[str] = []  # alertas da ingestão para o revisor (ex.: termos internos)
 
+    @property
+    def is_approved(self) -> bool:
+        """Revisado E sem alertas pendentes: apagar `review_notes` faz parte da revisão."""
+        return self.reviewed and not self.review_notes
+
 
 class SLAPolicy(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
@@ -123,7 +128,7 @@ class FileKnowledgeBase:
                         f"{path}: id duplicado '{entry.id}' (já existe em {seen[entry.id]})"
                     )
                 seen[entry.id] = path
-                if entry.reviewed or include_unreviewed:
+                if entry.is_approved or include_unreviewed:
                     entries.append(entry)
         return cls(entries)
 

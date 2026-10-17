@@ -94,4 +94,4 @@ Resultado em 2026-10-14 (`chopp-hub@1674717`): 84 snippets, 0 segredos, 21 com t
 - [x] **EN-5** YAML de KB inválido (campo faltando) falha no startup com mensagem clara.
 - [x] **EN-6** `ContextEnrichment` sem `classify` no contexto lança `PipelineMisconfigured`.
 - [x] **EN-7** Ingestão: extratores cobertos com fixtures sintéticas; segredos descartados; revisão preservada ao re-ingerir; determinística.
-- [x] **EN-8** Snippets `reviewed: false` não entram na busca com a configuração padrão.
+- [x] **EN-8** Snippets `reviewed: false` não entram na busca com a configuração padrão. Item com `review_notes` preenchido também não conta como aprovado: apagar os alertas faz parte da revisão.

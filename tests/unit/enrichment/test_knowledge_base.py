@@ -76,6 +76,14 @@ def test_unreviewed_entries_are_excluded_by_default(tmp_path: Path) -> None:
     assert "kb-draft-001" in {s.id for s in kb_all.search("rascunho cobrança duplicada", k=10)}
 
 
+def test_reviewed_entry_with_pending_notes_is_not_approved(tmp_path: Path) -> None:
+    pending = {**ENTRIES[1], "id": "kb-pending", "review_notes": ["termos internos: tabela_exemplo"]}
+    kb = FileKnowledgeBase.from_directory(write_kb(tmp_path, [*ENTRIES, pending]))
+    assert "kb-pending" not in {e.id for e in kb.entries}
+    kb_all = FileKnowledgeBase.from_directory(tmp_path, include_unreviewed=True)
+    assert "kb-pending" in {e.id for e in kb_all.entries}
+
+
 def test_no_match_returns_empty(tmp_path: Path) -> None:  # EN-4
     kb = FileKnowledgeBase.from_directory(write_kb(tmp_path))
     assert kb.search("xyzzy quântico", k=3) == []
