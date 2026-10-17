@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from prompt_engine import __version__
 from prompt_engine.api.errors import GENERIC_MESSAGE, error_response, install_error_handlers
-from prompt_engine.api.routes import api_router, health_router
+from prompt_engine.api.routes import api_router, health_router, page_router
 from prompt_engine.config import Settings
 from prompt_engine.core.context import new_request_id
 from prompt_engine.flows.deps import AppDeps, build_deps
@@ -91,5 +91,6 @@ def create_app(settings: Settings | None = None, *, deps: AppDeps | None = None)
     )
     install_error_handlers(app)
     app.include_router(health_router)
+    app.include_router(page_router)
     app.include_router(api_router)
     return app

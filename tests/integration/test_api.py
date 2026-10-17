@@ -228,3 +228,19 @@ def test_lifespan_keeps_injected_deps() -> None:
             assert app.state.deps is deps
     finally:
         logging.getLogger().handlers.clear()
+
+
+def test_playground_is_served_by_the_api() -> None:
+    c, _ = client(
+        api_key="segredo"
+    )  # a página é pública; as chamadas que ela faz é que exigem a chave
+    page = c.get("/playground")
+    assert page.status_code == 200
+    assert page.headers["content-type"].startswith("text/html")
+    html = page.text
+    assert "/api/v1/process-prompt" in html
+    assert "X-API-Key" in html
+    assert ".innerHTML" not in html  # saída de LLM nunca vira HTML
+    redirect = c.get("/", follow_redirects=False)
+    assert (redirect.status_code, redirect.headers["location"]) == (307, "/playground")
+    assert "/playground" not in c.get("/openapi.json").json()["paths"]

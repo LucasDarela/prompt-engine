@@ -41,3 +41,23 @@ async def test_usage_is_word_count() -> None:
     response = await fake.generate(make_request())
     assert response.usage.output_tokens == 3
     assert response.usage.input_tokens > 0
+
+
+async def test_demo_script_answers_every_triage_step_with_valid_json() -> None:
+    from prompt_engine.llm.fake import demo_script
+    from prompt_engine.output.schemas import (
+        ClassifyOutput,
+        DraftOutput,
+        InjectionJudgeOutput,
+        ReviewOutput,
+    )
+
+    fake = FakeProvider(demo_script())
+    for step, schema in [
+        ("classify", ClassifyOutput),
+        ("draft_reply", DraftOutput),
+        ("review_reply", ReviewOutput),
+        ("injection_judge", InjectionJudgeOutput),
+    ]:
+        response = await fake.generate(make_request(metadata={"step": step}))
+        schema.model_validate_json(response.text)

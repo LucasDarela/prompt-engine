@@ -14,42 +14,15 @@ import sys
 from prompt_engine.config import Settings
 from prompt_engine.flows.deps import build_deps
 from prompt_engine.flows.registry import FlowRunner, default_flow_registry
-from prompt_engine.llm.fake import FakeProvider
+from prompt_engine.llm.fake import FakeProvider, demo_script
 
 DEFAULT_MESSAGE = "Fomos cobrados duas vezes na mensalidade de outubro. CPF 529.982.247-25."
-
-# Respostas fixas para demonstrar o pipeline sem rede (cada step recebe o JSON do seu schema).
-OFFLINE_SCRIPT = {
-    "classify": json.dumps(
-        {
-            "reasoning": "Cobrança em duplicidade da mensalidade.",
-            "category": "billing",
-            "urgency": "high",
-            "sentiment": "negative",
-            "entities": {},
-            "intents": ["billing_dispute"],
-            "complexity_hint": "simple",
-        }
-    ),
-    "draft_reply": json.dumps(
-        {
-            "summary": "Cliente [CPF_1] relata cobrança em duplicidade da mensalidade.",
-            "suggested_reply": "Olá! Sentimos muito pelo transtorno. Para que o nosso time "
-            "financeiro analise o caso do CPF [CPF_1], pode nos enviar os comprovantes das duas "
-            "cobranças? A sua solicitação será encaminhada para análise.",
-            "needs_human": True,
-            "confidence": 0.9,
-            "used_kb_ids": ["kb-billing-001"],
-        }
-    ),
-    "review_reply": json.dumps({"approved": True, "issues": [], "revised_reply": None}),
-}
 
 
 async def run(message: str, *, offline: bool) -> dict[str, object]:
     if offline:
         settings = Settings(_env_file=None, llm_provider="fake", obs_enabled=False)  # type: ignore[call-arg]
-        deps = build_deps(settings, provider_overrides={"fake": FakeProvider(dict(OFFLINE_SCRIPT))})
+        deps = build_deps(settings, provider_overrides={"fake": FakeProvider(demo_script())})
     else:
         deps = build_deps(Settings())
     runner = FlowRunner(default_flow_registry(), deps)

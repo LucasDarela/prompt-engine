@@ -7,7 +7,7 @@ from collections.abc import Mapping
 from prompt_engine.config import ProviderName, Settings
 from prompt_engine.core.errors import ProviderConfigError
 from prompt_engine.llm.base import LLMProvider
-from prompt_engine.llm.fake import FakeProvider
+from prompt_engine.llm.fake import FakeProvider, demo_script
 from prompt_engine.llm.pool import ProviderPool
 
 
@@ -18,7 +18,7 @@ def _secret(value: object) -> str | None:
 
 def build_provider(name: ProviderName, settings: Settings) -> LLMProvider:
     if name == "fake":
-        return FakeProvider({})
+        return FakeProvider(demo_script())  # modo demo offline (respostas fixas por step)
     if name == "gemini":
         from prompt_engine.llm.gemini import GeminiProvider
 

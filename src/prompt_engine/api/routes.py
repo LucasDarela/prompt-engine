@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import time
+from pathlib import Path
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Request
+from fastapi.responses import HTMLResponse, RedirectResponse
 
 from prompt_engine import __version__
 from prompt_engine.api.deps import get_app_deps, get_runner, get_settings, require_api_key
@@ -36,7 +38,23 @@ ERROR_RESPONSES: dict[int | str, dict[str, Any]] = {
     }.items()
 }
 
+PLAYGROUND = Path(__file__).parent / "static" / "playground.html"
+
 health_router = APIRouter(tags=["health"])
+page_router = APIRouter(include_in_schema=False)
+
+
+@page_router.get("/")
+async def root() -> RedirectResponse:
+    return RedirectResponse("/playground")
+
+
+@page_router.get("/playground", response_class=HTMLResponse)
+async def playground() -> HTMLResponse:
+    """Frontend de teste: text area, cenários, triagem, pipeline e debug por step."""
+    return HTMLResponse(PLAYGROUND.read_text(encoding="utf-8"))
+
+
 api_router = APIRouter(prefix="/api/v1", dependencies=[Depends(require_api_key)])
 
 

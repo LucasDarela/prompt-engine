@@ -23,7 +23,7 @@ def test_library_usage_offline(
     assert result["triage"]["category"] == "billing"
     assert result["pii_redacted"] == ["CPF"]
     assert "529.982.247-25" not in result["prompt_sent_to_llm"]
-    assert "529.982.247-25" in result["triage"]["suggested_reply"]  # reidratado só para o cliente
+    assert result["triage"]["needs_human"] is True  # roteiro de demo: cobrança escala para humano
 
 
 def test_frontend_never_uses_inner_html() -> None:

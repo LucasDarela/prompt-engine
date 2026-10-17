@@ -15,6 +15,7 @@ Expor o pipeline via HTTP como uma camada **fina**: validar o payload, chamar o 
 | `GET` | `/api/v1/prompts` | Lista os prompts da biblioteca (`id`, `version`, `description`, `techniques`) |
 | `GET` | `/api/v1/prompts/{prompt_id}` | Metadados e template (sem renderizar) de um prompt |
 | `GET` | `/api/v1/traces/{request_id}` | Trace de uma request. **Habilitado só se `DEBUG_ENDPOINTS=true`** |
+| `GET` | `/playground` | Frontend de teste (text area, cenários, triagem, pipeline, debug por step e trace). `/` redireciona para cá. Fora do OpenAPI |
 
 ## 3. `POST /api/v1/process-prompt`
 

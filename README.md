@@ -43,6 +43,10 @@ make run                        # http://localhost:8000/docs
 ./examples/curl.sh              # 5 cenários de exemplo
 ```
 
+**Frontend de teste:** com a API no ar, abra **http://localhost:8000/playground**. Tem cenários prontos (cobrança com CPF, pedido de desconto, app parado, NF-e, Procon, injection), mostra a triagem, a rota, os modelos, a PII mascarada e, com `DEBUG_ENDPOINTS=true`, o prompt que cada step enviou ao LLM e o trace.
+
+**Sem chave ou sem quota:** `LLM_PROVIDER=fake DEBUG_ENDPOINTS=true make run` sobe em **modo demo**, com respostas fixas por step. O pipeline inteiro roda de verdade (PII, injection, roteamento, validação, traces); só o LLM é simulado.
+
 Ou com Docker (lê o `.env`; traces persistem em `./var`):
 ```bash
 docker compose up --build    # http://localhost:8000/docs
