@@ -1,0 +1,11 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file: .env            # GEMINI_API_KEY e demais variáveis (o .env NÃO entra na imagem)
+    environment:
+      LOG_FORMAT: json
+    volumes:
+      - ./var:/app/var        # traces SQLite persistem fora do container
+    restart: unless-stopped

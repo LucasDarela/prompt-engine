@@ -116,7 +116,7 @@
 ## Fase 10 — Entrega
 - [x] **10.1** `examples/`: `curl.sh`, `python_client.py`, `library_usage.py`, `frontend/index.html`
 - [ ] **10.2** README final (setup, arquitetura resumida, como rodar testes/evals, resultados dos evals, limitações)
-- [ ] **10.3** (Opcional) `Dockerfile` + `docker-compose.yml`
+- [x] **10.3** (Opcional) `Dockerfile` + `docker-compose.yml` (⚠️ build não verificado: daemon Docker indisponível na máquina de desenvolvimento em 2026-10-17; wheel verificado com prompts e parciais incluídos)
 - [ ] **10.4** Revisão final: `ruff`, `mypy`, cobertura ≥ 80% e checklist do PRD §7
 
 ---
