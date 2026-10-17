@@ -108,7 +108,9 @@ class ProviderPool:
 - `PoolResult.attempts` registra cada tentativa (`"gemini:rate_limited"`, `"gemini:ok"`) e vai para `StepResult.call_log`. Chamadas de reparo aparecem com prefixo `repair:`.
 - **Timeout** por request: `LLM_TIMEOUT_S` (padrão 30).
 - **Retry** (loop próprio com `sleep` injetável, determinístico nos testes): só para `ProviderRateLimitError` e `ProviderUnavailableError`. Até `LLM_MAX_RETRIES` (padrão 2), backoff exponencial com jitter (0.5s, 1s, 2s…). Respeita `retry_after` se vier.
-- **Fallback:** esgotados os retries, tenta o próximo provider de `LLM_FALLBACK_PROVIDERS` **no mesmo tier**. Isso fica registrado em `StepResult.attempts` e no trace.
+- **Fallback de modelo (mesmo provider)** — `LLM_MODEL_FALLBACK=true`: esgotados os retries, tenta os outros tiers do mesmo provider antes de trocar de provider. Ordem: `fast → balanced`; `balanced → powerful → fast`; `powerful → balanced` (primeiro sobe em qualidade, depois desce em custo). Modelos repetidos entre tiers não são tentados duas vezes. Motivo: com só a chave do Gemini, um 503 persistente num modelo derrubava a request (visto ao vivo em 2026-10-14) mesmo com outros modelos Gemini respondendo.
+- **Fallback de provider:** depois, o próximo provider de `LLM_FALLBACK_PROVIDERS` **no mesmo tier**.
+- `call_log` mostra `gemini[gemini-3.8-flash]:ok` quando a resposta veio de um fallback de modelo, para dar para auditar.
 - `ProviderBadRequestError` **não** tem retry (é bug nosso).
 
 ## 5. Roteamento (`routing/`)

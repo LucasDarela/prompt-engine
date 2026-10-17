@@ -36,6 +36,7 @@ class Settings(BaseSettings):
     llm_fallback_providers: Annotated[list[ProviderName], NoDecode] = []
     llm_timeout_s: float = Field(default=30.0, gt=0)
     llm_max_retries: int = Field(default=2, ge=0)
+    llm_model_fallback: bool = True  # outros tiers do MESMO provider antes de trocar de provider
 
     gemini_api_key: SecretStr | None = None
     gemini_model_fast: str | None = "gemini-3.5-flash-lite"

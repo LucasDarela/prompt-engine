@@ -15,6 +15,12 @@ from prompt_engine.core.errors import ProviderConfigError, ProviderError, Provid
 from prompt_engine.llm.base import LLMProvider, LLMRequest, LLMResponse
 
 TIER_ORDER: tuple[Tier, ...] = ("fast", "balanced", "powerful")
+# Se o modelo do tier pedido estiver indisponível: primeiro sobe (qualidade), depois desce (custo).
+MODEL_FALLBACK_ORDER: dict[Tier, tuple[Tier, ...]] = {
+    "fast": ("balanced",),
+    "balanced": ("powerful", "fast"),
+    "powerful": ("balanced",),
+}
 BASE_DELAY_S = 0.5
 MAX_DELAY_S = 30.0
 JITTER_S = 0.25
@@ -76,10 +82,10 @@ class ProviderPool:
                 except ProviderError as exc:
                     last_error = exc
                 else:
-                    attempts.append(f"{candidate.provider}:ok")
+                    attempts.append(f"{self._label(candidate, target)}:ok")
                     return PoolResult(response=response, attempts=attempts)
 
-                attempts.append(f"{candidate.provider}:{last_error.code}")
+                attempts.append(f"{self._label(candidate, target)}:{last_error.code}")
                 if not last_error.retryable:
                     raise last_error  # bug nosso (400): nem retry nem fallback
                 if attempt < self.settings.llm_max_retries:
@@ -89,9 +95,24 @@ class ProviderPool:
             raise ProviderConfigError("nenhum provider candidato")
         raise last_error
 
+    @staticmethod
+    def _label(candidate: Target, target: Target) -> str:
+        """`gemini[modelo]` só no fallback de modelo do MESMO provider; senão, só o provider."""
+        model_fallback = candidate.provider == target.provider and candidate.model != target.model
+        return f"{candidate.provider}[{candidate.model}]" if model_fallback else candidate.provider
+
     def _candidates(self, target: Target) -> list[Target]:
-        """Target pedido + providers de fallback, no mesmo tier."""
+        """Target pedido -> outros modelos do mesmo provider -> outros providers (mesmo tier)."""
         candidates = [target]
+        if self.settings.llm_model_fallback:
+            for tier in MODEL_FALLBACK_ORDER[target.tier]:
+                model = (
+                    self.settings.model_for(target.provider, tier)
+                    if target.provider != "fake"
+                    else None
+                )
+                if model and all(c.model != model for c in candidates):
+                    candidates.append(Target(target.provider, model, tier))
         for name in self.settings.llm_fallback_providers:
             if name == target.provider or name not in self.providers:
                 continue

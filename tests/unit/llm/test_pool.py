@@ -114,6 +114,7 @@ async def test_fallback_to_next_provider_same_tier() -> None:  # LLM-4
     p, _ = pool(
         {"gemini": named_fake("gemini", down), "fake": named_fake("fake", "do fallback")},
         llm_fallback_providers="fake",
+        llm_model_fallback=False,
     )
     result = await p.generate(p.resolve("balanced"), make_request())
     assert result.response.text == "do fallback"
@@ -122,7 +123,10 @@ async def test_fallback_to_next_provider_same_tier() -> None:  # LLM-4
 
 
 async def test_all_providers_exhausted_raises_last_error() -> None:
-    p, _ = pool({"gemini": named_fake("gemini", [e.ProviderUnavailableError("gemini")] * 3)})
+    p, _ = pool(
+        {"gemini": named_fake("gemini", [e.ProviderUnavailableError("gemini")] * 3)},
+        llm_model_fallback=False,
+    )
     with pytest.raises(e.ProviderUnavailableError):
         await p.generate(p.resolve("fast"), make_request())
 
@@ -152,7 +156,7 @@ async def test_timeout_becomes_unavailable_and_is_retried() -> None:
             raise AssertionError("não deveria chegar aqui")
 
     slow = Slow()
-    p, _ = pool({"gemini": slow}, llm_timeout_s=0.01, llm_max_retries=1)
+    p, _ = pool({"gemini": slow}, llm_timeout_s=0.01, llm_max_retries=1, llm_model_fallback=False)
     with pytest.raises(e.ProviderUnavailableError, match="timeout"):
         await p.generate(p.resolve("fast"), make_request())
     assert slow.calls == 2
@@ -164,6 +168,7 @@ async def test_fallback_list_skips_self_disabled_and_unconfigured() -> None:
         {"gemini": named_fake("gemini", down), "fake": named_fake("fake", "ok")},
         # gemini (o próprio), openai (não habilitado) e anthropic (sem modelo) são ignorados
         llm_fallback_providers="gemini,openai,anthropic,fake",
+        llm_model_fallback=False,
     )
     p.providers["anthropic"] = named_fake("anthropic", "nunca")
     p.settings = p.settings.model_copy(
@@ -171,3 +176,95 @@ async def test_fallback_list_skips_self_disabled_and_unconfigured() -> None:
     )
     result = await p.generate(p.resolve("balanced"), make_request())
     assert result.attempts[-1] == "fake:ok"
+
+
+# --- fallback entre modelos do mesmo provider (plano 6.7) --------------------------------
+
+
+def by_model(responses: dict[str, Any]) -> Any:
+    """Roteiro que responde conforme o MODELO pedido (simula um modelo sobrecarregado)."""
+
+    def respond(request: LLMRequest) -> str:
+        outcome = responses[request.model]
+        if isinstance(outcome, Exception):
+            raise outcome
+        return str(outcome)
+
+    return respond
+
+
+DOWN = e.ProviderUnavailableError("gemini", "HTTP 503")
+
+
+def gemini_by_model(responses: dict[str, Any]) -> FakeProvider:
+    fake = FakeProvider({}, name="gemini")
+    fake.script["classify"] = by_model(responses)
+    return fake
+
+
+async def test_overloaded_model_falls_back_to_other_gemini_tier() -> None:
+    gemini = gemini_by_model({"gemini-3.7-flash": DOWN, "gemini-3.8-flash": "do powerful"})
+    p, _ = pool({"gemini": gemini})
+    result = await p.generate(p.resolve("balanced"), make_request())
+    assert result.response.text == "do powerful"
+    assert result.response.model == "gemini-3.8-flash"
+    assert result.attempts == ["gemini:provider_unavailable"] * 3 + ["gemini[gemini-3.8-flash]:ok"]
+
+
+async def test_model_fallback_order_balanced_then_powerful_then_fast() -> None:
+    gemini = gemini_by_model(
+        {"gemini-3.7-flash": DOWN, "gemini-3.8-flash": DOWN, "gemini-3.5-flash-lite": "do fast"}
+    )
+    p, _ = pool({"gemini": gemini}, llm_max_retries=0)
+    result = await p.generate(p.resolve("balanced"), make_request())
+    assert [c.model for c in gemini.calls] == [
+        "gemini-3.7-flash",
+        "gemini-3.8-flash",
+        "gemini-3.5-flash-lite",
+    ]
+    assert result.response.text == "do fast"
+
+
+@pytest.mark.parametrize(
+    ("tier", "expected_order"),
+    [
+        ("fast", ["gemini-3.5-flash-lite", "gemini-3.7-flash"]),
+        ("powerful", ["gemini-3.8-flash", "gemini-3.7-flash"]),
+    ],
+)
+async def test_model_fallback_order_for_other_tiers(tier: Any, expected_order: list[str]) -> None:
+    gemini = gemini_by_model({m: DOWN for m in expected_order})
+    p, _ = pool({"gemini": gemini}, llm_max_retries=0)
+    with pytest.raises(e.ProviderUnavailableError):
+        await p.generate(p.resolve(tier), make_request())
+    assert [c.model for c in gemini.calls] == expected_order
+
+
+async def test_model_fallback_runs_before_other_providers() -> None:
+    gemini = gemini_by_model({"gemini-3.7-flash": DOWN, "gemini-3.8-flash": "gemini ainda"})
+    other = named_fake("fake", "outro provider")
+    p, _ = pool({"gemini": gemini, "fake": other}, llm_fallback_providers="fake")
+    result = await p.generate(p.resolve("balanced"), make_request())
+    assert result.response.text == "gemini ainda"
+    assert other.calls == []
+
+
+async def test_model_fallback_can_be_disabled() -> None:
+    gemini = gemini_by_model({"gemini-3.7-flash": DOWN, "gemini-3.8-flash": "não deveria"})
+    p, _ = pool({"gemini": gemini}, llm_model_fallback=False)
+    with pytest.raises(e.ProviderUnavailableError):
+        await p.generate(p.resolve("balanced"), make_request())
+    assert {c.model for c in gemini.calls} == {"gemini-3.7-flash"}
+
+
+async def test_duplicate_models_across_tiers_are_not_retried_twice() -> None:
+    gemini = gemini_by_model({"gemini-3.8-flash": DOWN})
+    p, _ = pool(
+        {"gemini": gemini},
+        llm_max_retries=0,
+        gemini_model_balanced="gemini-3.8-flash",
+        gemini_model_fast="gemini-3.8-flash",
+    )
+    with pytest.raises(e.ProviderUnavailableError):
+        await p.generate(p.resolve("balanced"), make_request())
+    assert len(gemini.calls) == 1

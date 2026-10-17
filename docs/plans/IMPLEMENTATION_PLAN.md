@@ -86,7 +86,7 @@
 - [x] **6.4** `api/schemas.py`, `api/routes.py`, `api/deps.py`, `api/app.py` (request id, CORS, API key, handlers) → API-1..8
 - [x] **6.5** Rodar manualmente com Gemini real (`make run` + `examples/curl.sh`) e registrar a saída no README
 - [x] **6.6** (achados do teste ao vivo) Regras "IA não executa ações" e "nada financeiro é prometido" em prompt + review + guarda determinística (`unverified_action_claim`, `financial_promise`); warning `missing_accents`; latência por step no debug
-- [ ] **6.7** Fallback entre **modelos do mesmo provedor**: com só a chave do Gemini, um 503 persistente num modelo derruba a request (visto ao vivo em 2026-10-14) mesmo com outros modelos Gemini respondendo. Ex.: `balanced` em 503 → tentar `powerful`, depois `fast`
+- [x] **6.7** Fallback entre **modelos do mesmo provedor**: com só a chave do Gemini, um 503 persistente num modelo derruba a request (visto ao vivo em 2026-10-14) mesmo com outros modelos Gemini respondendo. Ex.: `balanced` em 503 → tentar `powerful`, depois `fast`
 
 ## Fase 7 — Observabilidade (SPEC-008)
 - [ ] **7.1** `observability/logging.py` (structlog, filtros anti-PII) → OBS-5
