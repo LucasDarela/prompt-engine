@@ -31,6 +31,7 @@ texto do cliente ─▶ validação ─▶ anti-injection ─▶ mascarar PII �
 | [docs/adr/](docs/adr/) | Registros de decisão arquitetural |
 | [docs/plans/IMPLEMENTATION_PLAN.md](docs/plans/IMPLEMENTATION_PLAN.md) | Plano em fases com checklist |
 | [docs/CONVENTIONS.md](docs/CONVENTIONS.md) | Padrões de código, testes, git, DoD |
+| [docs/DEMO.md](docs/DEMO.md) | Roteiro de demonstração de 5 minutos |
 | [CLAUDE.md](CLAUDE.md) | Instruções para agentes de IA |
 
 ## Quickstart
