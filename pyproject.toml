@@ -79,6 +79,11 @@ asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 addopts = "-m 'not live' --strict-markers --import-mode=importlib --cov=prompt_engine --cov-report=term-missing --cov-fail-under=80"
 markers = ["live: chama provedores reais de LLM (gasta quota; rode com -m live)"]
+# Só avisos conhecidos de terceiros (Starlette sobre httpx; SDK do Google no Python 3.14).
+filterwarnings = [
+    "ignore:Using `httpx` with `starlette.testclient` is deprecated",
+    "ignore:'_UnionGenericAlias' is deprecated:DeprecationWarning",
+]
 
 [tool.coverage.run]
 branch = true

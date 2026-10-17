@@ -1,6 +1,7 @@
 """SQLiteTraceStore + StoreTraceSink (SPEC-008 §3)."""
 
 import sqlite3
+from contextlib import closing
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -62,7 +63,8 @@ def test_purge_removes_old_traces(tmp_path: Path) -> None:
 def test_denormalized_columns_are_queryable(tmp_path: Path) -> None:
     store = SQLiteTraceStore(tmp_path / "t.db")
     store.save(make_trace("req_1"))
-    with sqlite3.connect(tmp_path / "t.db") as conn:
+    # `with sqlite3.connect()` não fecha a conexão (só faz commit): closing() fecha.
+    with closing(sqlite3.connect(tmp_path / "t.db")) as conn:
         row = conn.execute("SELECT flow, status, category FROM traces").fetchone()
     assert row == ("support_triage", "ok", "billing")
 

@@ -10,7 +10,8 @@ Middleware de prompts em Python/FastAPI para **triagem de suporte**: guardrails 
 5. `docs/CONVENTIONS.md` e, se for mexer em prompt, `docs/PROMPT_ENGINEERING.md`
 
 ## Status atual
-Documentação aprovada. Implementação em andamento, fase por fase: o próximo item é o primeiro checkbox aberto em `docs/plans/IMPLEMENTATION_PLAN.md`.
+Fases 0–7, 9 e 10 concluídas (MVP, observabilidade, evals, entrega). Pendências no plano: 9.6 (completar a rodada de evals quando a quota diária do Gemini permitir: `make eval-full`), 9.0b (ataques de injection de terceiros) e a Fase 8 (adiada).
+Frontend de teste: `/playground`. Sem chave/quota: `LLM_PROVIDER=fake` (modo demo).
 Domínio: **Chopp Hub**, SaaS B2B para distribuidores de bebidas (persona em `prompts/library/_partials/system_base.j2`).
 
 ## Comandos (após a Fase 0)
