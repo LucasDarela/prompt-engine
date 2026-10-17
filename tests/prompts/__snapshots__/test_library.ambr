@@ -92,7 +92,7 @@
     }),
   ])
 # ---
-# name: test_rendered_prompt_snapshot[support_triage.classify@1.0.0]
+# name: test_rendered_prompt_snapshot[support_triage.classify@1.1.0]
   list([
     dict({
       'content': '''
@@ -114,13 +114,13 @@
         CRITÉRIOS
         - category:
           - billing: cobranças do Chopp Hub ao cliente (mensalidade, boletos, faturas, valores contratados).
-          - technical: erros, lentidão, integrações, App do Motorista, falhas na emissão de NF-e pelo sistema.
+          - technical: erros, falhas ou lentidão RELATADOS (algo não funciona como deveria): integrações, App do Motorista, emissão de NF-e pelo sistema.
           - account: acesso, login, usuários, permissões, dados cadastrais.
           - shipping: rotas, entregas, coleta e devolução de barris.
           - cancellation: encerrar plano ou contrato.
           - legal: LGPD, contrato, Procon, processo, advogado.
-          - other: nada acima.
-        - urgency: critical = operação parada ou ameaça jurídica; high = impacto financeiro ou operacional relevante; medium = problema com contorno; low = dúvida ou solicitação simples.
+          - other: dúvidas sobre o que o Chopp Hub oferece, se tem um recurso ou como funciona, sem erro relatado (ex.: "dá para emitir boleto em lote?", "existe relatório de comissão por vendedor?"); elogios; nada acima.
+        - urgency: critical = operação parada ou ameaça jurídica; high = impacto financeiro ou operacional relevante, incluindo QUALQUER cobrança indevida, duplicada ou acima do contratado; medium = problema com contorno; low = dúvida ou solicitação simples.
         - sentiment: very_negative, negative, neutral ou positive, conforme o tom do texto.
         - intents: até 5 intenções em snake_case, em inglês (ex.: refund, report_bug, manage_users).
         - entities: extraia apenas order_id, product, amount, date e payment_method quando explícitos; omita os ausentes.

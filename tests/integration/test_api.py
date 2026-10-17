@@ -35,7 +35,7 @@ def test_process_prompt_success_contract() -> None:  # API-1
     meta = body.meta
     assert meta.flow == "support_triage"
     assert meta.steps == [
-        "support_triage.classify@1.0.0",
+        "support_triage.classify@1.1.0",
         "support_triage.draft_reply@1.1.0",
         "support_triage.review_reply@1.1.0",
     ]
@@ -163,7 +163,7 @@ def test_prompt_library_endpoints() -> None:
     ids = {p["id"] for p in listing}
     assert "support_triage.classify" in ids
     classify = next(p for p in listing if p["id"] == "support_triage.classify")
-    assert classify["version"] == "1.0.0"
+    assert classify["version"] == "1.1.0"
     assert "few_shot" in classify["techniques"]
 
     detail = c.get("/api/v1/prompts/support_triage.classify")

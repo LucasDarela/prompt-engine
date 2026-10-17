@@ -1,5 +1,5 @@
 id: support_triage.classify
-version: 1.0.0
+version: 1.1.0
 description: Classifica a mensagem do cliente em categoria, urgência, sentimento, intenções e entidades.
 owner: lucas
 techniques:
@@ -19,6 +19,7 @@ output_schema: ClassifyOutput
 input_variables: [message, categories, canary]
 changelog:
   - "1.0.0: versão inicial (domínio Chopp Hub)."
+  - "1.1.0: evals de 2026-10-17 (25 casos): perguntas sobre recursos do produto caíam em technical (3 erros) e cobrança indevida saía medium (2 erros). Critérios de technical/other e de urgência high explicitados."
 
 system: |
   {% include "_partials/system_base.j2" %}
@@ -33,13 +34,13 @@ system: |
   CRITÉRIOS
   - category:
     - billing: cobranças do Chopp Hub ao cliente (mensalidade, boletos, faturas, valores contratados).
-    - technical: erros, lentidão, integrações, App do Motorista, falhas na emissão de NF-e pelo sistema.
+    - technical: erros, falhas ou lentidão RELATADOS (algo não funciona como deveria): integrações, App do Motorista, emissão de NF-e pelo sistema.
     - account: acesso, login, usuários, permissões, dados cadastrais.
     - shipping: rotas, entregas, coleta e devolução de barris.
     - cancellation: encerrar plano ou contrato.
     - legal: LGPD, contrato, Procon, processo, advogado.
-    - other: nada acima.
-  - urgency: critical = operação parada ou ameaça jurídica; high = impacto financeiro ou operacional relevante; medium = problema com contorno; low = dúvida ou solicitação simples.
+    - other: dúvidas sobre o que o Chopp Hub oferece, se tem um recurso ou como funciona, sem erro relatado (ex.: "dá para emitir boleto em lote?", "existe relatório de comissão por vendedor?"); elogios; nada acima.
+  - urgency: critical = operação parada ou ameaça jurídica; high = impacto financeiro ou operacional relevante, incluindo QUALQUER cobrança indevida, duplicada ou acima do contratado; medium = problema com contorno; low = dúvida ou solicitação simples.
   - sentiment: very_negative, negative, neutral ou positive, conforme o tom do texto.
   - intents: até 5 intenções em snake_case, em inglês (ex.: refund, report_bug, manage_users).
   - entities: extraia apenas order_id, product, amount, date e payment_method quando explícitos; omita os ausentes.

@@ -70,7 +70,7 @@ async def test_run_golden_collects_results_and_errors() -> None:
     ok, broken = runs
     assert ok.result is not None and ok.result["category"] == "billing"
     assert ok.error_code is None
-    assert ok.prompt_versions["classify"] == "1.0.0"
+    assert ok.prompt_versions["classify"] == "1.1.0"
     assert ok.models["draft_reply"] == "fake-fast"
     assert ok.tokens.input_tokens > 0
     assert ok.ctx is not None

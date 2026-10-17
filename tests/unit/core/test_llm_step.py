@@ -70,7 +70,7 @@ async def test_happy_path_records_step_result() -> None:
     ctx = await classify_step(deps).run(make_ctx())
     step = ctx.step("classify")
     assert step.parsed == VALID
-    assert (step.prompt_id, step.prompt_version) == ("support_triage.classify", "1.0.0")
+    assert (step.prompt_id, step.prompt_version) == ("support_triage.classify", "1.1.0")
     assert (step.provider, step.model) == ("fake", "fake-fast")
     assert step.attempts == 1
     assert not step.repaired and not step.fallback_used
