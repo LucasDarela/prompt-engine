@@ -426,10 +426,19 @@ def run_ingest(repo: Path, config: Path, out: Path, *, commit: str | None = None
                         "reviewed": reviewed,
                     }
                 )
+                notes = []
                 internal = find_internal_terms(f"{part.title}\n{part.content}")
                 if internal:
-                    note = "termos internos (remover antes de revisar): " + ", ".join(internal)
-                    entries[-1]["review_notes"] = [note]
+                    notes.append(
+                        "termos internos (remover antes de revisar): " + ", ".join(internal)
+                    )
+                for stale in cfg.get(
+                    "stale_terms", []
+                ):  # fatos que o código-fonte ainda não reflete
+                    if re.search(stale["match"], f"{part.title}\n{part.content}", re.IGNORECASE):
+                        notes.append(str(stale["note"]))
+                if notes:
+                    entries[-1]["review_notes"] = notes
                 report.needs_review += 0 if reviewed else 1
         path = out / f"{prefix}.yaml"
         header = (

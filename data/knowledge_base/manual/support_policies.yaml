@@ -62,6 +62,17 @@
   tags: [lento, fora do ar, erro, indisponível]
   source: manual-demo
 
+- id: kb-technical-004
+  category: technical
+  title: NF-e é emitida direto pela SEFAZ
+  content: >-
+    Toda a NF-e no Chopp Hub (emissão, cancelamento, carta de correção, inutilização e
+    devolução) é feita diretamente pela SEFAZ, sem intermediários. Em caso de rejeição, peça o
+    número do pedido e a mensagem de rejeição exibida para que o time técnico analise.
+  tags: [nf-e, nota fiscal, sefaz, rejeição, cancelamento, carta de correção]
+  updated_at: 2026-10-17
+  source: manual  # fato informado pelo Lucas em 2026-10-17
+
 # --- account ------------------------------------------------------------------------------
 - id: kb-account-001
   category: account

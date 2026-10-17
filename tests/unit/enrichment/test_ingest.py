@@ -425,3 +425,33 @@ def test_ts_objects_tolerates_unterminated_array() -> None:
         'const xs = [ { title: "Único", description: "ok" }', array="xs"
     )
     assert (snippet.title, snippet.content) == ("Único", "ok")
+
+
+def test_stale_terms_add_review_notes(repo: Path, tmp_path: Path) -> None:
+    (repo / "docs" / "nfe.md").write_text(
+        "# NF-e\n\n## Contexto\n\nO cancelamento continua via Focus NFe.\n\n"
+        "## Fluxo\n\nEmissão pela SEFAZ.\n",
+        encoding="utf-8",
+    )
+    cfg = tmp_path / "stale.yaml"
+    cfg.write_text(
+        yaml.safe_dump(
+            {
+                "repo": "chopp-hub",
+                "stale_terms": [{"match": r"\bfocus\b", "note": "Focus não é mais usada"}],
+                "sources": [
+                    {
+                        "path": "docs/nfe.md",
+                        "extractor": "markdown_sections",
+                        "prefix": "nfe",
+                        "category": "technical",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    run_ingest(repo, cfg, tmp_path / "out", commit="x")
+    notes = {e["id"]: e.get("review_notes") for e in load_out(tmp_path / "out", "nfe")}
+    assert notes["nfe-contexto"] == ["Focus não é mais usada"]
+    assert notes["nfe-fluxo"] is None

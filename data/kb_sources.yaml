@@ -5,6 +5,16 @@
 repo: chopp-hub
 max_chars: 900
 
+# Fatos que o código/specs do repositório ainda não refletem: snippets que casarem recebem
+# review_notes (e saem da KB até alguém corrigir o texto). Fonte de cada fato no comentário.
+stale_terms:
+  # Lucas, 2026-10-17: a Focus NFe não é mais usada; toda a NF-e é feita direto pela SEFAZ.
+  - match: '\bfocus\b'
+    note: >-
+      Desatualizado: a Focus NFe não é mais usada (nenhuma API, integração ou chamada). Toda a
+      NF-e (emissão, cancelamento, carta de correção, inutilização e devolução) é feita direto
+      pela SEFAZ. Corrija o texto antes de aprovar.
+
 sources:
   - path: app/dashboard/help/page.tsx
     extractor: ts_objects

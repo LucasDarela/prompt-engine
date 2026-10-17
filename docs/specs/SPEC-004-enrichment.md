@@ -80,6 +80,7 @@ Garantias:
 - **Lista permitida** de arquivos e, para specs internos, de seções. Specs descrevem funcionalidades **planejadas**: confirme se já estão no ar.
 - **Segredos:** trechos com padrão de credencial (Google/GitHub/Stripe/AWS, JWT, chave privada, `api_key = ...`) são **descartados** e listados no relatório.
 - **Termos internos:** caminhos de código e identificadores snake_case viram `review_notes` para o revisor remover.
+- **Fatos desatualizados (`stale_terms` no `kb_sources.yaml`):** regex + nota. Serve para o que o código-fonte ainda não reflete. Exemplo: a Focus NFe não é mais usada, e toda a NF-e é feita direto pela SEFAZ (Lucas, 2026-10-17); qualquer snippet que mencione a Focus recebe `review_notes` e sai da KB até ser corrigido.
 - **Proveniência:** `source: <repo>@<commit>:<arquivo>`.
 - **Revisão preservada:** re-ingerir mantém `reviewed: true` quando título e conteúdo não mudaram; se mudaram, volta para `false`.
 - Regras de categoria (`category_rules`) olham só o **título**: palavras soltas no conteúdo geravam categorias erradas (ex.: "entregas" no FAQ da planilha).
