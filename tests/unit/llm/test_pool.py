@@ -94,7 +94,7 @@ async def test_rate_limit_then_success_with_backoff() -> None:  # LLM-3
 async def test_retry_after_is_respected_and_capped() -> None:
     script = [
         e.ProviderRateLimitError("gemini", retry_after=7),
-        e.ProviderRateLimitError("gemini", retry_after=999),
+        e.ProviderRateLimitError("gemini", retry_after=30),  # no teto: ainda é espera curta
         "ok",
     ]
     p, sleeps = pool({"gemini": named_fake("gemini", script)})
@@ -268,3 +268,29 @@ async def test_duplicate_models_across_tiers_are_not_retried_twice() -> None:
     with pytest.raises(e.ProviderUnavailableError):
         await p.generate(p.resolve("balanced"), make_request())
     assert len(gemini.calls) == 1
+
+
+async def test_exhausted_daily_quota_skips_retries_and_falls_back() -> None:
+    # retryDelay de horas = quota do dia esgotada (ex.: 20 req/dia no gemini-3.7-flash free tier)
+    exhausted = e.ProviderRateLimitError("gemini", "quota diária", retry_after=29526)
+    gemini = gemini_by_model({"gemini-3.7-flash": exhausted, "gemini-3.8-flash": "do powerful"})
+    p, sleeps = pool({"gemini": gemini})
+    result = await p.generate(p.resolve("balanced"), make_request())
+    assert result.response.text == "do powerful"
+    assert result.attempts == ["gemini:quota_exhausted", "gemini[gemini-3.8-flash]:ok"]
+    assert sleeps.delays == []  # não esperou nada: foi direto para o próximo modelo
+
+
+async def test_short_retry_after_is_still_retried() -> None:
+    script = [e.ProviderRateLimitError("gemini", retry_after=12), "ok"]
+    p, sleeps = pool({"gemini": named_fake("gemini", script)})
+    result = await p.generate(p.resolve("fast"), make_request())
+    assert result.attempts == ["gemini:rate_limited", "gemini:ok"]
+    assert sleeps.delays == [12]
+
+
+async def test_all_models_exhausted_raises_rate_limit() -> None:
+    exhausted = e.ProviderRateLimitError("gemini", retry_after=29526)
+    p, _ = pool({"gemini": named_fake("gemini", [exhausted] * 3)})
+    with pytest.raises(e.ProviderRateLimitError):
+        await p.generate(p.resolve("balanced"), make_request())

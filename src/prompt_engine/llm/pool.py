@@ -13,7 +13,12 @@ from collections.abc import Awaitable, Callable, MutableMapping
 from dataclasses import dataclass, field
 
 from prompt_engine.config import ProviderName, Settings, Tier
-from prompt_engine.core.errors import ProviderConfigError, ProviderError, ProviderUnavailableError
+from prompt_engine.core.errors import (
+    ProviderConfigError,
+    ProviderError,
+    ProviderRateLimitError,
+    ProviderUnavailableError,
+)
 from prompt_engine.llm.base import LLMProvider, LLMRequest, LLMResponse
 
 TIER_ORDER: tuple[Tier, ...] = ("fast", "balanced", "powerful")
@@ -28,6 +33,12 @@ MAX_DELAY_S = 30.0
 
 logger = logging.getLogger("prompt_engine.llm")
 JITTER_S = 0.25
+
+
+def _quota_exhausted(error: ProviderError) -> bool:
+    """429 pedindo para esperar mais que o teto de backoff = quota (ex.: diária) esgotada."""
+    retry_after = getattr(error, "retry_after", None)
+    return isinstance(error, ProviderRateLimitError) and (retry_after or 0) > MAX_DELAY_S
 
 
 @dataclass(frozen=True)
@@ -91,10 +102,13 @@ class ProviderPool:
                     self._log(candidate, request, "ok", started)
                     return PoolResult(response=response, attempts=attempts)
 
-                attempts.append(f"{self._label(candidate, target)}:{last_error.code}")
-                self._log(candidate, request, last_error.code, started)
+                outcome = "quota_exhausted" if _quota_exhausted(last_error) else last_error.code
+                attempts.append(f"{self._label(candidate, target)}:{outcome}")
+                self._log(candidate, request, outcome, started)
                 if not last_error.retryable:
                     raise last_error  # bug nosso (400): nem retry nem fallback
+                if outcome == "quota_exhausted":
+                    break  # esperar horas não adianta: vai direto para o próximo modelo/provider
                 if attempt < self.settings.llm_max_retries:
                     await self._sleep(self._delay(attempt, last_error))
 
