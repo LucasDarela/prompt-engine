@@ -77,7 +77,7 @@
 - [x] **5.5** `routing/router.py` (stage, force tier, override de provider) → RT-3
 - [x] **5.6** (novo) `enrichment/ingest.py`: ingestão determinística do repositório `chopp-hub` (4 extratores, filtro de segredos, `review_notes` de termos internos, revisão preservada) → EN-7, EN-8
 - [x] **5.7** (novo) Ingestão real: `data/kb_sources.yaml` → 84 snippets em `data/knowledge_base/generated/` (`chopp-hub@1674717`)
-- [ ] **5.8** 👤 **Revisão humana (Lucas)** dos 84 snippets gerados: remover termos internos apontados em `review_notes`, confirmar se as funcionalidades dos specs já estão no ar e marcar `reviewed: true`. Validar também os itens `manual-demo` e o `sla.yaml`.
+- [x] **5.8** 👤 **Revisão humana (Lucas)** dos 84 snippets gerados: remover termos internos apontados em `review_notes`, confirmar se as funcionalidades dos specs já estão no ar e marcar `reviewed: true`. Validar também os itens `manual-demo` e o `sla.yaml`.
 
 ## Fase 6 — Flow + API (SPEC-002 §5, SPEC-001) — **MVP**
 - [x] **6.1** `AssembleTriage` com a regra de `needs_human` → OUT-8
