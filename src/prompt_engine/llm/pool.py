@@ -24,21 +24,25 @@ from prompt_engine.llm.base import LLMProvider, LLMRequest, LLMResponse
 TIER_ORDER: tuple[Tier, ...] = ("fast", "balanced", "powerful")
 # Se o modelo do tier pedido estiver indisponível: primeiro sobe (qualidade), depois desce (custo).
 MODEL_FALLBACK_ORDER: dict[Tier, tuple[Tier, ...]] = {
-    "fast": ("balanced",),
+    "fast": ("balanced", "powerful"),
     "balanced": ("powerful", "fast"),
     "powerful": ("balanced",),
 }
 BASE_DELAY_S = 0.5
-MAX_DELAY_S = 30.0
+MAX_DELAY_S = 60.0  # cobre a janela de um limite por minuto (RPM)
+# Acima disso o provider está pedindo horas: quota diária esgotada, não adianta esperar.
+QUOTA_EXHAUSTED_AFTER_S = 300.0
 
 logger = logging.getLogger("prompt_engine.llm")
 JITTER_S = 0.25
 
 
 def _quota_exhausted(error: ProviderError) -> bool:
-    """429 pedindo para esperar mais que o teto de backoff = quota (ex.: diária) esgotada."""
+    """429 pedindo para esperar mais de 5 min = quota diária esgotada (por minuto pede <= 60s)."""
     retry_after = getattr(error, "retry_after", None)
-    return isinstance(error, ProviderRateLimitError) and (retry_after or 0) > MAX_DELAY_S
+    return (
+        isinstance(error, ProviderRateLimitError) and (retry_after or 0) > QUOTA_EXHAUSTED_AFTER_S
+    )
 
 
 @dataclass(frozen=True)
@@ -104,7 +108,7 @@ class ProviderPool:
 
                 outcome = "quota_exhausted" if _quota_exhausted(last_error) else last_error.code
                 attempts.append(f"{self._label(candidate, target)}:{outcome}")
-                self._log(candidate, request, outcome, started)
+                self._log(candidate, request, outcome, started, last_error)
                 if not last_error.retryable:
                     raise last_error  # bug nosso (400): nem retry nem fallback
                 if outcome == "quota_exhausted":
@@ -117,12 +121,19 @@ class ProviderPool:
         raise last_error
 
     @staticmethod
-    def _log(candidate: Target, request: LLMRequest, outcome: str, started: float) -> None:
+    def _log(
+        candidate: Target,
+        request: LLMRequest,
+        outcome: str,
+        started: float,
+        error: ProviderError | None = None,
+    ) -> None:
         level = logging.INFO if outcome == "ok" else logging.WARNING
         logger.log(
             level,
             "llm.call",
             extra={
+                "retry_after": getattr(error, "retry_after", None),
                 "step": request.metadata.get("step"),
                 "provider": candidate.provider,
                 "model": candidate.model,

@@ -91,15 +91,16 @@ async def test_rate_limit_then_success_with_backoff() -> None:  # LLM-3
     assert sleeps.delays == [0.5]
 
 
-async def test_retry_after_is_respected_and_capped() -> None:
+async def test_retry_after_is_respected_and_long_waits_mean_exhausted() -> None:
     script = [
         e.ProviderRateLimitError("gemini", retry_after=7),
-        e.ProviderRateLimitError("gemini", retry_after=30),  # no teto: ainda é espera curta
-        "ok",
+        e.ProviderRateLimitError("gemini", retry_after=999),  # > 5 min: quota esgotada
+        "não deveria chegar aqui",
     ]
-    p, sleeps = pool({"gemini": named_fake("gemini", script)})
-    await p.generate(p.resolve("fast"), make_request())
-    assert sleeps.delays == [7, 30]
+    p, sleeps = pool({"gemini": named_fake("gemini", script)}, llm_model_fallback=False)
+    with pytest.raises(e.ProviderRateLimitError):
+        await p.generate(p.resolve("fast"), make_request())
+    assert sleeps.delays == [7]  # esperou o 1º; o 2º encerrou o modelo sem esperar
 
 
 async def test_exponential_backoff_on_unavailable() -> None:
@@ -228,7 +229,7 @@ async def test_model_fallback_order_balanced_then_powerful_then_fast() -> None:
 @pytest.mark.parametrize(
     ("tier", "expected_order"),
     [
-        ("fast", ["gemini-3.5-flash-lite", "gemini-3.7-flash"]),
+        ("fast", ["gemini-3.5-flash-lite", "gemini-3.7-flash", "gemini-3.8-flash"]),
         ("powerful", ["gemini-3.8-flash", "gemini-3.7-flash"]),
     ],
 )
@@ -294,3 +295,19 @@ async def test_all_models_exhausted_raises_rate_limit() -> None:
     p, _ = pool({"gemini": named_fake("gemini", [exhausted] * 3)})
     with pytest.raises(e.ProviderRateLimitError):
         await p.generate(p.resolve("balanced"), make_request())
+
+
+async def test_per_minute_limit_waits_full_window() -> None:
+    # Limite por minuto: o Gemini pede ~45s. Antes era tratado como quota esgotada (erro).
+    script = [e.ProviderRateLimitError("gemini", retry_after=45), "ok"]
+    p, sleeps = pool({"gemini": named_fake("gemini", script)}, llm_model_fallback=False)
+    result = await p.generate(p.resolve("fast"), make_request())
+    assert result.attempts == ["gemini:rate_limited", "gemini:ok"]
+    assert sleeps.delays == [45]
+
+
+async def test_wait_is_capped_at_one_minute() -> None:
+    script = [e.ProviderRateLimitError("gemini", retry_after=200), "ok"]
+    p, sleeps = pool({"gemini": named_fake("gemini", script)}, llm_model_fallback=False)
+    await p.generate(p.resolve("fast"), make_request())
+    assert sleeps.delays == [60]
