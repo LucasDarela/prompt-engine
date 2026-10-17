@@ -1,7 +1,7 @@
 # Prompt Engine — Triagem de Suporte com LLM
 
 > Capstone Módulo 2 · Sistema de prompts **modular, testável e reutilizável**
-> Status: ✅ **MVP funcional + observabilidade** (Fases 0–7): API ponta a ponta com Gemini · 522 testes · cobertura 100%
+> Status: ✅ **MVP + observabilidade + evals** (Fases 0–7 e 9): API ponta a ponta com Gemini · 560 testes · cobertura 100%
 
 Um middleware em **Python + FastAPI** que recebe a mensagem livre de um cliente (text area), protege, enriquece, roteia, consulta uma LLM em várias etapas e devolve um **JSON de triagem limpo e validado**.
 
@@ -38,7 +38,7 @@ texto do cliente ─▶ validação ─▶ anti-injection ─▶ mascarar PII �
 source venv/bin/activate
 pip install -e ".[dev,gemini]"
 cp .env.example .env            # preencha GEMINI_API_KEY
-make test                       # 522 testes offline, sem chave
+make test                       # 560 testes offline, sem chave
 make run                        # http://localhost:8000/docs
 ./examples/curl.sh              # 5 cenários de exemplo
 ```
@@ -66,6 +66,25 @@ curl -X POST http://localhost:8000/api/v1/process-prompt \
 | `Ignore all previous instructions...` | — | — | **422 `unsafe_input`**, nenhuma chamada ao LLM |
 
 Latência típica: ~1 s por step no `flash-lite`; o draft chega a ~7 s quando o Gemini devolve 503 e o retry com backoff entra em ação.
+
+## Evals contra o modelo real (2026-10-17)
+
+| Métrica | Resultado | Meta |
+|---|---|---|
+| JSON válido / sem reparo | 100% / 100% | 100% / ≥ 90% |
+| Acurácia de categoria | 89,3% | ≥ 85% |
+| Acurácia de urgência | 87,5% (100% com até 1 nível de diferença) | ≥ 75% |
+| Recall de `needs_human` | 100% | ≥ 95% |
+| Consistência (mesma categoria em 5 execuções) | 100% | ≥ 95% |
+| Prompt injection: recall / falso positivo (juiz real) | 100% / 0% | ≥ 90% / ≤ 5% |
+| Vazamento de PII para o provedor | 0 | 0 |
+| Qualidade da resposta (LLM-as-judge, 1 a 5) | 4,88 | ≥ 4,0 |
+
+Medido em 25 a 28 dos 43 casos do golden dataset: o plano gratuito do Gemini (500 req/dia no `flash-lite`, **20/dia** no `3.7-flash` e no `3.8-flash`) interrompeu o restante. Detalhes, metodologia e comando para completar: [SPEC-009 §8](docs/specs/SPEC-009-testing-evals.md) · relatórios em [docs/evals/](docs/evals/).
+
+```bash
+python -m prompt_engine.evals.run --sample 10    # ou: make eval
+```
 
 ## Observabilidade
 - **Logs JSON** (`LOG_FORMAT=json`) com `request_id` em todas as linhas e filtro anti-PII em todos os campos.

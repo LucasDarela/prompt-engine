@@ -108,10 +108,14 @@
 - [x] **9.3** Evals de validade, acurácia, needs_human, consistência, injection e PII leak
 - [x] **9.4** `evals.judge_reply` + `test_reply_quality`
 - [x] **9.5** Gerador de relatório `reports/eval-*.{json,md}`
-- [ ] **9.0c** Medir a frequência do warning `missing_accents` nos evals (Gemini omite acentos de forma intermitente em JSON mode, inclusive na `revised_reply` do review). Se relevante: tier mínimo `balanced` no draft, ou reparo dirigido.
+- [x] **9.0c** (medido: 8,0% e 14,3% das respostas nas rodadas de 2026-10-17; segue como warning, sem correção automática. Próximo passo, se incomodar: tier mínimo `balanced` no draft, limitado pela quota de 20/dia) Medir a frequência do warning `missing_accents` nos evals (Gemini omite acentos de forma intermitente em JSON mode, inclusive na `revised_reply` do review). Se relevante: tier mínimo `balanced` no draft, ou reparo dirigido.
 - [ ] **9.0b** Ampliar `injection_redteam.jsonl` com ataques **escritos por outra pessoa** (os atuais foram escritos junto com os padrões; risco de sobreajuste) e medir recall do juiz real.
-- [ ] **9.0** Corrigir extração de entidades do `classify`: no smoke de 2026-10-14 o modelo pôs `"amount": "outubro"` (mês no campo de valor). Medir no golden dataset, ajustar critério/few-shot, subir MINOR.
-- [ ] **9.6** Rodar com o Gemini, iterar prompts até atingir os limiares e registrar a tabela de resultados no README
+- [x] **9.0** (não reproduzido: entity_recall 100% em 14 entidades rotuladas e nenhum valor errado nas 2 rodadas; a métrica fica nos evals como regressão) Corrigir extração de entidades do `classify`: no smoke de 2026-10-14 o modelo pôs `"amount": "outubro"` (mês no campo de valor). Medir no golden dataset, ajustar critério/few-shot, subir MINOR.
+- [ ] **9.6** 🟡 PARCIAL: Rodar com o Gemini, iterar prompts até atingir os limiares e registrar a tabela de resultados no README. Feito: 2 rodadas, `classify` 1.1.0, todas as metas medidas atingidas (SPEC-009 §8). Falta (quota diária esgotada em 2026-10-17): casos g-029 a g-043, consistência e juiz no 1.1.0:
+  ```bash
+  python -m prompt_engine.evals.run --concurrency 1 --delay 4 --ids g-029,g-030,g-031,g-032,g-033,g-034,g-035,g-036,g-037,g-038,g-039,g-040,g-041,g-042,g-043
+  python -m prompt_engine.evals.run --concurrency 1 --delay 4 --suites consistency,judge
+  ```
 
 ## Fase 10 — Entrega
 - [x] **10.1** `examples/`: `curl.sh`, `python_client.py`, `library_usage.py`, `frontend/index.html`

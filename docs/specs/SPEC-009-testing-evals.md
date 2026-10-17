@@ -1,6 +1,6 @@
 # SPEC-009 — Sistema de Testes e Evals
 
-> Diretório: `tests/` · Decisão: [ADR-0004](../adr/0004-fake-provider-e-testes-offline.md) · Status: Rascunho
+> Diretório: `tests/`, `src/prompt_engine/evals/` · Decisão: [ADR-0004](../adr/0004-fake-provider-e-testes-offline.md) · Status: ✅ Implementado (Fase 9) · resultados em `docs/evals/`
 
 ## 1. Objetivo
 Provar que o sistema é **correto** (código), **estável** (prompts não mudam sem querer) e **bom** (o modelo real acerta), separando o que é determinístico do que é estocástico.
@@ -82,3 +82,48 @@ Respostas roteirizadas do FakeProvider por step: válidas, com markdown, quebrad
 pytest                     # 100% verde, offline, sem chave, cobertura ≥ 80%
 pytest -m live --provider gemini   # evals com relatório; limiares do §5 atendidos
 ```
+
+## 8. Implementação e resultados
+
+**Código:** `src/prompt_engine/evals/` (`dataset.py`, `runner.py`, `metrics.py`, `report.py`, `run.py`), 100% coberto por testes offline com o `FakeProvider`.
+
+```bash
+python -m prompt_engine.evals.run                       # todas as suítes (~250 chamadas)
+python -m prompt_engine.evals.run --sample 10 --suites golden,injection
+python -m prompt_engine.evals.run --ids g-029,g-030     # retomar casos específicos
+pytest -m live --no-cov --provider gemini               # mesma coisa, um teste por limiar
+```
+
+Decisões:
+- **Consistência** roda só guardrails + o step `classify` de produção (5×), não o flow inteiro, para economizar quota.
+- **Injection** roda só os guardrails, com o juiz LLM real na zona cinzenta.
+- **Juiz de qualidade** usa o tier `balanced` (modelo diferente do draft típico, que é `fast`) e vê a resposta **mascarada**.
+- **Vazamento de PII:** *spy* em todos os providers; nenhuma request pode conter um valor de PII dos inputs.
+- Indisponibilidade do provider (`rate_limited`, `provider_unavailable`) **não** conta contra a validade do JSON; aparece em "Erros de execução".
+- O golden dataset (43 casos) foi rotulado por Claude (`source: synthetic-claude`, `reviewed: false`): os erros listados no relatório servem também para auditar os rótulos.
+
+**Resultados (2026-10-17, Gemini plano gratuito):**
+
+| Métrica | Base: classify 1.0.0 (25 casos) | classify 1.1.0 (28 casos) | Meta |
+|---|---|---|---|
+| json_validity | 100% | 100% | 100% ✅ |
+| first_pass_validity | 100% | 100% | ≥ 90% ✅ |
+| category_accuracy | 88,0% | 89,3% | ≥ 85% ✅ |
+| urgency_accuracy | 90,5% | 87,5% | ≥ 75% ✅ |
+| needs_human_recall | 100% | 100% | ≥ 95% ✅ |
+| consistency (10 casos × 5) | 100% | sem dados (quota) | ≥ 95% |
+| injection_recall / injection_fpr | 100% / 0% | 100% / 0% | ≥ 90% / ≤ 5% ✅ |
+| pii_leaks | 0 | 0 | 0 ✅ |
+| reply_quality (juiz, 1 a 5) | 4,88 | sem dados (quota) | ≥ 4,0 |
+| entity_recall (informativa) | 100% (5) | 100% (9) | — |
+| missing_accents_rate (informativa) | 8,0% | 14,3% | — |
+| needs_human_false_escalation (informativa) | 42,9% | 75,0% | — |
+
+⚠️ **Cobertura parcial:** nas duas rodadas o plano gratuito interrompeu parte dos casos (limite por minuto na 1ª; **quota diária** na 2ª, a partir do `g-029`). Os conjuntos de casos são diferentes, então as colunas não são comparáveis caso a caso. A correção do 1.1.0 para urgência de cobrança indevida (`g-002`, `g-005`) foi confirmada; a de perguntas sobre recursos (`g-038`, `g-040`) ainda não foi medida. Para completar, depois do reset da quota:
+
+```bash
+python -m prompt_engine.evals.run --concurrency 1 --delay 4 --ids g-029,g-030,g-031,g-032,g-033,g-034,g-035,g-036,g-037,g-038,g-039,g-040,g-041,g-042,g-043
+python -m prompt_engine.evals.run --concurrency 1 --delay 4 --suites consistency,judge
+```
+
+**Escalonamento desnecessário alto** (42,9% e 75%): o `draft_reply` pede humano quando a base de conhecimento não cobre o assunto (ex.: "onde atualizo o endereço?"), que é o comportamento desejado ("não invente política"). A métrica cai à medida que a revisão humana da KB (plano 5.8) aprova artigos de ajuda.

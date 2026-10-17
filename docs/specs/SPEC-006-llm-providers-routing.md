@@ -90,6 +90,15 @@ Lista obtida com `client.models.list()` (SDK `google-genai`) e uma chamada míni
 
 - **Família 1.5 descontinuada:** os modelos `gemini-1.5-*` não existem mais e não devem ser usados.
 - **Sem aliases nem previews:** evite aliases `*-latest` e modelos `preview`. Eles mudam sem aviso e quebram a comparabilidade dos evals entre versões de prompt.
+- **Quotas diárias do plano gratuito** (lidas dos 429 em 2026-10-17, `GenerateRequestsPerDayPerProjectPerModel-FreeTier`):
+
+  | Modelo | Tier | Requisições/dia |
+  |---|---|---|
+  | `gemini-3.5-flash-lite` | fast | 500 |
+  | `gemini-3.7-flash` | balanced | 20 |
+  | `gemini-3.8-flash` | powerful | 20 |
+
+  Consequência: no plano gratuito cabem ~150 requests/dia do flow completo (~3 chamadas cada). Os tiers `balanced` e `powerful` atendem só ~20 drafts/dia cada; depois disso o fallback de modelo cai para o `fast` (registrado no `call_log`). Para produção, é preciso um plano pago.
 - **Re-listagem periódica:** a lista muda com frequência. Antes de cada release, rode de novo a listagem e as chamadas de teste.
 
 `ProviderPool.resolve(tier, provider=None) -> Target(provider, model)`. Se o tier não estiver configurado para um provider, ele cai para o tier inferior configurado e emite um warning.

@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Any
 
 from prompt_engine.config import Settings
-from prompt_engine.evals.dataset import load_cases
+from prompt_engine.evals.dataset import GoldenCase, load_cases
 from prompt_engine.evals.report import render_markdown, write_report
 from prompt_engine.evals.runner import ALL_SUITES, EvalConfig, run_evaluation
 from prompt_engine.flows.deps import AppDeps, build_deps
@@ -34,6 +34,16 @@ def _inputs(path: Path) -> list[str]:
     ]
 
 
+def _select(cases: list[GoldenCase], ids: str | None) -> list[GoldenCase]:
+    if not ids:
+        return cases
+    wanted = {i.strip() for i in ids.split(",") if i.strip()}
+    unknown = wanted - {c.id for c in cases}
+    if unknown:
+        raise SystemExit(f"ids inexistentes no golden dataset: {sorted(unknown)}")
+    return [c for c in cases if c.id in wanted]
+
+
 def main(
     argv: Sequence[str] | None = None,
     *,
@@ -46,6 +56,9 @@ def main(
     parser.add_argument("--out", type=Path, default=Path("reports"))
     parser.add_argument("--suites", default=",".join(sorted(ALL_SUITES)))
     parser.add_argument("--sample", type=int)
+    parser.add_argument(
+        "--ids", help="só estes casos do golden (ex.: g-029,g-030): retomar rodadas"
+    )
     parser.add_argument("--delay", type=float)
     parser.add_argument("--concurrency", type=int)
     args = parser.parse_args(argv)
@@ -66,7 +79,7 @@ def main(
     result = asyncio.run(
         run_evaluation(
             deps_factory(settings),
-            golden=load_cases(args.golden),
+            golden=_select(load_cases(args.golden), args.ids),
             attacks=_inputs(args.redteam),
             benign=_inputs(args.benign),
             config=config,

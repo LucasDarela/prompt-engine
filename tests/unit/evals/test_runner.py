@@ -356,3 +356,35 @@ def test_cli_uses_settings_delay_by_default(
         "golden",
     ]
     assert main(argv, deps_factory=lambda s: deps_with()[0]) == 1  # categoria errada => reprovado
+
+
+def test_cli_ids_selects_cases_and_rejects_unknown(tmp_path: Path) -> None:
+    golden = tmp_path / "golden.jsonl"
+    golden.write_text(
+        "".join(
+            case(i, "Cobrado 2x", category="billing").model_dump_json() + "\n"
+            for i in ("a", "b", "c")
+        ),
+        encoding="utf-8",
+    )
+    empty = tmp_path / "empty.jsonl"
+    empty.write_text("", encoding="utf-8")
+    base = [
+        "--golden",
+        str(golden),
+        "--redteam",
+        str(empty),
+        "--benign",
+        str(empty),
+        "--out",
+        str(tmp_path),
+        "--suites",
+        "golden",
+        "--delay",
+        "0",
+    ]
+    assert main([*base, "--ids", "a,c"], deps_factory=lambda s: deps_with()[0]) == 0
+    report = json.loads(next(tmp_path.glob("eval-*.json")).read_text(encoding="utf-8"))
+    assert report["cases"] == 2
+    with pytest.raises(SystemExit, match="g-999"):
+        main([*base, "--ids", "a,g-999"], deps_factory=lambda s: deps_with()[0])
