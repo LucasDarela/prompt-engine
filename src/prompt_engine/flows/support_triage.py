@@ -11,7 +11,7 @@ from typing import Any, get_args
 
 from prompt_engine.config import Settings
 from prompt_engine.core.context import PipelineContext
-from prompt_engine.core.llm_step import LLMStep
+from prompt_engine.core.llm_step import LLMDeps, LLMStep
 from prompt_engine.core.pipeline import Pipeline
 from prompt_engine.core.stage import Stage
 from prompt_engine.enrichment.enricher import ContextEnrichment
@@ -127,6 +127,30 @@ def _classification(ctx: PipelineContext) -> dict[str, Any]:
     return {key: parsed[key] for key in CLASSIFICATION_FIELDS if key in parsed}
 
 
+def make_classify_step(llm: LLMDeps) -> LLMStep:
+    """Step de classificação (reusado pelos evals de consistência, idêntico ao de produção)."""
+    return LLMStep(
+        name="classify",
+        prompt_ref="support_triage.classify@latest",
+        variables=lambda c: {
+            "message": c.sanitized_input,
+            "categories": list(get_args(Category)),
+        },
+        tier="fast",
+        fallback=lambda c: classify_fallback(),
+        deps=llm,
+    )
+
+
+def build_guardrails(deps: AppDeps) -> list[Stage]:
+    """Validação -> PII -> injection (reusado pelos evals de injection)."""
+    return [
+        InputValidation(deps.settings),
+        PIIRedaction(),  # antes do guard: o juiz LLM só vê texto mascarado
+        InjectionGuard(deps.heuristics, build_injection_judge(deps.llm), deps.settings),
+    ]
+
+
 def build_support_triage(deps: AppDeps) -> Pipeline:
     settings, llm = deps.settings, deps.llm
 
@@ -136,20 +160,8 @@ def build_support_triage(deps: AppDeps) -> Pipeline:
 
     return Pipeline(
         [
-            InputValidation(settings),
-            PIIRedaction(),  # antes do guard: o juiz LLM só vê texto mascarado
-            InjectionGuard(deps.heuristics, build_injection_judge(llm), settings),
-            LLMStep(
-                name="classify",
-                prompt_ref="support_triage.classify@latest",
-                variables=lambda c: {
-                    "message": c.sanitized_input,
-                    "categories": list(get_args(Category)),
-                },
-                tier="fast",
-                fallback=lambda c: classify_fallback(),
-                deps=llm,
-            ),
+            *build_guardrails(deps),
+            make_classify_step(llm),
             ContextEnrichment(deps.kb, deps.sla, settings),
             Router(ComplexityScorer(), llm.pool, settings),
             LLMStep(
