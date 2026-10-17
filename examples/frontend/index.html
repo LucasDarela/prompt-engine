@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chopp Hub · Suporte</title>
+  <style>
+    :root { --bg: #f6f5f2; --card: #fff; --ink: #1c1b19; --muted: #6b6760; --accent: #b4561d; --warn: #9a3412; --line: #e4e1da; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #161513; --card: #201f1c; --ink: #ece9e2; --muted: #a29d93; --accent: #e08a4f; --warn: #fb923c; --line: #34322d; } }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, sans-serif; }
+    main { max-width: 720px; margin: 0 auto; padding: 32px 16px; }
+    h1 { font-size: 1.4rem; margin: 0 0 4px; }
+    p.lead { color: var(--muted); margin: 0 0 20px; }
+    textarea { width: 100%; min-height: 120px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); font: inherit; resize: vertical; }
+    button { margin-top: 12px; padding: 10px 18px; border: 0; border-radius: 8px; background: var(--accent); color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+    button:disabled { opacity: .6; cursor: wait; }
+    .card { margin-top: 24px; padding: 16px; background: var(--card); border: 1px solid var(--line); border-radius: 8px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .tag { padding: 2px 10px; border: 1px solid var(--line); border-radius: 999px; font-size: .85rem; }
+    .tag.human { border-color: var(--warn); color: var(--warn); }
+    .reply { white-space: pre-wrap; }
+    .meta { margin-top: 12px; color: var(--muted); font-size: .85rem; }
+    .error { color: var(--warn); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Fale com o suporte do Chopp Hub</h1>
+    <p class="lead">Descreva o que aconteceu. Dados pessoais (CPF, e-mail, cartão) são mascarados antes de qualquer IA.</p>
+    <label for="msg" class="sr-only" hidden>Mensagem</label>
+    <textarea id="msg" placeholder="Ex.: Fomos cobrados duas vezes na mensalidade de outubro."></textarea>
+    <button id="send" type="button">Enviar</button>
+    <section id="out" aria-live="polite"></section>
+  </main>
+  <script>
+    // Servir com: python -m http.server 5173 --directory examples/frontend  (origem liberada no CORS)
+    const API = new URLSearchParams(location.search).get("api") || "http://localhost:8000";
+    const $ = (id) => document.getElementById(id);
+
+    // Tudo que vem da API é TEXTO: textContent, nunca innerHTML (a resposta é gerada por LLM).
+    function el(tag, text, cls) { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+
+    function render(body) {
+      const out = $("out"); out.replaceChildren();
+      const card = el("div", null, "card");
+      if (body.status !== "ok") { card.append(el("p", `${body.error.message} (código: ${body.error.code})`, "error")); out.append(card); return; }
+      const t = body.triage, m = body.meta;
+      const tags = el("div", null, "tags");
+      [t.category, `urgência: ${t.urgency}`, `sentimento: ${t.sentiment}`].forEach((x) => tags.append(el("span", x, "tag")));
+      if (t.needs_human) tags.append(el("span", `atendimento humano: ${t.escalation_reasons.join(", ")}`, "tag human"));
+      card.append(tags, el("p", t.suggested_reply, "reply"));
+      card.append(el("p", `Resumo para o agente: ${t.summary}`, "meta"));
+      card.append(el("p", `request_id ${body.request_id} · ${m.latency_ms} ms · modelos: ${Object.values(m.models).join(", ")} · PII mascarada: ${m.pii_redacted.join(", ") || "nenhuma"}`, "meta"));
+      out.append(card);
+    }
+
+    $("send").addEventListener("click", async () => {
+      const input = $("msg").value.trim(); if (!input) return;
+      $("send").disabled = true;
+      try {
+        const res = await fetch(`${API}/api/v1/process-prompt`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ input }) });
+        render(await res.json());
+      } catch (err) {
+        render({ status: "error", error: { code: "network", message: `Não foi possível falar com a API em ${API}.` } });
+      } finally { $("send").disabled = false; }
+    });
+  </script>
+</body>
+</html>
