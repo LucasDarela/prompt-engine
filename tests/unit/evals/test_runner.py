@@ -78,6 +78,19 @@ async def test_run_golden_collects_results_and_errors() -> None:
     assert sleep.calls == 2  # pausa entre chamadas (rate limit do plano gratuito)
 
 
+async def test_progress_reports_each_item() -> None:
+    lines: list[str] = []
+    deps, _ = deps_with()
+    await run_golden(
+        FlowRunner(default_flow_registry(), deps),
+        [case("a", "Cobrado 2x"), case("b", "Cobrado 3x")],
+        config=EvalConfig(concurrency=1, progress=lines.append),
+        sleep=NoSleep(),
+    )
+    assert [line.split("] ")[0] for line in lines] == ["[golden 1/2", "[golden 2/2"]
+    assert lines[0].startswith("[golden 1/2] a ok ")
+
+
 async def test_blocked_input_is_recorded_as_error_code() -> None:
     deps, _ = deps_with()
     (blocked,) = await run_golden(
@@ -137,8 +150,10 @@ async def test_run_judge_scores_masked_replies() -> None:
         config=EvalConfig(),
         sleep=NoSleep(),
     )
-    scores = await run_judge(deps, runs, config=EvalConfig(), sleep=NoSleep())
+    lines: list[str] = []
+    scores = await run_judge(deps, runs, config=EvalConfig(progress=lines.append), sleep=NoSleep())
     assert scores["a"] is not None and scores["a"].overall == 4
+    assert lines == ["[judge 1/1] a nota 4"]
     judge_call = next(c for c in fake.calls if c.metadata["step"] == "judge_reply")
     assert CPF not in judge_call.messages[-1].content  # o juiz vê a resposta mascarada
 

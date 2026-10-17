@@ -38,6 +38,8 @@ class EvalConfig:
     delay_s: float = 1.0
     consistency_cases: int = 10
     consistency_repeats: int = 5
+    # Uma linha por item concluído (ex.: "[golden 12/43] g-012 ok 3.1s"): rodadas são longas.
+    progress: Callable[[str], None] | None = field(default=None, compare=False)
 
 
 @dataclass
@@ -104,16 +106,28 @@ def pii_leak_ids(cases: Sequence[GoldenCase], spies: Sequence[SpyProvider]) -> l
 
 
 async def _bounded[T](
-    items: Sequence[T], work: Callable[[T], Awaitable[Any]], config: EvalConfig, sleep: Sleep
+    items: Sequence[T],
+    work: Callable[[T], Awaitable[Any]],
+    config: EvalConfig,
+    sleep: Sleep,
+    *,
+    label: str,
+    describe: Callable[[T, Any], str],
 ) -> list[Any]:
     semaphore = asyncio.Semaphore(config.concurrency)
+    done = 0
 
     async def guarded(item: T) -> Any:
+        nonlocal done
         async with semaphore:
             try:
-                return await work(item)
+                result = await work(item)
             finally:
                 await sleep(config.delay_s)
+            done += 1
+            if config.progress is not None:
+                config.progress(f"[{label} {done}/{len(items)}] {describe(item, result)}")
+            return result
 
     return list(await asyncio.gather(*(guarded(item) for item in items)))
 
@@ -150,7 +164,14 @@ async def run_golden(
             ctx=ctx,
         )
 
-    return await _bounded(cases, one, config, sleep)
+    return await _bounded(
+        cases,
+        one,
+        config,
+        sleep,
+        label="golden",
+        describe=lambda c, r: f"{c.id} {r.error_code or 'ok'} {r.latency_ms / 1000:.1f}s",
+    )
 
 
 async def run_consistency(
@@ -175,7 +196,9 @@ async def run_consistency(
         return None if step.fallback_used else str((step.parsed or {}).get("category"))
 
     jobs = [case for case in cases for _ in range(repeats)]
-    answers = await _bounded(jobs, one, config, sleep)
+    answers = await _bounded(
+        jobs, one, config, sleep, label="consistency", describe=lambda c, a: f"{c.id} {a}"
+    )
     samples: dict[str, list[str | None]] = {case.id: [] for case in cases}
     for case, answer in zip(jobs, answers, strict=True):
         samples[case.id].append(answer)
@@ -202,7 +225,14 @@ async def run_injection(
             return "invalid" if exc.code == "invalid_input" else "error"
         return ctx.security.verdict
 
-    verdicts = await _bounded([*attacks, *benign], one, config, sleep)
+    verdicts = await _bounded(
+        [*attacks, *benign],
+        one,
+        config,
+        sleep,
+        label="injection",
+        describe=lambda text, v: f"{v} · {text[:40]!r}",
+    )
     return verdicts[: len(attacks)], verdicts[len(attacks) :]
 
 
@@ -251,7 +281,14 @@ async def run_judge(
         step = ctx.step(judge.name)
         return None if step.fallback_used else JudgeReplyOutput.model_validate(step.parsed)
 
-    scores = await _bounded(judged, one, config, sleep)
+    scores = await _bounded(
+        judged,
+        one,
+        config,
+        sleep,
+        label="judge",
+        describe=lambda r, s: f"{r.case.id} nota {s.overall if s else 'indisponível'}",
+    )
     return {run.case.id: score for run, score in zip(judged, scores, strict=True)}
 
 

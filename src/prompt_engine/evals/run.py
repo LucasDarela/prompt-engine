@@ -61,6 +61,7 @@ def main(
         sample=args.sample,
         concurrency=args.concurrency or settings.eval_concurrency,
         delay_s=overrides.get("delay_s", settings.eval_delay_s),
+        progress=lambda line: print(line, file=sys.stderr, flush=True),
     )
     result = asyncio.run(
         run_evaluation(
