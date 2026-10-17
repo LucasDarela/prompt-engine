@@ -88,6 +88,15 @@ Medido em 25 a 28 dos 43 casos do golden dataset: o plano gratuito do Gemini (50
 python -m prompt_engine.evals.run --sample 10    # ou: make eval
 ```
 
+## Limitações conhecidas
+- **Plano gratuito do Gemini:** 500 req/dia no `flash-lite` e **20/dia** no `3.7-flash` e no `3.8-flash`. Os tiers `balanced`/`powerful` atendem ~20 drafts/dia cada; depois disso o fallback cai para o `fast`. Para produção, é preciso um plano pago.
+- **Evals parciais:** 25 a 28 dos 43 casos medidos; consistência e juiz ainda não remedidos no `classify` 1.1.0 (comando para completar em [SPEC-009 §8](docs/specs/SPEC-009-testing-evals.md)).
+- **Golden dataset e ataques de injection escritos por Claude:** há viés de autoria. Os rótulos merecem auditoria e os ataques, complemento por outra pessoa (plano 9.0b).
+- **Base de conhecimento em revisão:** 42 artigos aprovados; parte dos gerados do `chopp-hub` aguarda revisão, e os itens `manual-demo` são suposições de demonstração. Sem artigo para o assunto, a IA escala para humano em vez de inventar (por isso o escalonamento desnecessário fica alto).
+- **Acentuação:** o Gemini omite acentos de forma intermitente em JSON mode (8 a 14% das respostas); é sinalizado com `missing_accents`, sem correção automática.
+- **PII:** nomes próprios não são detectados (exigiriam NER).
+- **Provedores:** só Gemini; os adapters da Anthropic e da OpenAI estão adiados (a arquitetura e a suíte de contrato estão prontas para eles).
+
 ## Observabilidade
 - **Logs JSON** (`LOG_FORMAT=json`) com `request_id` em todas as linhas e filtro anti-PII em todos os campos.
 - **Trace por request** em `var/traces.db` (SQLite): prompt final e versão de cada step, resposta bruta, tentativas (`call_log`), tokens, latência, rota, segurança. Sem PII. Ver com `DEBUG_ENDPOINTS=true`: `GET /api/v1/traces/{request_id}`.

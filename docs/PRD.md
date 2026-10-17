@@ -105,18 +105,18 @@ Um **middleware de prompts em Python (FastAPI)** que fica entre o frontend (text
 
 ## 7. Mapeamento aos critérios de aceitação do capstone
 
-| Critério | Onde é atendido |
-|---|---|
-| Prompts estruturados | [SPEC-005](specs/SPEC-005-prompt-library.md), [PROMPT_ENGINEERING.md](PROMPT_ENGINEERING.md) |
-| Técnicas avançadas | [PROMPT_ENGINEERING.md §3](PROMPT_ENGINEERING.md) (few-shot, CoT oculto, structured output, spotlighting, self-critique, prompt chaining, LLM-as-judge) |
-| Pipeline multi-step | [SPEC-002](specs/SPEC-002-pipeline-core.md) |
-| Sistema de testes | [SPEC-009](specs/SPEC-009-testing-evals.md) |
-| Biblioteca de prompts | `src/prompt_engine/prompts/library/` |
-| Documentação | `docs/` + `README.md` |
-| Exemplos de uso | `examples/` |
-| Modularidade/organização | [ARCHITECTURE.md](ARCHITECTURE.md), [CONVENTIONS.md](CONVENTIONS.md) |
-| Outputs consistentes | [SPEC-007](specs/SPEC-007-output-validation.md) + evals de consistência |
-| Resolve problema real | Este PRD |
+| Critério | Onde é atendido | Evidência (2026-10-17) |
+|---|---|---|
+| Prompts estruturados | [SPEC-005](specs/SPEC-005-prompt-library.md), [PROMPT_ENGINEERING.md](PROMPT_ENGINEERING.md) | 6 prompts YAML versionados (SemVer + changelog), parciais Jinja compartilhadas, JSON schema gerado do Pydantic; snapshot de cada prompt renderizado |
+| Técnicas avançadas | [PROMPT_ENGINEERING.md §3](PROMPT_ENGINEERING.md) | 15 técnicas declaradas e validadas (enum `Technique`): few-shot, raciocínio oculto, structured output, spotlighting, canary, self-critique, prompt chaining, RAG com citação, error-feedback, LLM-as-judge… |
+| Pipeline multi-step | [SPEC-002](specs/SPEC-002-pipeline-core.md) | 10 stages: validação → PII → injection → classify → KB → roteador → draft → review → assemble → reidratação |
+| Sistema de testes | [SPEC-009](specs/SPEC-009-testing-evals.md) | 560 testes offline (100% de cobertura, sem chave) + evals ao vivo com limiares |
+| Biblioteca de prompts | `src/prompt_engine/prompts/library/` | `PromptRegistry` + `PromptRenderer`; uso sem API em `examples/library_usage.py` |
+| Documentação | `docs/` + `README.md` | PRD, arquitetura, 9 specs, 5 ADRs, plano, convenções, guia de prompts, `CLAUDE.md` |
+| Exemplos de uso | `examples/` | curl, cliente Python, biblioteca (com modo offline testado), frontend com text area, Docker |
+| Modularidade/organização | [ARCHITECTURE.md](ARCHITECTURE.md), [CONVENTIONS.md](CONVENTIONS.md) | camadas com regra de dependência; provedores por adapter; ruff + mypy strict sem erros |
+| Outputs consistentes | [SPEC-007](specs/SPEC-007-output-validation.md) + evals | JSON válido em 100% dos casos; consistência de categoria 100% (10 casos × 5); reparo + fallback seguro |
+| Resolve problema real | Este PRD | triagem do suporte do Chopp Hub; categoria 89%, urgência 88%, recall de `needs_human` 100%, PII nunca sai, injection 100%/0% |
 
 ## 8. Riscos
 
