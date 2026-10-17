@@ -103,11 +103,11 @@
 - [ ] **8.3** Smoke `@live` por provider com chave → LLM-2
 
 ## Fase 9 — Evals (SPEC-009 §5)
-- [ ] **9.1** `golden_dataset.jsonl` com ≥ 40 casos revisados
-- [ ] **9.2** `tests/evals/conftest.py`: opção `--provider`, rate limiting e coleta de resultados
-- [ ] **9.3** Evals de validade, acurácia, needs_human, consistência, injection e PII leak
-- [ ] **9.4** `evals.judge_reply` + `test_reply_quality`
-- [ ] **9.5** Gerador de relatório `reports/eval-*.{json,md}`
+- [x] **9.1** `golden_dataset.jsonl` com 43 casos (rotulados por Claude, `source: synthetic-claude`, `reviewed: false`: auditar os rótulos pelos erros listados no relatório)
+- [x] **9.2** `tests/evals/conftest.py`: opção `--provider`, rate limiting e coleta de resultados
+- [x] **9.3** Evals de validade, acurácia, needs_human, consistência, injection e PII leak
+- [x] **9.4** `evals.judge_reply` + `test_reply_quality`
+- [x] **9.5** Gerador de relatório `reports/eval-*.{json,md}`
 - [ ] **9.0c** Medir a frequência do warning `missing_accents` nos evals (Gemini omite acentos de forma intermitente em JSON mode, inclusive na `revised_reply` do review). Se relevante: tier mínimo `balanced` no draft, ou reparo dirigido.
 - [ ] **9.0b** Ampliar `injection_redteam.jsonl` com ataques **escritos por outra pessoa** (os atuais foram escritos junto com os padrões; risco de sobreajuste) e medir recall do juiz real.
 - [ ] **9.0** Corrigir extração de entidades do `classify`: no smoke de 2026-10-14 o modelo pôs `"amount": "outubro"` (mês no campo de valor). Medir no golden dataset, ajustar critério/few-shot, subir MINOR.
