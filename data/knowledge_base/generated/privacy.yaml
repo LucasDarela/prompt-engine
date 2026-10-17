@@ -1,3 +1,22 @@
 # GERADO por prompt_engine.enrichment.ingest a partir de chopp-hub@1674717.
 # Revise cada item e marque reviewed: true. Itens não revisados NÃO entram na KB.
-[]
+- id: privacy-coleta
+  category: legal
+  title: Coleta
+  content: Coletamos dados pessoais para permitir o acesso ao sistema Chopp Hub e ao aplicativo Chopp
+    Hub Driver, prestar suporte e enviar propostas, faturas e notas fiscais.
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-seguranca
+  category: legal
+  title: Segurança
+  content: Os dados são armazenados de maneira segura e criptografada em nossos servidores ou em servidores
+    contratados para esse fim.
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true

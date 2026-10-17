@@ -1,3 +1,11 @@
 # GERADO por prompt_engine.enrichment.ingest a partir de chopp-hub@1674717.
 # Revise cada item e marque reviewed: true. Itens não revisados NÃO entram na KB.
-[]
+- id: spec-exclusao-conta-fora-de-escopo
+  category: cancellation
+  title: "Solicitar exclusão de conta: Fora de escopo"
+  content: Exclusão automática de dados não é possível, irá depender do suporte fazer isso manualmente.
+  tags:
+    - spec-exclusao-conta
+  updated_at: "2026-10-14"
+  source: chopp-hub@1674717:docs/superpowers/specs/2026-09-20-solicitar-exclusao-conta-design.md
+  reviewed: true

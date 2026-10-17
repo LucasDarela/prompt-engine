@@ -1,3 +1,195 @@
 # GERADO por prompt_engine.enrichment.ingest a partir de chopp-hub@1674717.
 # Revise cada item e marque reviewed: true. Itens não revisados NÃO entram na KB.
-[]
+- id: terms-licenca-de-uso-da-plataforma
+  category: legal
+  title: Licença de uso da Plataforma
+  content: Sujeito à sua conformidade com estes Termos, a Provedora de Serviços concede a você uma licença
+    limitada, não exclusiva, intransferível e revogável para acessar o sistema Chopp Hub e/ou instalar
+    e usar o aplicativo Chopp Hub Driver em um dispositivo móvel ou computador para fins comerciais internos
+    da sua cervejaria ou distribuidora. Você não pode reproduzir, distribuir, modificar, criar trabalhos
+    derivados, fazer engenharia reversa, descompilar ou desmontar a Plataforma, exceto e apenas na medida
+    em que tal atividade seja expressamente permitida pela lei aplicável.
+  tags:
+  - terms
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/terms/page.tsx
+  reviewed: true
+- id: terms-propriedade-intelectual
+  category: legal
+  title: Propriedade Intelectual
+  content: A Provedora de Serviços retém todos os direitos de propriedade intelectual do sistema Chopp
+    Hub e do aplicativo Chopp Hub Driver, incluindo seu código, design, marcas registradas, marcas de
+    serviço, nomes comerciais, logotipos e identidade visual (a "PI"). Nada nestes Termos concede a você
+    qualquer licença ou direito de usar as marcas registradas, logotipos ou identidade visual da Provedora
+    de Serviços para qualquer finalidade. Você concorda em não remover, alterar ou ocultar nenhum aviso
+    de direitos autorais, marca registrada ou outros avisos de propriedade exibidos na Plataforma.
+  tags:
+  - terms
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/terms/page.tsx
+  reviewed: true
+- id: terms-rescisao-1
+  category: cancellation
+  title: Rescisão (parte 1)
+  content: A Provedora de Serviços pode suspender seu acesso ao sistema Chopp Hub, ao aplicativo Chopp
+    Hub Driver ou aos serviços se você violar materialmente estes Termos. A Provedora de Serviços fornecerá
+    a você um aviso por escrito da violação e, nos casos em que a violação puder ser sanada, você terá
+    14 dias a partir do recebimento do aviso para remediar a violação. Se você não conseguir sanar a violação
+    dentro desse período, a Provedora de Serviços poderá encerrar seu acesso. A Provedora de Serviços
+    pode suspender ou encerrar seu acesso imediatamente, sem aviso prévio, se você violar a lei aplicável,
+    infringir direitos de propriedade intelectual ou envolver-se em atividades que possam causar danos
+    a outros usuários ou à Provedora de Serviços.
+  tags:
+  - terms
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/terms/page.tsx
+  reviewed: true
+- id: terms-rescisao-2
+  category: cancellation
+  title: Rescisão (parte 2)
+  content: Em caso de rescisão, seu direito de usar a Plataforma será encerrado e você deverá excluir
+    todas as cópias do aplicativo Chopp Hub Driver dos seus dispositivos. Ao acessar e usar a Plataforma,
+    você declara estar legalmente autorizado a usá-la em sua jurisdição. Você deve ter pelo menos 18 anos
+    de idade para usar o sistema Chopp Hub ou o aplicativo Chopp Hub Driver. A cópia ou modificação não
+    autorizada da Plataforma, de qualquer parte dela, ou das marcas registradas da Provedora de Serviços
+    é estritamente proibida.
+  tags:
+  - terms
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/terms/page.tsx
+  reviewed: true
+- id: terms-conteudo-gerado-pelo-usuario-e-uso-aceitavel-1
+  category: legal
+  title: Conteúdo Gerado pelo Usuário e Uso Aceitável (parte 1)
+  content: 'Se a Plataforma permitir que os usuários postem, compartilhem ou façam upload de conteúdo
+    — como comprovantes, observações de entrega ou mensagens de suporte — você concorda em não postar
+    conteúdo que: - Seja ilegal ou viole direitos de propriedade intelectual de terceiros - Seja abusivo,
+    ameaçador, assediador, difamatório ou discurso de ódio - Contenha discriminação ou incitação à violência
+    ou a atividades ilegais - Seja spam, phishing ou contenha malware - Viole os direitos de privacidade
+    ou dados pessoais de terceiros - Seja enganoso, falso ou fraudulento - Contenha violência explícita
+    ou conteúdo sexual impróprio A Provedora de Serviços reserva-se o direito de: - Remover ou desativar
+    o acesso a conteúdo que viole estas diretrizes - Suspender ou encerrar contas de usuários que violarem
+    repetidamente estas diretrizes'
+  tags:
+  - terms
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/terms/page.tsx
+  reviewed: true
+- id: terms-conteudo-gerado-pelo-usuario-e-uso-aceitavel-2
+  category: legal
+  title: Conteúdo Gerado pelo Usuário e Uso Aceitável (parte 2)
+  content: '- Cooperar com as autoridades policiais se conteúdo ilegal for denunciado - Moderar, filtrar
+    ou ocultar conteúdo que viole estes Termos Se você acredita que algum conteúdo viola estes Termos,
+    pode denunciá-lo em suporte@chopphub.com. Ao enviar Conteúdo Gerado pelo Usuário, você concede à Provedora
+    de Serviços uma licença não exclusiva, mundial e isenta de royalties para usar, reproduzir e distribuir
+    o conteúdo em conexão com o sistema Chopp Hub e o aplicativo Chopp Hub Driver.'
+  tags:
+  - terms
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/terms/page.tsx
+  reviewed: true
+- id: terms-servicos-de-terceiros
+  category: legal
+  title: Serviços de Terceiros
+  content: '- Stripe
+  - Banco Inter
+  - Asaas Pagamentos
+  - Sicoob
+  - Sefaz
+  - Google Play Services
+
+    - Processadores de pagamento e emissão de boletos e notas fiscais
+
+    Esteja ciente de que a Provedora de Serviços não assume responsabilidade por certas situações. Algumas
+    funções do sistema Chopp Hub e do aplicativo Chopp Hub Driver exigem uma conexão ativa com a internet.
+    A Provedora de Serviços não pode ser responsabilizada se a Plataforma não funcionar com capacidade
+    total  devido à falta de acesso à internet ou dados esgotados, especialmente durante o uso do aplicativo
+    em campo pelos motoristas.
+
+    Nada nestes Termos limitará quaisquer direitos que você tenha de acordo com as leis de proteção ao
+    consumidor aplicáveis.'
+  tags:
+  - terms
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/terms/page.tsx
+  reviewed: true
+- id: terms-limitacao-de-responsabilidade
+  category: legal
+  title: Limitação de Responsabilidade
+  content: 'Na extensão máxima permitida por lei, a Provedora de Serviços não será responsável por quaisquer
+    danos indiretos, incidentais, especiais, consequenciais ou punitivos, incluindo perda de lucros, perda
+    de dados ou interrupção de negócios decorrentes do uso do sistema Chopp Hub ou do aplicativo Chopp
+    Hub Driver.
+
+    No entanto, a Provedora de Serviços retém total responsabilidade por:
+
+    - Morte ou danos pessoais causados por negligência
+
+    - Fraude ou declaração fraudulenta
+
+    - Qualquer outra responsabilidade que não possa ser excluída sob a lei aplicável'
+  tags:
+  - terms
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/terms/page.tsx
+  reviewed: true
+- id: terms-indenizacao
+  category: legal
+  title: Indenização
+  content: Na extensão máxima permitida por lei, você concorda em indenizar e isentar a Provedora de Serviços
+    de e contra quaisquer reclamações, responsabilidades, danos, perdas e despesas decorrentes de sua
+    violação destes Termos ou do uso indevido do sistema Chopp Hub ou do aplicativo Chopp Hub Driver.
+  tags:
+  - terms
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/terms/page.tsx
+  reviewed: true
+- id: terms-lei-aplicavel-e-jurisdicao
+  category: legal
+  title: Lei Aplicável e Jurisdição
+  content: 'Estes Termos e Condições são regidos pelas leis da jurisdição em que a Provedora de Serviços
+    está estabelecida. Qualquer disputa decorrente destes Termos será apresentada aos tribunais que possuam
+    jurisdição sob a lei aplicável.'
+  tags:
+  - terms
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/terms/page.tsx
+  reviewed: true
+- id: terms-conformidade-com-a-dsa-lei-de-servicos-digitais
+  category: legal
+  title: Conformidade com a DSA (Lei de Serviços Digitais)
+  content: 'Ponto de Contato: A Provedora de Serviços mantém um ponto de contato único acessível por suporte@chopphub.com e WhatsApp.
+
+    Moderação de Conteúdo: Quando a Provedora de Serviços restringir o acesso a conteúdo ou suspender
+    uma conta, uma declaração de motivos clara será fornecida ao usuário afetado.
+
+    Resolução Extrajudicial de Disputas: Disputas referentes a decisões de moderação podem ser enviadas
+    a um órgão de resolução extrajudicial certificado de acordo com o Artigo 21 da DSA.'
+  tags:
+  - terms
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/terms/page.tsx
+  reviewed: true
+- id: terms-alteracoes-nestes-termos-e-condicoes
+  category: legal
+  title: Alterações nestes Termos e Condições
+  content: 'A Provedora de Serviços poderá atualizar periodicamente os seus Termos e Condições. Versões
+    anteriores serão mantidas e disponibilizadas mediante solicitação pelo e-mail suporte@chopphub.com.
+
+    Estes termos e condições entram em vigor a partir de 24 de julho de 2026.'
+  tags:
+  - terms
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/terms/page.tsx
+  reviewed: true
+- id: terms-entre-em-contato-conosco
+  category: legal
+  title: Entre em Contato Conosco
+  content: Se você tiver alguma dúvida ou sugestão sobre os Termos e Condições, não hesite em contatar
+    a Provedora de Serviços em suporte@chopphub.com. Para saber como tratamos seus dados pessoais, consulte
+    também nossa Política de Privacidade.
+  tags:
+  - terms
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/terms/page.tsx
+  reviewed: true

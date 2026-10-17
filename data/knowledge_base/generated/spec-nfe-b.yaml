@@ -1,3 +1,18 @@
 # GERADO por prompt_engine.enrichment.ingest a partir de chopp-hub@1674717.
 # Revise cada item e marque reviewed: true. Itens não revisados NÃO entram na KB.
-[]
+- id: spec-nfe-b-contexto-e-objetivo-2
+  category: technical
+  title: "NF-e Direta (SEFAZ): Contexto e objetivo (parte 2)"
+  content:
+    'Cancelamento, carta de correção, inutilização e devolução/extorno continuam via Focus por
+    enquanto (os endpoints já existem no microserviço desde a Fase A, mas não ganham rota nova no Next
+    aqui). - Empresa piloto: "Darela Chopp" (22c827f4-cc12-44cf-b841-3c3202b0add5), já validada em homologação.
+    - Erros de emissão devem ser específicos e acionáveis, nunca genéricos — o usuário precisa entender
+    o motivo real sem precisar me perguntar. - Numeração da NF-e (nNF) precisa de um contador próprio,
+    dedicado, editável manualmente em Configurações (bloqueado por padrão até ser configurado) — ver §3.
+    Série da NF-e também passa a ser configurável (hoje fixa em "1" em todo o sistema).'
+  tags:
+    - spec-nfe-b
+  updated_at: "2026-10-14"
+  source: chopp-hub@1674717:docs/superpowers/specs/2026-09-18-nfe-direta-fase-b-design.md
+  reviewed: true

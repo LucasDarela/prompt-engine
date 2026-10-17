@@ -68,7 +68,7 @@
   title: Limitar o acesso de funcionários
   content: >-
     O Chopp Hub permite controlar o que cada funcionário acessa no sistema. Ajustes de usuários
-    e permissões são feitos por um administrador da empresa.
+    e permissões são feitos por um administrador da empresa, na aba configurações, depois time, selecione os três pontinhos e acesse "gerenciar acesso".
   tags: [usuário, permissão, acesso, funcionário, vendedor]
   source: chopp-hub:app/marketing/sections/FAQ.tsx
 - id: kb-account-002
@@ -154,6 +154,7 @@
   title: Falar com um atendente humano
   content: >-
     Sempre que o cliente pedir para falar com uma pessoa, informe que o pedido será registrado e
-    que um atendente entrará em contato dentro do SLA da categoria.
+    solicite o motivo, caso não informado, solicite para que haja um motivo para passar para o atendente, caso contrário, selecione "outros". Um atendente entrará em contato
+    dentro do SLA da categoria.
   tags: [atendente, humano, contato]
   source: manual-demo
