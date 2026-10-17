@@ -15,11 +15,11 @@
 | 5 | Enriquecimento + roteamento | 2, 3 | tier muda conforme a mensagem |
 | 6 | Flow `support_triage` + API | 2–5 | **MVP ponta a ponta** com Gemini |
 | 7 | Observabilidade | 6 | traces no SQLite + export |
-| 8 | Adapters Anthropic e OpenAI | 3 | troca de provider por env |
+| 8 | ~~Adapters Anthropic e OpenAI~~ **adiada** | 3 | (fora por enquanto, decisão de 2026-10-17) |
 | 9 | Evals + datasets | 6, 7 | relatório de métricas |
 | 10 | Exemplos, README final e polimento | todas | entrega do capstone |
 
-> **Caminho crítico do MVP:** 0 → 1 → 2 → 3 → 4 → 5 → 6. As fases 7, 8 e 9 podem ser paralelizadas depois da 6.
+> **Caminho crítico do MVP:** 0 → 1 → 2 → 3 → 4 → 5 → 6. Ordem executada depois: 7 → 9 → 10. A Fase 8 está adiada.
 
 ---
 
@@ -96,7 +96,8 @@
 - [x] **7.5** `llm/pricing.yaml` + estimativa de custo
 - [x] **7.6** `observability/export.py` (CLI) → OBS-6
 
-## Fase 8 — Provedores adicionais (SPEC-006)
+## Fase 8 — Provedores adicionais (SPEC-006) · ⏸️ ADIADA (2026-10-17)
+> Fora do escopo atual por decisão do Lucas: o projeto usa só o Gemini. Quando retomar: novo adapter em `llm/`, registro em `llm/factory.py` e inclusão na suíte de contrato (`tests/unit/llm/_support.py`).
 - [ ] **8.1** `llm/anthropic.py` + contract tests → LLM-1
 - [ ] **8.2** `llm/openai.py` + contract tests → LLM-1
 - [ ] **8.3** Smoke `@live` por provider com chave → LLM-2

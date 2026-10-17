@@ -98,7 +98,7 @@ capstone módulo 2/
 │   │   └── router.py               # stage Router → (tier, provider, model)
 │   ├── llm/
 │   │   ├── base.py                 # protocolo LLMProvider, LLMRequest, LLMResponse
-│   │   ├── gemini.py  anthropic.py  openai.py
+│   │   ├── gemini.py               # único adapter real no MVP (anthropic/openai adiados)
 │   │   ├── fake.py                 # FakeProvider determinístico (testes/demos)
 │   │   ├── pool.py                 # ProviderPool: tier→modelo, timeout, retry/backoff, fallback
 │   │   ├── pricing.py / pricing.yaml # estimativa de custo (preços vêm do arquivo)
@@ -248,7 +248,7 @@ observability ◀── usado por core e api (nunca o contrário)
 | API | FastAPI + Uvicorn | Async, OpenAPI automático, Pydantic nativo ([ADR-0001](adr/0001-fastapi-como-camada-http.md)) |
 | Modelos/validação | Pydantic v2 + pydantic-settings | Schemas de I/O e config tipada |
 | Templates | Jinja2 (`StrictUndefined`) + YAML (PyYAML) | Prompts como dados, com parciais e herança |
-| LLM SDKs | `google-genai`, `anthropic`, `openai` (extras) | Adapters plugáveis |
+| LLM SDKs | `google-genai` (extra `gemini`) | Adapter implementado. `anthropic`/`openai`: extras declarados, adapters adiados |
 | Resiliência | `ProviderPool` próprio (`asyncio`) | Retry/backoff/fallback explícitos e testáveis com `sleep` injetado; retry interno do SDK desligado |
 | Logs | `structlog` (JSON) | Logs estruturados para correlação |
 | Traces | SQLite (stdlib `sqlite3`) | Zero infra, consultável, exportável |

@@ -38,7 +38,7 @@ def test_missing_key_is_clear_config_error() -> None:
 
 @pytest.mark.parametrize("name", ["anthropic", "openai"])
 def test_not_yet_implemented_adapters_fail_clearly(name: str) -> None:
-    with pytest.raises(ProviderConfigError, match="Fase 8"):
+    with pytest.raises(ProviderConfigError, match="Fase 8 adiada"):
         build_pool(settings(llm_provider=name))
 
 

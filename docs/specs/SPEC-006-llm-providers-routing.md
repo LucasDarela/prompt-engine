@@ -4,7 +4,7 @@
 > Decisão: [ADR-0002](../adr/0002-abstracao-de-provedores-llm.md), [ADR-0005](../adr/0005-roteamento-heuristico-por-tiers.md)
 
 ## 1. Objetivo
-1. Permitir **plugar Gemini (padrão), Anthropic e OpenAI** (e outros no futuro) sem tocar no core.
+1. Permitir **plugar provedores** sem tocar no core. **Implementado: Gemini.** Anthropic e OpenAI estão **adiados** (2026-10-17): a tabela abaixo descreve o mapeamento esperado, e o contrato e a suíte de testes de contrato já estão prontos para eles.
 2. Escolher **tier e modelo** conforme a complexidade da tarefa, para economizar custo e quota.
 3. Ser resiliente: timeout, retry com backoff e fallback entre provedores.
 

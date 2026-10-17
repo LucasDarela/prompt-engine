@@ -25,7 +25,7 @@ def build_provider(name: ProviderName, settings: Settings) -> LLMProvider:
         return GeminiProvider(
             api_key=_secret(settings.gemini_api_key), timeout_s=settings.llm_timeout_s
         )
-    raise ProviderConfigError(f"adapter '{name}' ainda não implementado (Fase 8 do plano)")
+    raise ProviderConfigError(f"adapter '{name}' não implementado (Fase 8 adiada; use gemini)")
 
 
 def build_pool(

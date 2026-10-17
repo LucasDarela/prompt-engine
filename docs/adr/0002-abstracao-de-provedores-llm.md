@@ -15,6 +15,9 @@ Os SDKs entram como extras opcionais. O provider padrão, os modelos por tier e 
 - **LiteLLM:** boa opção de gateway, mas adiciona uma dependência grande e torna menos visível o mapeamento de features específicas (JSON schema do Gemini, `system` da Anthropic). Pode virar **mais um adapter** no futuro sem mudar o core.
 - **Usar só um SDK:** viola o requisito de plugabilidade.
 
+## Atualização (2026-10-17)
+Os adapters da Anthropic e da OpenAI foram **adiados**: o projeto usa só o Gemini. A decisão continua válida, porque é ela que torna o adiamento barato: adicionar um provedor é um adapter novo mais a suíte de contrato, sem mudar o core.
+
 ## Consequências
 - ✅ Core independente de fornecedor; testes de contrato iguais para todos; fallback entre provedores.
 - ✅ Controle total do prompt final (o que é enviado é exatamente o que é logado).

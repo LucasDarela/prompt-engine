@@ -16,7 +16,7 @@ texto do cliente ─▶ validação ─▶ anti-injection ─▶ mascarar PII �
 - 🛡️ **Guardrails:** detecção de prompt injection em 4 camadas, mascaramento de CPF/CNPJ/cartão/e-mail/telefone com validação de dígitos
 - 🧩 **Biblioteca de prompts** em YAML + Jinja2, versionada (SemVer), com técnicas declaradas e snapshot tests
 - 🔀 **Roteamento dinâmico** por complexidade (`fast` / `balanced` / `powerful`)
-- 🔌 **Provedores plugáveis:** Gemini (padrão), Anthropic, OpenAI e Fake para testes
+- 🔌 **Provedores plugáveis:** Gemini (implementado) e Fake para testes; a arquitetura aceita outros adapters (Anthropic/OpenAI adiados)
 - ✅ **Saída sempre válida:** limpeza de markdown, extração de JSON, reparo automático e fallback seguro
 - 🔭 **Observabilidade:** prompt final, resposta, modelo, versão, tokens, latência e custo por request, exportáveis como dataset de teste
 - 🧪 **Testes offline + evals** com métricas (acurácia, consistência, recall de injection, vazamento de PII)

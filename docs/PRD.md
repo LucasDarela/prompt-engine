@@ -47,13 +47,14 @@ Um **middleware de prompts em Python (FastAPI)** que fica entre o frontend (text
 - Guardrails: validação de entrada, detecção de injection em camadas e mascaramento/reidratação de PII brasileira
 - Enriquecimento com uma base de conhecimento local (FAQ e políticas em arquivos)
 - Roteamento por complexidade em 3 tiers (`fast`, `balanced`, `powerful`)
-- Provedores plugáveis: **Gemini (padrão)**, Anthropic, OpenAI e Fake (testes)
+- Provedores plugáveis: **Gemini** (implementado) e Fake (testes). A arquitetura aceita outros provedores via adapter; adapters da Anthropic e da OpenAI **adiados** (decisão de 2026-10-17; ver plano, Fase 8)
 - Pipeline multi-step configurável
 - Observabilidade: logs estruturados e trace store em SQLite
 - Testes unitários, de integração, de snapshot de prompts e evals contra modelo real
 - Exemplos de uso (curl, script Python e frontend HTML mínimo)
 
 ### Fora do escopo (MVP)
+- Adapters da Anthropic e da OpenAI (adiados em 2026-10-17; o contrato e a suíte de testes de contrato já estão prontos para recebê-los)
 - Autenticação de usuários finais e multi-tenant
 - RAG vetorial (embeddings). A recuperação é lexical e fica atrás de uma interface, então pode ser trocada depois
 - Streaming de resposta

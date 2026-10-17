@@ -1,6 +1,6 @@
 # CLAUDE.md — Guia para agentes de IA
 
-Middleware de prompts em Python/FastAPI para **triagem de suporte**: guardrails → enriquecimento → roteamento → pipeline LLM multi-step → validação de saída → observabilidade. O provedor padrão é o Gemini; Anthropic e OpenAI são plugáveis.
+Middleware de prompts em Python/FastAPI para **triagem de suporte**: guardrails → enriquecimento → roteamento → pipeline LLM multi-step → validação de saída → observabilidade. Provedor: Gemini (único adapter implementado). Adapters da Anthropic e da OpenAI estão **adiados** (Fase 8); não os implemente sem pedido.
 
 ## Leia antes de codar (nesta ordem)
 1. `docs/PRD.md`: problema, escopo e métricas
