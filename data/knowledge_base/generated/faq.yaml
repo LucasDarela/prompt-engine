@@ -1,3 +1,122 @@
 # GERADO por prompt_engine.enrichment.ingest a partir de chopp-hub@1674717.
 # Revise cada item e marque reviewed: true. Itens não revisados NÃO entram na KB.
-[]
+- id: faq-planilha
+  category: other
+  title: Qual a diferença entre usar o Chopp Hub e uma planilha?
+  content: Planilhas dependem de controle manual e são fáceis de errar. O Chopp Hub automatiza processos
+    como estoque, entregas, financeiro e cobranças, reduzindo erros e evitando prejuízos que muitas vezes
+    passam despercebidos.
+  tags:
+  - faq
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/sections/FAQ.tsx
+  reviewed: true
+- id: faq-nota-fiscal
+  category: other
+  title: Sou obrigado a emitir nota fiscal em todas as vendas?
+  content: Não. Você tem total liberdade. Pode emitir nota fiscal apenas quando quiser, sem travar sua
+    operação. O sistema funciona normalmente mesmo sem emissão de NF-e.
+  tags:
+  - faq
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/sections/FAQ.tsx
+  reviewed: true
+- id: faq-boletos
+  category: other
+  title: Consigo gerar e controlar boletos pelo sistema?
+  content: Sim. Você pode gerar boletos, acompanhar pagamentos e saber exatamente quem pagou e quem está
+    em aberto, trazendo mais controle e organização para sua cobrança.
+  tags:
+  - faq
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/sections/FAQ.tsx
+  reviewed: true
+- id: faq-financeiro
+  category: other
+  title: O sistema ajuda no controle financeiro da empresa?
+  content: Sim. Você acompanha contas a pagar, contas a receber e valores pendentes em um único lugar,
+    sem depender de anotações soltas ou controles paralelos.
+  tags:
+  - faq
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/sections/FAQ.tsx
+  reviewed: true
+- id: faq-motorista
+  category: shipping
+  title: O motorista pode usar o sistema durante as entregas?
+  content: Sim. O motorista pode acessar o sistema pelo celular e dar baixa nas entregas e coletas em
+    tempo real, evitando erros, retrabalho e falta de comunicação com a equipe.
+  tags:
+  - faq
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/sections/FAQ.tsx
+  reviewed: true
+- id: faq-entregas
+  category: shipping
+  title: Consigo saber o que precisa ser entregue ou coletado no dia?
+  content: Sim. O sistema mostra exatamente o que precisa ser entregue, coletado e o que já foi finalizado,
+    ajudando você a não esquecer pedidos e manter a operação organizada.
+  tags:
+  - faq
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/sections/FAQ.tsx
+  reviewed: true
+- id: faq-acesso
+  category: account
+  title: Posso limitar o acesso dos funcionários no sistema?
+  content: Sim. Cada usuário acessa apenas o que precisa. O motorista, por exemplo, não vê o financeiro
+    nem dados sensíveis da empresa, garantindo mais segurança.
+  tags:
+  - faq
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/sections/FAQ.tsx
+  reviewed: true
+- id: faq-relatorios
+  category: other
+  title: O sistema possui relatórios para acompanhar o negócio?
+  content: Sim. Você terá relatórios de vendas, estoque, comodatos, equipamentos e produtos, permitindo
+    identificar problemas e tomar decisões com mais segurança.
+  tags:
+  - faq
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/sections/FAQ.tsx
+  reviewed: true
+- id: faq-equipe
+  category: other
+  title: Minha equipe vai conseguir usar o sistema?
+  content: Sim. O sistema foi desenvolvido para ser simples e direto. Mesmo quem nunca utilizou um sistema
+    consegue aprender rapidamente no dia a dia.
+  tags:
+  - faq
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/sections/FAQ.tsx
+  reviewed: true
+- id: faq-mudanca
+  category: other
+  title: É difícil sair do controle atual e começar a usar o sistema?
+  content: Não. A transição é simples e você pode começar aos poucos. Em pouco tempo já percebe mais organização,
+    menos erros e mais controle da operação.
+  tags:
+  - faq
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/sections/FAQ.tsx
+  reviewed: true
+- id: faq-resultado
+  category: other
+  title: O sistema realmente ajuda a evitar prejuízos?
+  content: Sim. Muitos prejuízos vêm de erros de controle, falta de organização e falhas na comunicação.
+    O Chopp Hub resolve esses pontos e ajuda você a ter mais clareza e controle do negócio.
+  tags:
+  - faq
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/sections/FAQ.tsx
+  reviewed: true
+- id: faq-usabilidade
+  category: other
+  title: Posso usar o sistema no celular e no computador?
+  content: Sim. O Chopp Hub é totalmente responsivo e funciona perfeitamente em celular, tablet e computador.
+  tags:
+  - faq
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/sections/FAQ.tsx
+  reviewed: true

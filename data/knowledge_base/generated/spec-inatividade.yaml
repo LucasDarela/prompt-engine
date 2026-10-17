@@ -1,3 +1,19 @@
 # GERADO por prompt_engine.enrichment.ingest a partir de chopp-hub@1674717.
 # Revise cada item e marque reviewed: true. Itens não revisados NÃO entram na KB.
-[]
+- id: spec-inatividade-e-mail-texto-para-revisao
+  category: account
+  title: 'Aviso de conta inativa (90 dias): E-mail (texto para revisão)'
+  content: 'Assunto: Sua conta no Chopp Hub pode ser excluída em breve
+
+    > Olá{, nome}, > > Notamos que a assinatura da sua empresa no Chopp Hub está sem regularização há
+    mais de 90 dias. > Contas sem assinatura ativa por muito tempo podem ser removidas do nosso sistema.
+    > > Se quiser continuar usando, regularize sua assinatura: {SITE_URL}/dashboard/billing > > > Chopp
+    Hub — Gestão inteligente para o seu negócio de chopp.
+
+    O texto não promete data de exclusão, já que nada exclui contas automaticamente. A frase sobre cópia
+    dos dados é sugestão; remova se não quiser esse compromisso.'
+  tags:
+  - spec-inatividade
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:docs/superpowers/specs/2026-09-19-aviso-inatividade-90-dias-design.md
+  reviewed: true

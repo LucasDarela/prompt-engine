@@ -1,3 +1,67 @@
 # GERADO por prompt_engine.enrichment.ingest a partir de chopp-hub@1674717.
 # Revise cada item e marque reviewed: true. Itens não revisados NÃO entram na KB.
-[]
+- id: help-getting-started
+  category: other
+  title: Primeiros passos
+  content: 'Entenda a estrutura do sistema e como começar a usar o Chopp Hub.
+
+    - Visão geral do sistema: Apresenta o painel principal, os menus e a lógica geral de funcionamento
+    do sistema.
+
+    - Como editar informações da empresa: Aprenda a editar as informações da sua empresa, como nome, endereço,
+    telefone, e-mail, etc.'
+  tags:
+  - help
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/dashboard/help/page.tsx
+  reviewed: true
+- id: help-products
+  category: other
+  title: Produtos
+  content: 'Gestão do catálogo, estoque e valores utilizados no sistema.
+
+    - Como cadastrar produtos: Ensina como criar produtos, preencher preços e manter o catálogo organizado.'
+  tags:
+  - help
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/dashboard/help/page.tsx
+  reviewed: true
+- id: help-customers
+  category: other
+  title: Clientes
+  content: 'Cadastro, edição, pesquisa e organização dos clientes da empresa.
+
+    - Como cadastrar um cliente: Explica o preenchimento dos dados do cliente, vínculo com a empresa e
+    informações usadas nas vendas.'
+  tags:
+  - help
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/dashboard/help/page.tsx
+  reviewed: true
+- id: help-orders
+  category: other
+  title: Vendas e pedidos
+  content: 'Criação de pedidos, pagamento, entrega, coleta e espelho da venda.
+
+    - Como criar uma venda: Mostra como registrar uma nova venda, selecionar cliente, produtos e forma
+    de pagamento.
+
+    - Fluxo de entrega e coleta: Explica o uso dos status Entregar, Coletar e Coletado, além da lógica
+    operacional do pedido.'
+  tags:
+  - help
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/dashboard/help/page.tsx
+  reviewed: true
+- id: help-financial
+  category: other
+  title: Financeiro
+  content: 'Contas a pagar, contas a receber, notas financeiras e lançamentos.
+
+    - Como adicionar uma nota financeira: Mostra como lançar notas de entrada e saída, selecionar categoria
+    e informar valores.'
+  tags:
+  - help
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/dashboard/help/page.tsx
+  reviewed: true

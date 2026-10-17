@@ -20,3 +20,343 @@
   updated_at: '2026-10-14'
   source: chopp-hub@1674717:app/marketing/privacy/page.tsx
   reviewed: true
+- id: privacy-compartilhamento
+  category: legal
+  title: Compartilhamento
+  content: Nunca vendemos ou comercializamos seus dados com terceiros. O compartilhamento ocorre apenas
+    para os serviços necessários ao funcionamento do Chopp Hub e do Chopp Hub Driver.
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-comunicacao
+  category: legal
+  title: Comunicação
+  content: Campanhas de marketing serão relacionadas ao Chopp Hub, e você pode cancelar a inscrição na
+    lista de e-mail correspondente a qualquer momento.
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-politica-de-privacidade-completa-1
+  category: legal
+  title: Política de Privacidade Completa (parte 1)
+  content: A Loading Tecnology ("Devium" ou "nós") é uma empresa que fornece soluções para gestão de cervejarias
+    e distribuidoras de forma online, através do sistema Chopp Hub e do aplicativo móvel Chopp Hub Driver
+    (coletivamente, a "Plataforma"). O Chopp Hub pode ser acessado através do nosso site, onde você encontra
+    informações sobre nossas soluções, bem como acessa o sistema propriamente dito através da conta cadastrada
+    por você. Já o Chopp Hub Driver pode ser baixado em lojas de aplicativos e é utilizado por motoristas
+    e entregadores para atualizar entregas e coletas em tempo real. Para oferecer essas soluções, coletamos
+    alguns dados e informações visando personalizar a Plataforma para o seu uso. Esta Política de Privacidade
+    informa quais informações são coletadas e como coletamos, armazenamos e usamos as mesmas.
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-politica-de-privacidade-completa-2
+  category: legal
+  title: Política de Privacidade Completa (parte 2)
+  content: Esta Política será aplicada sempre que você usar o sistema Chopp Hub, o aplicativo Chopp Hub
+    Driver e também em eventuais pesquisas, eventos, redes sociais, dentre outros.
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-1-como-os-dados-pessoais-poderao-ser-coletados-1
+  category: legal
+  title: 1. Como os Dados Pessoais poderão ser coletados? (parte 1)
+  content: '1.1. Ao navegar em nosso website: coletamos automaticamente dados de acesso, uso, comunicação
+    e cookies. 1.2. Quando você demonstrar interesse nos nossos serviços: quando você interage, acessa
+    ou solicita conteúdos ou materiais pelo website, landing pages, formulários, e-mail, telefone, redes
+    sociais ou outros canais de comunicação do Chopp Hub. 1.3. Na contratação dos serviços: ao contratar
+    o sistema Chopp Hub e/ou o aplicativo Chopp Hub Driver, inscrição em eventos via website, landing
+    pages, e-mail ou formulários. 1.4. No uso do sistema Chopp Hub e do aplicativo Chopp Hub Driver: ao
+    cadastrar pedidos, estoque, clientes, rotas de entrega e ao dar baixa em entregas e coletas pelo celular.
+    1.5. Interação com anúncios: se você interage com um ou mais dos nossos anúncios em sites de terceiros,
+    nós podemos receber informações sobre essa interação. 1.6.'
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-1-como-os-dados-pessoais-poderao-ser-coletados-2
+  category: legal
+  title: 1. Como os Dados Pessoais poderão ser coletados? (parte 2)
+  content: 'Dados criados por nós: durante nossas interações com você, poderemos criar Dados Pessoais,
+    por exemplo, mas não limitado a informações sobre sua empresa, cargo e necessidades de serviços. 1.7.
+    Plataformas de terceiros: podemos contratar serviços terceirizados de parceiros, como automação de
+    marketing, meios de pagamento e emissão de notas fiscais, cujo consentimento para compartilhamento
+    dos seus dados foi concedido por você a esses terceiros. Nesse caso, sempre respeitamos a finalidade
+    determinada por nosso parceiro, bem como o disposto na presente Política, lembrando que você sempre
+    poderá solicitar a retenção, exclusão, anonimização e eliminação dos seus dados pessoais, na forma
+    disposta neste documento.'
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-2-quais-dados-pessoais-e-nao-pessoais-poderao-ser-coletados-
+  category: legal
+  title: 2. Quais Dados Pessoais e Não Pessoais poderão ser coletados? (parte 1)
+  content: '2.1. Dados de cadastro no sistema Chopp Hub, a fim de permitir a personalização da Plataforma,
+    o acesso ao sistema, solicitação de contato pelo "Fale Conosco" ou pelo "WhatsApp", envio de proposta
+    comercial e elaboração de contratos: nome completo, e-mail, número de telefone, endereço, CPF/CNPJ,
+    cargo ocupado, informações profissionais e nome da empresa. 2.2. Dados de cadastro no aplicativo Chopp
+    Hub Driver, a fim de permitir que motoristas e entregadores acessem as rotas atribuídas pela sua cervejaria
+    ou distribuidora: nome completo, e-mail, telefone e vínculo com a empresa contratante. 2.3. Dados
+    operacionais registrados no uso da Plataforma: pedidos, entregas e coletas atribuídas, status e horário
+    de atualização das entregas realizadas pelo motorista pelo aplicativo Chopp Hub Driver. 2.4.'
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-2-quais-dados-pessoais-e-nao-pessoais-poderao-ser-coletados--2
+  category: legal
+  title: 2. Quais Dados Pessoais e Não Pessoais poderão ser coletados? (parte 2)
+  content: 'Dados Pessoais de envio de material informativo, comunicações e atualizações da Plataforma:
+    nome completo, nome da empresa, e-mail e telefone. 2.5. Dados coletados automaticamente quando você
+    utiliza nosso website ou a Plataforma: - Registros de acesso: endereço IP, com data e hora, utilizado
+    para acessar o website, o sistema Chopp Hub ou o aplicativo Chopp Hub Driver. - Dados de uso: informações
+    sobre suas interações na Plataforma, como navegação, telas ou conteúdos que você acessa ou cria, e
+    outras ações. - Comunicação com nosso suporte: quando você se comunica conosco, coletamos informações
+    sobre sua comunicação, como data, IP e hora, assim como o conteúdo enviado. - Cookies essenciais:
+    arquivos de texto gerados e armazenados no seu navegador para manter sua sessão ativa (como o "manter
+    conectado") e garantir o funcionamento básico do website. Esses não podem ser desativados.'
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-2-quais-dados-pessoais-e-nao-pessoais-poderao-ser-coletados--3
+  category: legal
+  title: 2. Quais Dados Pessoais e Não Pessoais poderão ser coletados? (parte 3)
+  content: '- Cookies de análise (Google Analytics e Google Tag Manager): nos ajudam a entender como o
+    website é utilizado, para melhorar sua experiência. Só são carregados depois do seu aceite no aviso
+    de cookies exibido no website. Saiba mais na Política de Privacidade do Google. - Cookies de publicidade
+    (Meta Pixel): utilizados para medir e otimizar nossos anúncios no Instagram e Facebook. Só são carregados
+    depois do seu aceite no aviso de cookies exibido no website. Saiba mais na Política de Dados da Meta.
+    - Você pode revogar o consentimento aos cookies de análise e publicidade a qualquer momento, limpando
+    os dados de navegação (cookies) deste website no seu navegador — o aviso de cookies será exibido novamente
+    na próxima visita. 2.6.'
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-2-quais-dados-pessoais-e-nao-pessoais-poderao-ser-coletados--4
+  category: legal
+  title: 2. Quais Dados Pessoais e Não Pessoais poderão ser coletados? (parte 4)
+  content: 'Leads: se você interagir com os nossos materiais e conteúdo, coletamos, além dos dados mencionados
+    acima, os seus dados de visita às nossas páginas e outras informações que você optar compartilhar
+    conosco, através das suas interações com os nossos formulários, landing pages e e-mails. 2.7. Dados
+    Não Pessoais: formas de atuação da cervejaria ou distribuidora, volume mensal comercializado e informações
+    cadastrais da Pessoa Jurídica. 2.8. Dados de pagamento: na contratação do Chopp Hub, informações sobre
+    o responsável jurídico, bem como informações cadastrais da Pessoa Jurídica, para emissão de fatura,
+    boleto e nota fiscal. Não armazenamos dados de cartão de crédito.'
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-3-como-esses-dados-poderao-ser-utilizados-1
+  category: legal
+  title: 3. Como esses dados poderão ser utilizados? (parte 1)
+  content: 'Quando você interage com o website, o sistema Chopp Hub ou o aplicativo Chopp Hub Driver,
+    utilizamos diversas tecnologias para tratar os Dados Pessoais coletados. A seguir, descrevemos como
+    os seus Dados Pessoais poderão ser utilizados. 3.1. Os Dados Pessoais serão utilizados para prover,
+    desenvolver e melhorar os serviços prestados ou produtos oferecidos, inclusive aqueles a serem criados.
+    Além disso, utilizaremos os seus dados para estabelecer um fluxo de comunicação. 3.2. Os Dados Pessoais
+    poderão ser utilizados das seguintes maneiras: - Para que nós possamos nos comunicar com você, inclusive
+    para oferecer nossos serviços ou produtos. - Enviar newsletters sobre atualizações do sistema Chopp
+    Hub e do aplicativo Chopp Hub Driver, bem como novos serviços oferecidos por nós.'
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-3-como-esses-dados-poderao-ser-utilizados-2
+  category: legal
+  title: 3. Como esses dados poderão ser utilizados? (parte 2)
+  content: '- Enviar mensagens a respeito de suporte ou serviços prestados, como configurações da Plataforma
+    ou outras notificações a respeito. - Nossa equipe comercial poder entrar em contato com você por e-mail
+    ou telefone para fazer pesquisas ou apresentar novos produtos e serviços. - Nos comunicar com você
+    sobre promoções, eventos e publicidade direcionada conforme seus gostos, interesses e outras informações
+    coletadas. 3.3. Os seus dados de e-mail coletados poderão ser compartilhados com a nossa equipe de
+    marketing, com o intuito de enviar para você conteúdos e novidades a respeito do ramo de cervejarias
+    e distribuidoras. Você pode solicitar a alteração dessas preferências ou o cancelamento do envio,
+    a qualquer momento, através do próprio e-mail. 3.4.'
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-3-como-esses-dados-poderao-ser-utilizados-3
+  category: legal
+  title: 3. Como esses dados poderão ser utilizados? (parte 3)
+  content: Para fins internos e gerenciais, como auditoria, análise de dados e pesquisa para aprimorar
+    nossos produtos e serviços, e geração de análises estatísticas sobre o uso dos nossos serviços. 3.5.
+    Cumprir com obrigações e requisitos legais, proteger seus direitos, direitos de outros usuários ou
+    nossos direitos. 3.6. Formalizar eventual relação contratual entre você e a Loading Tecnology. 3.7.
+    Realizar o cadastro para possibilitar o acesso aos nossos serviços e produtos, bem como viabilizar
+    pagamentos e emitir boletos e notas fiscais.
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-4-as-informacoes-pessoais-poderao-ser-compartilhadas-1
+  category: legal
+  title: 4. As informações pessoais poderão ser compartilhadas? (parte 1)
+  content: '4.1. Não comercializamos os Dados Pessoais dos nossos usuários com terceiros, mas em algumas
+    situações específicas poderemos transferir ou compartilhar os Dados Pessoais com terceiros, por exemplo
+    para armazenamento de dados, conforme disposto neste documento e na legislação brasileira, em conformidade
+    com a LGPD. 4.2. Podemos compartilhar os seus Dados Pessoais com contratados e prestadores de serviços
+    que tratam tais dados em nosso nome, de modo a desempenhar determinadas funções relacionadas com suas
+    atividades, tais como, mas não somente: prestadores de serviços de bancos de dados e hospedagem, prestadores
+    de serviços de e-mail, processadores de pagamento e emissão de boletos e notas fiscais, agências de
+    marketing e comunicação, e ferramentas de automação de vendas e coleta de leads. 4.3.'
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-4-as-informacoes-pessoais-poderao-ser-compartilhadas-2
+  category: legal
+  title: 4. As informações pessoais poderão ser compartilhadas? (parte 2)
+  content: Os dados coletados serão tratados e armazenados em servidores de terceiros, que atuam de acordo
+    com as políticas e mecanismos de segurança e confidencialidade estipulados neste instrumento. 4.4.
+    Nossos parceiros são autorizados a utilizar os Dados Pessoais apenas para os fins específicos para
+    o qual foram contratados, não sendo permitido utilizá-los para outras finalidades. 4.5. Em caso de
+    venda, fusão, reorganização ou outra operação societária semelhante, os Dados Pessoais poderão fazer
+    parte dos ativos intangíveis compartilhados ou transferidos. 4.6. Reservamo-nos o direito de fornecer
+    seus Dados Pessoais e informações sobre você caso seja requisitado judicialmente, para que a empresa
+    esteja em conformidade com as leis nacionais, ou caso você autorize expressamente.
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-5-como-os-dados-sao-armazenados
+  category: legal
+  title: 5. Como os dados são armazenados?
+  content: '5.1. As informações pessoais coletadas serão armazenadas em serviços confiáveis, providos
+    por parceiros que podem estar localizados no Brasil ou em outros países, que atendam aos padrões de
+    segurança estabelecidos nesta política.
+
+    5.2. Na contratação desses serviços, a Loading Tecnology sempre buscará empresas que empregam alto
+    nível de segurança no armazenamento de suas informações, estabelecendo contratos que não violam as
+    definições de privacidade previstas nesta Política.
+
+    5.3. A Loading Tecnology armazena as informações dos usuários tão somente pelo período necessário
+    para as finalidades apresentadas, inclusive para fins de cumprimento de quaisquer obrigações legais,
+    contratuais, ou requisição de autoridades competentes, respeitando sempre o período de retenção de
+    dados determinado pela legislação aplicável.
+
+    5.4. Não armazenamos dados de cartão de crédito.'
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-6-retencao-e-eliminacao-dos-dados-1
+  category: legal
+  title: 6. Retenção e eliminação dos Dados (parte 1)
+  content: 6.1. Os dados pessoais coletados são retidos por período indeterminado, desde que você mantenha
+    a autorização ativa ou esteja sob uma relação contratual conosco, utilizando o sistema Chopp Hub,
+    o aplicativo Chopp Hub Driver, respondendo formulários ou inscrito na nossa newsletter. Enquanto a
+    relação existir ou pelo tempo que for necessário para fornecer os Serviços, esses dados serão retidos.
+    6.2. Quando desejar, de forma gratuita e simplificada, você poderá solicitar a eliminação dos seus
+    dados pessoais ou, ainda, que eles sejam tornados anônimos, por meio do e-mail suporte@chopphub.com.
+    6.3. Se você solicitar a exclusão dos seus Dados Pessoais, podemos iniciar o procedimento em até 30
+    dias após a solicitação.
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-6-retencao-e-eliminacao-dos-dados-2
+  category: legal
+  title: 6. Retenção e eliminação dos Dados (parte 2)
+  content: 'No entanto, note que: (1) pode haver alguma demora entre a exclusão das informações de nossos
+    servidores e do backup; e (2) podemos reter essas informações caso seja necessário para cumprir com
+    nossas obrigações legais, resolver disputas ou fazer cumprir nossos contratos. 6.4. Quando você se
+    inscrever ou contratar algum dos nossos Serviços, podemos enviar periodicamente informações, atualizações
+    e material de marketing referente aos nossos serviços ou ao setor de cervejarias e distribuidoras.
+    Caso você não queira receber algum tipo específico de material, basta clicar no link "Cancelar Inscrição"
+    no e-mail correspondente, ou solicitar o descadastramento através do e-mail suporte@chopphub.com.'
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-7-ha-transferencia-internacional-de-dados
+  category: legal
+  title: 7. Há transferência internacional de dados?
+  content: '7.1. Poderemos realizar transferências internacionais de dados para outros países, a fim de
+    realizar atividades envolvidas nos serviços prestados aos usuários, bem como para poder obter informações
+    que possam contribuir para o aperfeiçoamento e segurança dos nossos serviços.
+
+    7.2. Na hipótese de compartilhamento com parceiros localizados em outros países, estabelecemos contratualmente
+    que o parceiro possua padrão de proteção de dados e segurança da informação compatível com esta Política
+    de Privacidade, a fim de que os dados sejam sempre protegidos nestes termos.'
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-8-mudancas-na-politica-de-privacidade
+  category: legal
+  title: 8. Mudanças na Política de Privacidade
+  content: '8.1. Essa Política de Privacidade poderá ser atualizada periodicamente, sendo que a versão
+    em vigor será sempre a mais recente.
+
+    Versão 1.1 de 2 de setembro de 2026.
+
+    8.2. Você pode visitar periodicamente esta página para ter conhecimento sobre as modificações. Caso
+    sejam feitas alterações relevantes que necessitem um novo consentimento seu, iremos publicar essa
+    atualização e solicitar um novo consentimento para você.'
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-9-como-voce-pode-falar-conosco
+  category: legal
+  title: 9. Como você pode falar conosco?
+  content: 9.1. Caso você tenha dúvidas ou sugestões relacionadas a esta Política de Privacidade, ou se
+    você acredita que suas informações pessoais não foram usadas de acordo com essa Política, você pode
+    entrar em contato através do e-mail suporte@chopphub.com.
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-10-legislacao-e-foro
+  category: legal
+  title: 10. Legislação e Foro
+  content: 10.1. Esta Política é regida, interpretada e executada de acordo com as Leis da República Federativa
+    do Brasil, especialmente a Lei nº 13.709/2018 (LGPD), independentemente das Leis de outros estados
+    ou países, sendo competente o foro de domicílio do usuário para dirimir qualquer dúvida decorrente
+    deste documento.
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true
+- id: privacy-11-aceite-dessa-politica
+  category: legal
+  title: 11. Aceite dessa Política
+  content: 11.1. Caso você opte por utilizar o sistema Chopp Hub, o aplicativo Chopp Hub Driver ou qualquer
+    um de nossos serviços ou produtos, você declara que realizou a leitura completa e atenta desta Política
+    de Privacidade, estando plenamente ciente e de acordo com a mesma. Consulte também nossos Termos e
+    Condições.
+  tags:
+  - privacy
+  updated_at: '2026-10-14'
+  source: chopp-hub@1674717:app/marketing/privacy/page.tsx
+  reviewed: true

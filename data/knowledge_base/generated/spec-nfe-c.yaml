@@ -1,3 +1,13 @@
 # GERADO por prompt_engine.enrichment.ingest a partir de chopp-hub@1674717.
 # Revise cada item e marque reviewed: true. Itens não revisados NÃO entram na KB.
-[]
+- id: spec-nfe-c-2-escopo-2
+  category: technical
+  title: "NF-e Direta: 2. Escopo (parte 2)"
+  content:
+    "- Alterações no app mobile em si (repositório separado): este spec só define o contrato da
+    API."
+  tags:
+    - spec-nfe-c
+  updated_at: "2026-10-14"
+  source: chopp-hub@1674717:docs/superpowers/specs/2026-09-18-nfe-direta-fase-c-design.md
+  reviewed: true
