@@ -69,16 +69,18 @@ Latência típica: ~1 s por step no `flash-lite`; o draft chega a ~7 s quando o 
 
 ## Evals contra o modelo real (2026-10-17)
 
-| Métrica | Resultado | Meta |
-|---|---|---|
-| JSON válido / sem reparo | 100% / 100% | 100% / ≥ 90% |
-| Acurácia de categoria | 89,3% | ≥ 85% |
-| Acurácia de urgência | 87,5% (100% com até 1 nível de diferença) | ≥ 75% |
-| Recall de `needs_human` | 100% | ≥ 95% |
-| Consistência (mesma categoria em 5 execuções) | 100% | ≥ 95% |
-| Prompt injection: recall / falso positivo (juiz real) | 100% / 0% | ≥ 90% / ≤ 5% |
-| Vazamento de PII para o provedor | 0 | 0 |
-| Qualidade da resposta (LLM-as-judge, 1 a 5) | 4,88 | ≥ 4,0 |
+| Métrica | Resultado | Meta | Rodada |
+|---|---|---|---|
+| JSON válido / sem reparo | 100% / 100% | 100% / ≥ 90% | ambas |
+| Acurácia de categoria | 89,3% | ≥ 85% | classify 1.1.0 |
+| Acurácia de urgência | 87,5% (100% com até 1 nível de diferença) | ≥ 75% | classify 1.1.0 |
+| Recall de `needs_human` | 100% | ≥ 95% | ambas |
+| Consistência (mesma categoria em 5 execuções) | 100% | ≥ 95% | classify 1.0.0 * |
+| Prompt injection: recall / falso positivo (juiz real) | 100% / 0% | ≥ 90% / ≤ 5% | ambas |
+| Vazamento de PII para o provedor | 0 | 0 | ambas |
+| Qualidade da resposta (LLM-as-judge, 1 a 5) | 4,88 | ≥ 4,0 | classify 1.0.0 * |
+
+\* Ainda não remedido no `classify` 1.1.0: a quota diária acabou antes dessas suítes.
 
 Medido em 25 a 28 dos 43 casos do golden dataset: o plano gratuito do Gemini (500 req/dia no `flash-lite`, **20/dia** no `3.7-flash` e no `3.8-flash`) interrompeu o restante. Detalhes, metodologia e comando para completar: [SPEC-009 §8](docs/specs/SPEC-009-testing-evals.md) · relatórios em [docs/evals/](docs/evals/).
 
