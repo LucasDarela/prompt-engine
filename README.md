@@ -1,7 +1,7 @@
 # Prompt Engine — Triagem de Suporte com LLM
 
 > Capstone Módulo 2 · Sistema de prompts **modular, testável e reutilizável**
-> Status: ✅ **MVP + observabilidade + evals** (Fases 0–7 e 9): API ponta a ponta com Gemini · 560 testes · cobertura 100%
+> Status: ✅ **MVP + observabilidade + evals** (Fases 0–7 e 9): API ponta a ponta com Gemini · 564 testes · cobertura 100%
 
 Um middleware em **Python + FastAPI** que recebe a mensagem livre de um cliente (text area), protege, enriquece, roteia, consulta uma LLM em várias etapas e devolve um **JSON de triagem limpo e validado**.
 
@@ -39,7 +39,7 @@ texto do cliente ─▶ validação ─▶ anti-injection ─▶ mascarar PII �
 source venv/bin/activate
 pip install -e ".[dev,gemini]"
 cp .env.example .env            # preencha GEMINI_API_KEY
-make test                       # 560 testes offline, sem chave
+make test                       # 564 testes offline, sem chave
 make run                        # http://localhost:8000/docs
 ./examples/curl.sh              # 5 cenários de exemplo
 ```
@@ -97,7 +97,7 @@ python -m prompt_engine.evals.run --sample 10    # ou: make eval
 - **Plano gratuito do Gemini:** 500 req/dia no `flash-lite` e **20/dia** no `3.7-flash` e no `3.8-flash`. Os tiers `balanced`/`powerful` atendem ~20 drafts/dia cada; depois disso o fallback cai para o `fast`. Para produção, é preciso um plano pago.
 - **Evals parciais:** 25 a 28 dos 43 casos medidos; consistência e juiz ainda não remedidos no `classify` 1.1.0 (comando para completar em [SPEC-009 §8](docs/specs/SPEC-009-testing-evals.md)).
 - **Golden dataset e ataques de injection escritos por Claude:** os rótulos foram auditados (2026-10-17); os ataques ainda pedem complemento por outra pessoa (plano 9.0b), porque foram escritos junto com os padrões de detecção.
-- **Base de conhecimento em revisão:** 42 artigos aprovados; parte dos gerados do `chopp-hub` aguarda revisão, e os itens `manual-demo` são suposições de demonstração. Sem artigo para o assunto, a IA escala para humano em vez de inventar (por isso o escalonamento desnecessário fica alto).
+- **Base de conhecimento:** 80 artigos aprovados (63 gerados do `chopp-hub` e revisados por humano, 17 `manual-demo`, que são suposições de demonstração); 21 itens gerados ficam excluídos por conterem detalhes internos. Sem artigo para o assunto, a IA escala para humano em vez de inventar (por isso o escalonamento desnecessário fica alto).
 - **Acentuação:** o Gemini omite acentos de forma intermitente em JSON mode (8 a 14% das respostas); é sinalizado com `missing_accents`, sem correção automática.
 - **PII:** nomes próprios não são detectados (exigiriam NER).
 - **Provedores:** só Gemini; os adapters da Anthropic e da OpenAI estão adiados (a arquitetura e a suíte de contrato estão prontas para eles).
