@@ -95,8 +95,9 @@ python -m prompt_engine.evals.run --sample 10    # ou: make eval
 
 ## Limitações conhecidas
 - **Plano gratuito do Gemini:** 500 req/dia no `flash-lite` e **20/dia** no `3.7-flash` e no `3.8-flash`. Os tiers `balanced`/`powerful` atendem ~20 drafts/dia cada; depois disso o fallback cai para o `fast`. Para produção, é preciso um plano pago.
+- **Disponibilidade do Gemini:** em picos de demanda, os três modelos devolvem 503 ao mesmo tempo. O retry com backoff e o fallback entre modelos absorvem picos curtos, mas não uma indisponibilidade prolongada: em 2026-10-20 à tarde, um caso levou mais de 30 min. Nesse cenário, a API responde 503 `provider_unavailable`, e o ticket precisa seguir pela fila humana.
 - **Evals parciais:** 25 a 28 dos 43 casos medidos; consistência e juiz ainda não remedidos no `classify` 1.1.0 (comando para completar em [SPEC-009 §8](docs/specs/SPEC-009-testing-evals.md)).
-- **Golden dataset e ataques de injection escritos por Claude:** os rótulos foram auditados (2026-10-17); os ataques ainda pedem complemento por outra pessoa (plano 9.0b), porque foram escritos junto com os padrões de detecção.
+- **Golden dataset e ataques de injection escritos por Claude:** os rótulos foram auditados (2026-10-17); os ataques ainda pedem complemento por outra pessoa (plano 9.0b), porque foram escritos junto com os padrões de detecção. Por isso, o recall de 100% contra injection deve ser lido como teto otimista: ataques de autoria independente tendem a derrubá-lo.
 - **Base de conhecimento:** 80 artigos aprovados (63 gerados do `chopp-hub` e revisados por humano, 17 `manual-demo`, que são suposições de demonstração); 21 itens gerados ficam excluídos por conterem detalhes internos. Sem artigo para o assunto, a IA escala para humano em vez de inventar (por isso o escalonamento desnecessário fica alto).
 - **Acentuação:** o Gemini omite acentos de forma intermitente em JSON mode (8 a 14% das respostas); é sinalizado com `missing_accents`, sem correção automática.
 - **PII:** nomes próprios não são detectados (exigiriam NER).
