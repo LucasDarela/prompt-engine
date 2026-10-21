@@ -12,7 +12,7 @@ DEBUG_ENDPOINTS=true make run               # API com Gemini real
 # sem chave/quota: LLM_PROVIDER=fake DEBUG_ENDPOINTS=true make run   (modo demo)
 ```
 
-Abra **http://localhost:8000/playground**. O cabeçalho deve mostrar `pronta · provider gemini · 6 prompts · 80 artigos`.
+Abra **http://localhost:8000/playground**. O cabeçalho deve mostrar `pronta · provider gemini · 6 prompts · 75 artigos`.
 
 > Plano gratuito do Gemini: cada envio custa de 2 a 4 chamadas, e o `flash-lite` aceita 500 por dia. Para a demo, sobra quota. Se ela acabar, troque para o modo demo: o pipeline é o mesmo e só o LLM é simulado.
 
