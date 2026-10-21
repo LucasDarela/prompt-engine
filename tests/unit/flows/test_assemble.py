@@ -104,6 +104,18 @@ async def test_approved_review_keeps_draft() -> None:
             {"draft": {"suggested_reply": "Olá! O caso já foi encaminhado ao financeiro."}},
             "unverified_action_claim",
         ),
+        (  # eval 2026-10-21, g-013: sem "já"
+            {"draft": {"suggested_reply": "Olá! Foi encaminhada imediatamente ao time técnico."}},
+            "unverified_action_claim",
+        ),
+        (
+            {"draft": {"suggested_reply": "Olá! Sua solicitação foi imediatamente registrada."}},
+            "unverified_action_claim",
+        ),
+        (
+            {"draft": {"suggested_reply": "Olá! Os chamados foram corrigidos."}},
+            "unverified_action_claim",
+        ),
     ],
 )
 async def test_each_condition_alone_requires_human(

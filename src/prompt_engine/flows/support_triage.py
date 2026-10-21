@@ -39,7 +39,7 @@ CLASSIFICATION_FIELDS = ("category", "urgency", "sentiment", "intents")
 # que algo já foi feito. O prompt proíbe; isto garante (resposta é escalada se escapar).
 UNVERIFIED_ACTION_RE = re.compile(
     r"\b(registramos|registrei|encaminhamos|encaminhei|estornamos|estornei|reembolsamos"
-    r"|cancelamos|cancelei|liberamos|liberei|corrigimos|corrigi|j[aá] (foi|foram) "
+    r"|cancelamos|cancelei|liberamos|liberei|corrigimos|corrigi|(foi|foram) (\w+mente )?"
     r"(registrad|encaminhad|estornad|cancelad|liberad|corrigid)\w*)\b",
     re.IGNORECASE,
 )
