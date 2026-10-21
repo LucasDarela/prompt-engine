@@ -50,14 +50,14 @@ Mostre a tabela do README:
 | Métrica | Resultado | Meta |
 |---|---|---|
 | JSON válido | 100% | 100% |
-| Categoria / urgência | 89% / 88% | 85% / 75% |
+| Categoria / urgência | 97,5% / 96,8% | 85% / 75% |
 | Consistência (5 execuções) | 100% | 95% |
 | Injection: recall / falso positivo | 100% / 0% | 90% / 5% |
 | Vazamento de PII | 0 | 0 |
-| Qualidade da resposta (LLM-as-judge) | 4,88 / 5 | 4,0 |
+| Qualidade da resposta (LLM-as-judge) | 4,90 / 5 | 4,0 |
 
-- Seja transparente: medido em 25 a 28 dos 43 casos, porque o plano gratuito interrompeu o resto (ver "Limitações" no README).
-- Um ajuste de prompt guiado por eval: o `classify` 1.1.0 corrigiu a urgência de cobrança indevida.
+- Rodada completa em 2026-10-21: 41 dos 43 casos medidos, porque 2 caíram em 503 do Gemini (ver "Limitações" no README).
+- Ajustes guiados por eval: o `classify` 1.1.0 corrigiu a urgência de cobrança indevida. Além disso, o juiz pegou uma resposta que dizia "foi encaminhada", o que expôs uma brecha no guard de ações não executadas, já corrigida.
 
 ## Perguntas prováveis
 | Pergunta | Resposta curta |

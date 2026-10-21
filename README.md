@@ -1,7 +1,7 @@
 # Prompt Engine — Triagem de Suporte com LLM
 
 > Capstone Módulo 2 · Sistema de prompts **modular, testável e reutilizável**
-> Status: ✅ **MVP + observabilidade + evals** (Fases 0–7 e 9): API ponta a ponta com Gemini · 564 testes · cobertura 100%
+> Status: ✅ **MVP + observabilidade + evals** (Fases 0–7 e 9): API ponta a ponta com Gemini · 567 testes · cobertura 100%
 
 Um middleware em **Python + FastAPI** que recebe a mensagem livre de um cliente (text area), protege, enriquece, roteia, consulta uma LLM em várias etapas e devolve um **JSON de triagem limpo e validado**.
 
@@ -72,22 +72,22 @@ curl -X POST http://localhost:8000/api/v1/process-prompt \
 
 Latência típica: ~1 s por step no `flash-lite`; o draft chega a ~7 s quando o Gemini devolve 503 e o retry com backoff entra em ação.
 
-## Evals contra o modelo real (2026-10-17)
+## Evals contra o modelo real (2026-10-21)
 
-| Métrica | Resultado | Meta | Rodada |
-|---|---|---|---|
-| JSON válido / sem reparo | 100% / 100% | 100% / ≥ 90% | ambas |
-| Acurácia de categoria | 89,3% | ≥ 85% | classify 1.1.0 |
-| Acurácia de urgência | 87,5% (100% com até 1 nível de diferença) | ≥ 75% | classify 1.1.0 |
-| Recall de `needs_human` | 100% | ≥ 95% | ambas |
-| Consistência (mesma categoria em 5 execuções) | 100% | ≥ 95% | classify 1.0.0 * |
-| Prompt injection: recall / falso positivo (juiz real) | 100% / 0% | ≥ 90% / ≤ 5% | ambas |
-| Vazamento de PII para o provedor | 0 | 0 | ambas |
-| Qualidade da resposta (LLM-as-judge, 1 a 5) | 4,88 | ≥ 4,0 | classify 1.0.0 * |
+Rodada completa no `classify` 1.1.0: 43 casos do golden dataset e todas as suítes.
 
-\* Ainda não remedido no `classify` 1.1.0: a quota diária acabou antes dessas suítes.
+| Métrica | Resultado | Meta |
+|---|---|---|
+| JSON válido / sem reparo | 100% / 100% | 100% / ≥ 90% |
+| Acurácia de categoria | 97,5% | ≥ 85% |
+| Acurácia de urgência | 96,8% (100% com até 1 nível de diferença) | ≥ 75% |
+| Recall de `needs_human` | 100% | ≥ 95% |
+| Consistência (mesma categoria em 5 execuções) | 100% | ≥ 95% |
+| Prompt injection: recall / falso positivo (juiz real) | 100% / 0% | ≥ 90% / ≤ 5% |
+| Vazamento de PII para o provedor | 0 | 0 |
+| Qualidade da resposta (LLM-as-judge, 1 a 5) | 4,90 | ≥ 4,0 |
 
-Medido em 25 a 28 dos 43 casos do golden dataset: o plano gratuito do Gemini (500 req/dia no `flash-lite`, **20/dia** no `3.7-flash` e no `3.8-flash`) interrompeu o restante. Detalhes, metodologia e comando para completar: [SPEC-009 §8](docs/specs/SPEC-009-testing-evals.md) · relatórios em [docs/evals/](docs/evals/).
+Medido em 41 dos 43 casos: `g-033` e `g-034` caíram em 503 do Gemini e ficam de fora, sem contar como erro de JSON. O juiz deu nota 2 a uma resposta (`g-013`) que afirmava ter "encaminhado" o caso. Isso revelou uma brecha no guard de ações não executadas, já corrigida. Histórico das rodadas e metodologia: [SPEC-009 §8](docs/specs/SPEC-009-testing-evals.md) · relatórios em [docs/evals/](docs/evals/).
 
 ```bash
 python -m prompt_engine.evals.run --sample 10    # ou: make eval
@@ -96,7 +96,7 @@ python -m prompt_engine.evals.run --sample 10    # ou: make eval
 ## Limitações conhecidas
 - **Plano gratuito do Gemini:** 500 req/dia no `flash-lite` e **20/dia** no `3.7-flash` e no `3.8-flash`. Os tiers `balanced`/`powerful` atendem ~20 drafts/dia cada; depois disso o fallback cai para o `fast`. Para produção, é preciso um plano pago.
 - **Disponibilidade do Gemini:** em picos de demanda, os três modelos devolvem 503 ao mesmo tempo. O retry com backoff e o fallback entre modelos absorvem picos curtos, mas não uma indisponibilidade prolongada: em 2026-10-20 à tarde, um caso levou mais de 30 min. Nesse cenário, a API responde 503 `provider_unavailable`, e o ticket precisa seguir pela fila humana.
-- **Evals parciais:** 25 a 28 dos 43 casos medidos; consistência e juiz ainda não remedidos no `classify` 1.1.0 (comando para completar em [SPEC-009 §8](docs/specs/SPEC-009-testing-evals.md)).
+- **Evals com amostra pequena:** 43 casos rotulados por Claude e auditados por humano. Bastam para detectar regressões, mas não substituem medição em tickets reais. Na rodada completa, o Gemini gratuito esgotou a quota diária do `3.7-flash` e do `3.8-flash`, e as chamadas registradas no relatório acabaram todas no `flash-lite`.
 - **Golden dataset e ataques de injection escritos por Claude:** os rótulos foram auditados (2026-10-17); os ataques ainda pedem complemento por outra pessoa (plano 9.0b), porque foram escritos junto com os padrões de detecção. Por isso, o recall de 100% contra injection deve ser lido como teto otimista: ataques de autoria independente tendem a derrubá-lo.
 - **Base de conhecimento:** 80 artigos aprovados (63 gerados do `chopp-hub` e revisados por humano, 17 `manual-demo`, que são suposições de demonstração); 21 itens gerados ficam excluídos por conterem detalhes internos. Sem artigo para o assunto, a IA escala para humano em vez de inventar (por isso o escalonamento desnecessário fica alto).
 - **Acentuação:** o Gemini omite acentos de forma intermitente em JSON mode (8 a 14% das respostas); é sinalizado com `missing_accents`, sem correção automática.

@@ -102,28 +102,29 @@ Decisões:
 - Indisponibilidade do provider (`rate_limited`, `provider_unavailable`) **não** conta contra a validade do JSON; aparece em "Erros de execução".
 - O golden dataset (43 casos) foi rotulado por Claude e **auditado por Lucas em 2026-10-17** a partir dos erros listados nos relatórios: rótulos mantidos (`reviewed: true`).
 
-**Resultados (2026-10-17, Gemini plano gratuito):**
+**Resultados (Gemini plano gratuito):**
 
-| Métrica | Base: classify 1.0.0 (25 casos) | classify 1.1.0 (28 casos) | Meta |
-|---|---|---|---|
-| json_validity | 100% | 100% | 100% ✅ |
-| first_pass_validity | 100% | 100% | ≥ 90% ✅ |
-| category_accuracy | 88,0% | 89,3% | ≥ 85% ✅ |
-| urgency_accuracy | 90,5% | 87,5% | ≥ 75% ✅ |
-| needs_human_recall | 100% | 100% | ≥ 95% ✅ |
-| consistency (10 casos × 5) | 100% | sem dados (quota) | ≥ 95% |
-| injection_recall / injection_fpr | 100% / 0% | 100% / 0% | ≥ 90% / ≤ 5% ✅ |
-| pii_leaks | 0 | 0 | 0 ✅ |
-| reply_quality (juiz, 1 a 5) | 4,88 | sem dados (quota) | ≥ 4,0 |
-| entity_recall (informativa) | 100% (5) | 100% (9) | — |
-| missing_accents_rate (informativa) | 8,0% | 14,3% | — |
-| needs_human_false_escalation (informativa) | 42,9% | 75,0% | — |
+| Métrica | Base: classify 1.0.0 (2026-10-17, 25 casos) | classify 1.1.0 (2026-10-17, 28 casos) | **classify 1.1.0 completa (2026-10-21, 41 casos)** | Meta |
+|---|---|---|---|---|
+| json_validity | 100% | 100% | **100%** | 100% ✅ |
+| first_pass_validity | 100% | 100% | **100%** | ≥ 90% ✅ |
+| category_accuracy | 88,0% | 89,3% | **97,5%** | ≥ 85% ✅ |
+| urgency_accuracy | 90,5% | 87,5% | **96,8%** | ≥ 75% ✅ |
+| needs_human_recall | 100% | 100% | **100%** | ≥ 95% ✅ |
+| consistency (10 casos × 5) | 100% | sem dados (quota) | **100%** | ≥ 95% ✅ |
+| injection_recall / injection_fpr | 100% / 0% | 100% / 0% | **100% / 0%** | ≥ 90% / ≤ 5% ✅ |
+| pii_leaks | 0 | 0 | **0** | 0 ✅ |
+| reply_quality (juiz, 1 a 5) | 4,88 | sem dados (quota) | **4,90** | ≥ 4,0 ✅ |
+| entity_recall (informativa) | 100% (5) | 100% (9) | 100% (9) | — |
+| missing_accents_rate (informativa) | 8,0% | 14,3% | 9,8% | — |
+| needs_human_false_escalation (informativa) | 42,9% | 75,0% | 36,4% | — |
 
-⚠️ **Cobertura parcial:** nas duas rodadas o plano gratuito interrompeu parte dos casos (limite por minuto na 1ª; **quota diária** na 2ª, a partir do `g-029`). Os conjuntos de casos são diferentes, então as colunas não são comparáveis caso a caso. A correção do 1.1.0 para urgência de cobrança indevida (`g-002`, `g-005`) foi confirmada; a de perguntas sobre recursos (`g-038`, `g-040`) ainda não foi medida. Para completar, depois do reset da quota:
+A rodada de 2026-10-21 cobre os 43 casos. `g-033` e `g-034` caíram em 503 do provider e ficam fora das métricas, conforme a regra acima. As rodadas de 2026-10-17 foram interrompidas pelo plano gratuito, com limite por minuto na primeira e quota diária na segunda, a partir do `g-029`. Por isso, as colunas anteriores não são comparáveis caso a caso. As duas correções do 1.1.0 foram confirmadas: urgência de cobrança indevida (`g-002` e `g-005`) e perguntas sobre recursos (`g-038` e `g-040`). Erros restantes: categoria do `g-028` (`shipping` → `technical`) e urgência do `g-024` (`high` → `medium`, dentro de 1 nível).
 
-```bash
-python -m prompt_engine.evals.run --concurrency 1 --delay 4 --ids g-029,g-030,g-031,g-032,g-033,g-034,g-035,g-036,g-037,g-038,g-039,g-040,g-041,g-042,g-043
-python -m prompt_engine.evals.run --concurrency 1 --delay 4 --suites consistency,judge
-```
+**Ressalvas da rodada de 2026-10-21:**
+- A quota diária do `3.7-flash` e do `3.8-flash` acabou no meio da rodada, e as 123 chamadas registradas no relatório saíram do `flash-lite`. O juiz de qualidade acabou avaliando com o mesmo modelo do draft, ao contrário da decisão acima.
+- O juiz deu nota 2 ao `g-013`: a resposta dizia que o caso "foi encaminhada imediatamente ao time técnico". O guard de ações não executadas só reconhecia "já foi …" e deixou passar. O ticket já ia para humano (`urgency=critical`), mas o texto violava a regra. A correção amplia a regex para "foi/foram (advérbio) encaminhad…", com testes.
 
-**Escalonamento desnecessário alto** (42,9% e 75%): o `draft_reply` pede humano quando a base de conhecimento não cobre o assunto (ex.: "onde atualizo o endereço?"), que é o comportamento desejado ("não invente política"). A métrica cai à medida que a revisão humana da KB (plano 5.8) aprova artigos de ajuda.
+Relatórios: `docs/evals/2026-10-17-*.md` e `docs/evals/2026-10-21-3-classify-1.1.0-completa.md`.
+
+**Escalonamento desnecessário alto** (42,9%, 75% e 36,4%): o `draft_reply` pede humano quando a base de conhecimento não cobre o assunto (ex.: "onde atualizo o endereço?"), que é o comportamento desejado ("não invente política"). A métrica cai à medida que a revisão humana da KB (plano 5.8) aprova artigos de ajuda.
